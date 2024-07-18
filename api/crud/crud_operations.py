@@ -1,14 +1,14 @@
 from sqlalchemy.orm import Session
 from models.models import User, Restaurant
-import schemas.schemas as schemas
+from schemas.schemas import UserCreate, RestaurantCreate
 
 def get_user(db: Session, user_id: int):
     return db.query(User).filter(User.id == user_id).first()
 
-def get_user_by_email(db: Session, email: str):
+def get_user_by_email(email: str, db: Session):
     return db.query(User).filter(User.email == email).first()
 
-def create_user(db: Session, user: schemas.UserCreate):
+def create_user(user: UserCreate, db: Session):
     fake_hashed_password = user.password + "notreallyhashed"
     db_user = User(username=user.username, email=user.email, hashed_password=fake_hashed_password)
     db.add(db_user)
@@ -19,7 +19,7 @@ def create_user(db: Session, user: schemas.UserCreate):
 def get_restaurant(db: Session, restaurant_id: int):
     return db.query(Restaurant).filter(Restaurant.id == restaurant_id).first()
 
-def create_restaurant(db: Session, restaurant: schemas.RestaurantCreate):
+def create_restaurant(restaurant: RestaurantCreate, db: Session):
     db_restaurant = Restaurant(
         name=restaurant.name,
         address=restaurant.address,
