@@ -1,41 +1,39 @@
 from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.orm import Session
-from database.database import SessionLocal, engine
-from models.models import Base, User, Restaurant, PartnershipRequest
-from schemas.schemas import UserCreate, RestaurantCreate, PartnershipRequestCreate
-from crud import partnership_requests
+from database.database import SessionLocal, engine, get_db
+from models.models import Base, User
+from schemas.schemas import UserCreate, UserLogin
+from utils.utils import hash_password, verify_password
+from auth.auth import create_access_token, get_current_user
+from fastapi.security import OAuth2PasswordRequestForm
 
 app = FastAPI()
 
 # Kreiranje tabela prilikom pokretanja aplikacije
 Base.metadata.create_all(bind=engine)
 
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
+@app.post("/register")
+def register_user(user: UserCreate, db: Session = Depends(get_db)):
+    db_user = db.query(User).filter(User.email == user.email).first()
+    if db_user:
+        raise HTTPException(status_code=400, detail="Email already registered")
+    hashed_password = hash_password(user.password)
+    new_user = User(username=user.username, email=user.email, hashed_password=hashed_password, role=user.role)
+    db.add(new_user)
+    db.commit()
+    db.refresh(new_user)
+    return new_user
 
-# Definišemo rute za PartnershipRequest
-@app.post("/partnership_requests/")
-def create_partnership_request(partnership_request: PartnershipRequestCreate, db: Session = Depends(get_db)):
-    return partnership_requests.create_partnership_request(db=db, partnership_request=partnership_request)
+@app.post("/token")
+def login_user(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
+    db_user = db.query(User).filter(User.username == form_data.username).first()
+    if not db_user:
+        raise HTTPException(status_code=400, detail="Invalid username or password")
+    if not verify_password(form_data.password, db_user.hashed_password):
+        raise HTTPException(status_code=400, detail="Invalid username or password")
+    access_token = create_access_token(data={"sub": db_user.username})
+    return {"access_token": access_token, "token_type": "bearer"}
 
-@app.get("/partnership_requests/")
-def get_partnership_requests(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
-    return partnership_requests.get_partnership_requests(db=db, skip=skip, limit=limit)
-
-@app.get("/partnership_requests/{partnership_request_id}")
-def get_partnership_request(partnership_request_id: int, db: Session = Depends(get_db)):
-    db_partnership_request = partnership_requests.get_partnership_request(db=db, partnership_request_id=partnership_request_id)
-    if db_partnership_request is None:
-        raise HTTPException(status_code=404, detail="Partnership request not found")
-    return db_partnership_request
-
-@app.delete("/partnership_requests/{partnership_request_id}")
-def delete_partnership_request(partnership_request_id: int, db: Session = Depends(get_db)):
-    db_partnership_request = partnership_requests.delete_partnership_request(db=db, partnership_request_id=partnership_request_id)
-    if db_partnership_request is None:
-        raise HTTPException(status_code=404, detail="Partnership request not found")
-    return db_partnership_request
+@app.get("/users/me")
+def read_users_me(current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    return current_user

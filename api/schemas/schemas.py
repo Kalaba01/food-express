@@ -31,7 +31,10 @@ class UserCreate(BaseModel):
     email: str
     password: str
     role: str  # 'administrator', 'owner', 'courier', 'customer'
-    image_id: Optional[int]
+
+class UserLogin(BaseModel):
+    username: str
+    password: str
 
 class UserUpdate(BaseModel):
     username: Optional[str]
