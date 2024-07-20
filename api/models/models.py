@@ -15,6 +15,16 @@ class RestaurantCapacity(enum.Enum):
     busy = "busy"
     crowded = "crowded"
 
+class RequestType(enum.Enum):
+    partner = "partner"
+    driver = "driver"
+    team = "team"
+
+class RequestStatus(enum.Enum):
+    pending = "pending"
+    denied = "denied"
+    accepted = "accepted"
+
 class Image(Base):
     __tablename__ = "images"
     id = Column(Integer, primary_key=True, index=True)
@@ -233,14 +243,13 @@ class Bank(Base):
 
     user = relationship("User", back_populates="bank_account")
 
-class PartnershipRequest(Base):
-    __tablename__ = "partnership_requests"
+class Request(Base):
+    __tablename__ = "requests"
     id = Column(Integer, primary_key=True, index=True)
     first_name = Column(String, nullable=False)
     last_name = Column(String, nullable=False)
     email = Column(String, nullable=False)
-    restaurant_name = Column(String, nullable=False)
-    address = Column(String, nullable=False)
-    city = Column(String, nullable=False)
-    restaurant_type = Column(String, nullable=False)
+    additional_info = Column(String, nullable=False)
+    request_type = Column(String, nullable=False)  # 'partner', 'driver', 'team'
+    status = Column(Enum(RequestStatus), default=RequestStatus.pending)
     created_at = Column(DateTime, default=datetime.datetime.utcnow)

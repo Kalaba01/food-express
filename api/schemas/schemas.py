@@ -14,6 +14,16 @@ class RestaurantCapacityEnum(str, Enum):
     busy = "busy"
     crowded = "crowded"
 
+class RequestTypeEnum(str, Enum):
+    partner = "partner"
+    driver = "driver"
+    team = "team"
+
+class RequestStatusEnum(str, Enum):
+    pending = "pending"
+    denied = "denied"
+    accepted = "accepted"
+
 # Slike
 class ImageCreate(BaseModel):
     url: str
@@ -235,12 +245,10 @@ class BankUpdate(BaseModel):
     user_id: Optional[int]
     balance: Optional[float]
 
-# Zahtevi za partnerstvo
-class PartnershipRequestCreate(BaseModel):
+# Zahtevi
+class RequestCreate(BaseModel):
     first_name: str
     last_name: str
     email: str
-    restaurant_name: str
-    address: str
-    city: str
-    restaurant_type: str
+    additional_info: str
+    request_type: str  # 'partner', 'driver', 'team'

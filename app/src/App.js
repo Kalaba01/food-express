@@ -1,11 +1,18 @@
 import React, { useState } from 'react';
 import { FaUser, FaGlobe, FaSun, FaMoon } from 'react-icons/fa';
+import LoginPopup from './components/Auth/LoginPopup';
+import RegisterPopup from './components/Auth/RegisterPopup';
+import RequestPopup from './components/RequestPopup/RequestPopup';
 import './App.css';
 
 function App() {
   const [darkMode, setDarkMode] = useState(false);
   const [faqOpen, setFaqOpen] = useState(null);
   const [isAnimating, setIsAnimating] = useState(false);
+  const [isLoginOpen, setIsLoginOpen] = useState(false);
+  const [isRegisterOpen, setIsRegisterOpen] = useState(false);
+  const [isRequestOpen, setIsRequestOpen] = useState(false);
+  const [formType, setFormType] = useState('');
 
   const toggleFaq = (index) => {
     if (isAnimating) return;
@@ -32,21 +39,56 @@ function App() {
     document.body.classList.toggle('dark-mode', !darkMode);
   };
 
+  const openLoginModal = () => {
+    setIsLoginOpen(true);
+    setIsRegisterOpen(false);
+    setIsRequestOpen(false);
+  };
+
+  const closeLoginModal = () => {
+    setIsLoginOpen(false);
+  };
+
+  const openRegisterModal = () => {
+    setIsRegisterOpen(true);
+    setIsLoginOpen(false);
+    setIsRequestOpen(false);
+  };
+
+  const closeRegisterModal = () => {
+    setIsRegisterOpen(false);
+  };
+
+  const openRequestModal = (type) => {
+    setIsRequestOpen(true);
+    setFormType(type);
+    setIsLoginOpen(false);
+    setIsRegisterOpen(false);
+  };
+
+  const closeRequestModal = () => {
+    setIsRequestOpen(false);
+  };
+
   return (
     <div className={`App ${darkMode ? 'dark' : ''}`}>
       <header className="top-bar">
         <div className="logo-container">
-          <img src="logo.png" alt="Food Express Logo" className="logo" />
+          <img src="./images/logo.png" alt="Food Express Logo" className="logo" />
           <span className="logo-text">Food Express</span>
         </div>
         <div className="top-bar-icons">
-          <FaUser className="icon" />
+          <FaUser className="icon" onClick={openLoginModal} />
           <div className="theme-icon" onClick={toggleDarkMode}>
             {darkMode ? <FaSun className="icon" /> : <FaMoon className="icon" />}
           </div>
           <FaGlobe className="icon" />
         </div>
       </header>
+
+      {isLoginOpen && <LoginPopup closeLoginModal={closeLoginModal} switchToRegister={openRegisterModal} />}
+      {isRegisterOpen && <RegisterPopup closeRegisterModal={closeRegisterModal} switchToLogin={openLoginModal} />}
+      {isRequestOpen && <RequestPopup closeModal={closeRequestModal} formType={formType} />}
 
       <main>
         <section className="who-are-we">
@@ -78,17 +120,17 @@ function App() {
         <section className="join-us">
           <h2>Become part of Food Express</h2>
           <div className="join-us-cards">
-            <div className="join-card">
-              <img src="https://placehold.co/400x400" alt="Join as a Driver" className="join-img" />
-              <button>Join as a Driver</button>
+            <div className="join-card" onClick={() => openRequestModal('partner')}>
+              <img src="https://placehold.co/400x400" alt="Become a partner" className="join-img" />
+              <button>Become a partner</button>
             </div>
-            <div className="join-card">
-              <img src="https://placehold.co/400x400" alt="Join as a Restaurant" className="join-img" />
-              <button>Join as a Restaurant</button>
+            <div className="join-card" onClick={() => openRequestModal('deliver')}>
+              <img src="https://placehold.co/400x400" alt="Deliver with us" className="join-img" />
+              <button>Deliver with us</button>
             </div>
-            <div className="join-card">
-              <img src="https://placehold.co/400x400" alt="Join as a Partner" className="join-img" />
-              <button>Join as a Partner</button>
+            <div className="join-card" onClick={() => openRequestModal('join')}>
+              <img src="https://placehold.co/400x400" alt="Join the team" className="join-img" />
+              <button>Join the team</button>
             </div>
           </div>
         </section>
