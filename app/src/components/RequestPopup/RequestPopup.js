@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 import './RequestPopup.css';
 
-function RequestPopup({ closeModal, formType }) {
+function RequestPopup({ closeModal, formType, showNotification }) {
   const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
+    first_name: '',
+    last_name: '',
     email: '',
-    additionalInfo: ''
+    additional_info: ''
   });
 
   const handleChange = (e) => {
@@ -25,21 +26,16 @@ function RequestPopup({ closeModal, formType }) {
     };
 
     try {
-      const response = await fetch('/api/requests', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(requestData)
-      });
-      if (response.ok) {
-        console.log('Request submitted successfully');
+      const response = await axios.post('http://localhost:8000/requests/', requestData);
+      if (response.status === 200 || response.status === 201) {
+        showNotification('Request submitted successfully', 'success');
         closeModal();
       } else {
-        console.error('Failed to submit request');
+        showNotification('Failed to submit request', 'error');
       }
     } catch (error) {
       console.error('Error submitting request:', error);
+      showNotification('Error submitting request', 'error');
     }
   };
 

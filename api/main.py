@@ -1,4 +1,5 @@
 from fastapi import FastAPI, Depends, HTTPException
+from starlette.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 from database.database import SessionLocal, engine, get_db
 from models.models import Base, User, Request, RequestStatus
@@ -7,7 +8,20 @@ from utils.utils import hash_password, verify_password
 from auth.auth import create_access_token, get_current_user
 from fastapi.security import OAuth2PasswordRequestForm
 
-app = FastAPI()
+def start_application():
+    app = FastAPI() 
+    origins = ["*"]
+
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins = origins,
+        allow_credentials = True,
+        allow_methods = ["*"],
+        allow_headers = ["*"]
+    )
+    return app
+
+app = start_application()
 
 # Kreiranje tabela prilikom pokretanja aplikacije
 Base.metadata.create_all(bind=engine)

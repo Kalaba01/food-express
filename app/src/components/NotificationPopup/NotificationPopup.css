@@ -1,0 +1,39 @@
+.notification-popup {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 15px 25px;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    color: #fff;
+    font-size: 16px;
+    z-index: 1000;
+    animation: fadeInOut 3s forwards;
+}
+
+.notification-popup.success {
+    background-color: #4caf50; /* Zelena boja za uspeh */
+}
+
+.notification-popup.error {
+    background-color: #f44336; /* Crvena boja za grešku */
+}
+
+@keyframes fadeInOut {
+    0% {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    10% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    90% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+}

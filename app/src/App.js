@@ -3,6 +3,7 @@ import { FaUser, FaGlobe, FaSun, FaMoon } from 'react-icons/fa';
 import LoginPopup from './components/Auth/LoginPopup';
 import RegisterPopup from './components/Auth/RegisterPopup';
 import RequestPopup from './components/RequestPopup/RequestPopup';
+import NotificationPopup from './components/NotificationPopup/NotificationPopup'; // Importujte novu komponentu
 import './App.css';
 
 function App() {
@@ -13,6 +14,7 @@ function App() {
   const [isRegisterOpen, setIsRegisterOpen] = useState(false);
   const [isRequestOpen, setIsRequestOpen] = useState(false);
   const [formType, setFormType] = useState('');
+  const [notification, setNotification] = useState({ show: false, message: '', type: '' });
 
   const toggleFaq = (index) => {
     if (isAnimating) return;
@@ -70,6 +72,13 @@ function App() {
     setIsRequestOpen(false);
   };
 
+  const showNotification = (message, type) => {
+    setNotification({ show: true, message, type });
+    setTimeout(() => {
+      setNotification({ show: false, message: '', type: '' });
+    }, 3000);
+  };
+
   return (
     <div className={`App ${darkMode ? 'dark' : ''}`}>
       <header className="top-bar">
@@ -88,7 +97,9 @@ function App() {
 
       {isLoginOpen && <LoginPopup closeLoginModal={closeLoginModal} switchToRegister={openRegisterModal} />}
       {isRegisterOpen && <RegisterPopup closeRegisterModal={closeRegisterModal} switchToLogin={openLoginModal} />}
-      {isRequestOpen && <RequestPopup closeModal={closeRequestModal} formType={formType} />}
+      {isRequestOpen && <RequestPopup closeModal={closeRequestModal} formType={formType} showNotification={showNotification} />}
+
+      {notification.show && <NotificationPopup message={notification.message} type={notification.type} />} {/* Prikaz notifikacije */}
 
       <main>
         <section className="who-are-we">
