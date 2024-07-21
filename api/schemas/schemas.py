@@ -40,7 +40,6 @@ class UserCreate(BaseModel):
     username: str
     email: str
     password: str
-    role: str  # 'administrator', 'owner', 'courier', 'customer'
 
 class UserLogin(BaseModel):
     username: str

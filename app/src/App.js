@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { FaUser, FaGlobe, FaSun, FaMoon } from 'react-icons/fa';
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import LoginPopup from './components/Auth/LoginPopup';
 import RegisterPopup from './components/Auth/RegisterPopup';
 import RequestPopup from './components/RequestPopup/RequestPopup';
-import NotificationPopup from './components/NotificationPopup/NotificationPopup'; // Importujte novu komponentu
 import './App.css';
 
 function App() {
@@ -14,7 +14,6 @@ function App() {
   const [isRegisterOpen, setIsRegisterOpen] = useState(false);
   const [isRequestOpen, setIsRequestOpen] = useState(false);
   const [formType, setFormType] = useState('');
-  const [notification, setNotification] = useState({ show: false, message: '', type: '' });
 
   const toggleFaq = (index) => {
     if (isAnimating) return;
@@ -72,97 +71,101 @@ function App() {
     setIsRequestOpen(false);
   };
 
-  const showNotification = (message, type) => {
-    setNotification({ show: true, message, type });
-    setTimeout(() => {
-      setNotification({ show: false, message: '', type: '' });
-    }, 3000);
-  };
-
   return (
-    <div className={`App ${darkMode ? 'dark' : ''}`}>
-      <header className="top-bar">
-        <div className="logo-container">
-          <img src="./images/logo.png" alt="Food Express Logo" className="logo" />
-          <span className="logo-text">Food Express</span>
-        </div>
-        <div className="top-bar-icons">
-          <FaUser className="icon" onClick={openLoginModal} />
-          <div className="theme-icon" onClick={toggleDarkMode}>
-            {darkMode ? <FaSun className="icon" /> : <FaMoon className="icon" />}
+    <Router>
+      <div className={`App ${darkMode ? 'dark' : ''}`}>
+        <header className="top-bar">
+          <div className="logo-container">
+            <img src="./images/logo.png" alt="Food Express Logo" className="logo" />
+            <span className="logo-text">Food Express</span>
           </div>
-          <FaGlobe className="icon" />
-        </div>
-      </header>
-
-      {isLoginOpen && <LoginPopup closeLoginModal={closeLoginModal} switchToRegister={openRegisterModal} />}
-      {isRegisterOpen && <RegisterPopup closeRegisterModal={closeRegisterModal} switchToLogin={openLoginModal} />}
-      {isRequestOpen && <RequestPopup closeModal={closeRequestModal} formType={formType} showNotification={showNotification} />}
-
-      {notification.show && <NotificationPopup message={notification.message} type={notification.type} />} {/* Prikaz notifikacije */}
-
-      <main>
-        <section className="who-are-we">
-          <h2>Who are we?</h2>
-          <div className="content-row">
-            <img src="https://placehold.co/600x600" alt="About Us" className="content-img" />
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam.</p>
-          </div>
-        </section>
-
-        <section className="cities">
-          <h2>In which cities we operate?</h2>
-          <div className="content-row normal">
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam.</p>
-            <img src="https://placehold.co/600x600" alt="Cities" className="content-img" />
-          </div>
-        </section>
-
-        <section className="partners">
-          <h2>Our partners</h2>
-          <div className="partner-logos">
-            <img src="https://placehold.co/600x600" alt="Partner 1" className="partner-logo" />
-            <img src="https://placehold.co/600x600" alt="Partner 2" className="partner-logo" />
-            <img src="https://placehold.co/600x600" alt="Partner 3" className="partner-logo" />
-            <img src="https://placehold.co/600x600" alt="Partner 4" className="partner-logo" />
-          </div>
-        </section>
-
-        <section className="join-us">
-          <h2>Become part of Food Express</h2>
-          <div className="join-us-cards">
-            <div className="join-card" onClick={() => openRequestModal('partner')}>
-              <img src="https://placehold.co/400x400" alt="Become a partner" className="join-img" />
-              <button>Become a partner</button>
+          <div className="top-bar-icons">
+            <FaUser className="icon" onClick={openLoginModal} />
+            <div className="theme-icon" onClick={toggleDarkMode}>
+              {darkMode ? <FaSun className="icon" /> : <FaMoon className="icon" />}
             </div>
-            <div className="join-card" onClick={() => openRequestModal('deliver')}>
-              <img src="https://placehold.co/400x400" alt="Deliver with us" className="join-img" />
-              <button>Deliver with us</button>
-            </div>
-            <div className="join-card" onClick={() => openRequestModal('join')}>
-              <img src="https://placehold.co/400x400" alt="Join the team" className="join-img" />
-              <button>Join the team</button>
-            </div>
+            <FaGlobe className="icon" />
           </div>
-        </section>
+        </header>
 
-        <section className="faq">
-          <h2>FAQ</h2>
-          {[...Array(3)].map((_, index) => (
-            <div key={index} className={`faq-item ${faqOpen === index ? 'active' : ''}`} onClick={() => toggleFaq(index)}>
-              <h3>Question {index + 1}</h3>
-              <div className={`faq-answer ${faqOpen === index ? 'open' : ''}`}>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam.</p>
-              </div>
-            </div>
-          ))}
-        </section>
-      </main>
+        {isLoginOpen && <LoginPopup closeLoginModal={closeLoginModal} switchToRegister={openRegisterModal} />}
+        {isRegisterOpen && <RegisterPopup closeRegisterModal={closeRegisterModal} switchToLogin={openLoginModal} />}
+        {isRequestOpen && <RequestPopup closeModal={closeRequestModal} formType={formType} />}
 
-      <footer>
-        <p>© 2024 Food Express. All rights reserved.</p>
-      </footer>
-    </div>
+        <main>
+          <Routes>
+            <Route path="/" element={
+              <>
+                <section className="who-are-we">
+                  <h2>Who are we?</h2>
+                  <div className="content-row">
+                    <img src="https://placehold.co/600x600" alt="About Us" className="content-img" />
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam.</p>
+                  </div>
+                </section>
+
+                <section className="cities">
+                  <h2>In which cities we operate?</h2>
+                  <div className="content-row normal">
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam.</p>
+                    <img src="https://placehold.co/600x600" alt="Cities" className="content-img" />
+                  </div>
+                </section>
+
+                <section className="partners">
+                  <h2>Our partners</h2>
+                  <div className="partner-logos">
+                    <img src="https://placehold.co/600x600" alt="Partner 1" className="partner-logo" />
+                    <img src="https://placehold.co/600x600" alt="Partner 2" className="partner-logo" />
+                    <img src="https://placehold.co/600x600" alt="Partner 3" className="partner-logo" />
+                    <img src="https://placehold.co/600x600" alt="Partner 4" className="partner-logo" />
+                  </div>
+                </section>
+
+                <section className="join-us">
+                  <h2>Become part of Food Express</h2>
+                  <div className="join-us-cards">
+                    <div className="join-card" onClick={() => openRequestModal('partner')}>
+                      <img src="https://placehold.co/400x400" alt="Become a partner" className="join-img" />
+                      <button>Become a partner</button>
+                    </div>
+                    <div className="join-card" onClick={() => openRequestModal('deliver')}>
+                      <img src="https://placehold.co/400x400" alt="Deliver with us" className="join-img" />
+                      <button>Deliver with us</button>
+                    </div>
+                    <div className="join-card" onClick={() => openRequestModal('join')}>
+                      <img src="https://placehold.co/400x400" alt="Join the team" className="join-img" />
+                      <button>Join the team</button>
+                    </div>
+                  </div>
+                </section>
+
+                <section className="faq">
+                  <h2>FAQ</h2>
+                  {[...Array(3)].map((_, index) => (
+                    <div key={index} className={`faq-item ${faqOpen === index ? 'active' : ''}`} onClick={() => toggleFaq(index)}>
+                      <h3>Question {index + 1}</h3>
+                      <div className={`faq-answer ${faqOpen === index ? 'open' : ''}`}>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam.</p>
+                      </div>
+                    </div>
+                  ))}
+                </section>
+              </>
+            } />
+            <Route path="/customer" element={<div><h2>Customer Dashboard</h2><p>Welcome to the customer dashboard!</p></div>} />
+            <Route path="/owner" element={<div><h2>Owner Dashboard</h2><p>Welcome to the owner dashboard!</p></div>} />
+            <Route path="/courier" element={<div><h2>Courier Dashboard</h2><p>Welcome to the courier dashboard!</p></div>} />
+            <Route path="/admin" element={<div><h2>Admin Dashboard</h2><p>Welcome to the admin dashboard!</p></div>} />
+            <Route path="*" element={<Navigate to="/" />} />
+          </Routes>
+        </main>
+
+        <footer>
+          <p>© 2024 Food Express. All rights reserved.</p>
+        </footer>
+      </div>
+    </Router>
   );
 }
 
