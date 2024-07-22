@@ -63,7 +63,11 @@ function PopupForm({ type, closeModal, switchToOtherForm, showNotification, hand
         }
         closeModal();
       } else {
-        response = await axios.post('http://localhost:8000/requests/', formData);
+        const requestData = {
+          ...formData,
+          request_type: type === 'partner' ? 'partner' : type === 'deliver' ? 'driver' : 'team'
+        };
+        response = await axios.post('http://localhost:8000/requests/', requestData);
         if (response.status === 200 || response.status === 201) {
           showNotification('Request submitted successfully', 'success');
         } else {
@@ -88,7 +92,7 @@ function PopupForm({ type, closeModal, switchToOtherForm, showNotification, hand
         { label: 'Password', name: 'password', type: 'password' }
       ];
       title = 'Login';
-      switchText = "Don't have an account? Register";
+      switchText = "Don't have an account? <span class='switch-link'>Register</span>";
       break;
 
     case 'register':
@@ -98,7 +102,7 @@ function PopupForm({ type, closeModal, switchToOtherForm, showNotification, hand
         { label: 'Password', name: 'password', type: 'password' }
       ];
       title = 'Register';
-      switchText = "Already have an account? Login";
+      switchText = "Already have an account? <span class='switch-link'>Login</span>";
       break;
 
     case 'partner':
@@ -167,7 +171,7 @@ function PopupForm({ type, closeModal, switchToOtherForm, showNotification, hand
           ))}
           <button type="submit">Submit</button>
         </form>
-        {switchText && <p className="switch-text" onClick={() => switchToOtherForm(type === 'login' ? 'register' : 'login')}>{switchText}</p>}
+        {switchText && <p className="switch-text" onClick={() => switchToOtherForm(type === 'login' ? 'register' : 'login')} dangerouslySetInnerHTML={{ __html: switchText }}></p>}
       </div>
     </div>
   );

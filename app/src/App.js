@@ -7,6 +7,7 @@ import Customer from './components/Customer/Customer';
 import Owner from './components/Owner/Owner';
 import Courier from './components/Courier/Courier';
 import Admin from './components/Admin/Admin';
+import GoTop from './components/GoTop/GoTop';
 import './App.css';
 
 function App() {
@@ -53,6 +54,10 @@ function App() {
     setIsPopupOpen(false);
   };
 
+  const switchToOtherForm = (type) => {
+    setFormType(type);
+  };
+
   const showNotification = (message, type) => {
     setNotification({ message, type });
     setTimeout(() => setNotification({ message: '', type: '' }), 3000);
@@ -90,6 +95,7 @@ function App() {
         <PopupForm
           type={formType}
           closeModal={closePopupModal}
+          switchToOtherForm={switchToOtherForm}
           showNotification={showNotification}
           handleLogin={handleLogin}
         />
@@ -161,6 +167,7 @@ function App() {
         <Route path="/courier" element={<Courier />} />
         <Route path="/admin" element={<Admin />} />
       </Routes>
+      <GoTop />
       <footer>
         <p>© 2024 Food Express. All rights reserved.</p>
       </footer>
