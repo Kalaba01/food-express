@@ -20,7 +20,7 @@
     border: 1px solid var(--border-color);
     border-radius: 8px;
     width: 80%;
-    max-width: 500px;
+    max-width: 400px;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
     transition: all 0.3s ease-in-out;
     display: flex;
@@ -46,8 +46,20 @@
     cursor: pointer;
 }
 
+.switch-text {
+    color: var(--text-color);
+    font-size: 1em;
+    cursor: pointer;
+    text-align: center;
+    margin-top: 10px;
+}
+
+.switch-text:hover {
+    color: var(--secondary-color);
+}
+
 h2 {
-    margin-top: 20px;
+    margin-top: 40px;
     margin-bottom: 20px;
 }
 
@@ -67,11 +79,6 @@ textarea {
     margin-bottom: 15px;
     border: 1px solid var(--border-color);
     border-radius: 4px;
-}
-
-textarea {
-    resize: none;
-    height: 120px;
 }
 
 button {
