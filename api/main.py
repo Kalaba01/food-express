@@ -1,12 +1,13 @@
 from fastapi import FastAPI, Depends, HTTPException
-from starlette.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 from database.database import SessionLocal, engine, get_db
 from models.models import Base, User, Request, RequestStatus
-from schemas.schemas import UserCreate, UserLogin, RequestCreate
-from utils.utils import hash_password, verify_password
+from schemas.schemas import UserCreate, RequestCreate
 from auth.auth import create_access_token, get_current_user
+from utils.password_utils import hash_password, verify_password
+from utils.email_utils import send_email
 from fastapi.security import OAuth2PasswordRequestForm
+from fastapi.middleware.cors import CORSMiddleware
 
 def start_application():
     app = FastAPI() 
@@ -28,19 +29,20 @@ Base.metadata.create_all(bind=engine)
 
 @app.post("/register")
 def register_user(user: UserCreate, db: Session = Depends(get_db)):
-    db_user_by_email = db.query(User).filter(User.email == user.email).first()
-    if db_user_by_email:
+    db_user = db.query(User).filter(User.email == user.email).first()
+    if db_user:
         raise HTTPException(status_code=400, detail="Email already registered")
-    
-    db_user_by_username = db.query(User).filter(User.username == user.username).first()
-    if db_user_by_username:
-        raise HTTPException(status_code=400, detail="Username already registered")
-    
     hashed_password = hash_password(user.password)
     new_user = User(username=user.username, email=user.email, hashed_password=hashed_password, role='customer')
     db.add(new_user)
     db.commit()
     db.refresh(new_user)
+    
+    # Slanje welcome emaila nakon uspješne registracije
+    subject = "Welcome to Food Express"
+    body = f"Hi {new_user.username},\n\nWelcome to Food Express! We're excited to have you on board."
+    send_email(new_user.email, subject, body)
+    
     return new_user
 
 @app.post("/token")
@@ -57,7 +59,7 @@ def login_user(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = D
 def read_users_me(current_user: User = Depends(get_current_user)):
     return current_user
 
-# Rute za upravljanje zahtevima (partner, driver, team)
+# Rute za upravljanje zahtjevima (partner, driver, team)
 @app.post("/requests/")
 def create_request(request: RequestCreate, db: Session = Depends(get_db)):
     new_request = Request(**request.dict())
