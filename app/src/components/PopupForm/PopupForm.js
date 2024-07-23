@@ -1,12 +1,18 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import './PopupForm.css';
+import Captcha from '../Captcha/Captcha';
 import { useNavigate } from 'react-router-dom';
 
 function PopupForm({ type, closeModal, switchToOtherForm, showNotification, handleLogin }) {
   const [formData, setFormData] = useState({});
+  const [captchaVerified, setCaptchaVerified] = useState(false); // State za verifikaciju Captcha
   const [error, setError] = useState('');
   const navigate = useNavigate();
+
+  const handleCaptchaVerify = (verified) => {
+    setCaptchaVerified(verified);
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -52,6 +58,10 @@ function PopupForm({ type, closeModal, switchToOtherForm, showNotification, hand
         }
 
       } else if (type === 'register') {
+        if (!captchaVerified) {
+          showNotification('Please complete the CAPTCHA', 'error');
+          return;
+        }
         response = await axios.post('http://localhost:8000/register', {
           ...formData,
           role: 'customer'
@@ -63,6 +73,10 @@ function PopupForm({ type, closeModal, switchToOtherForm, showNotification, hand
         }
         closeModal();
       } else {
+        if (!captchaVerified) {
+          showNotification('Please complete the CAPTCHA', 'error');
+          return;
+        }
         const requestData = {
           ...formData,
           request_type: type === 'partner' ? 'partner' : type === 'deliver' ? 'driver' : 'team'
@@ -169,7 +183,12 @@ function PopupForm({ type, closeModal, switchToOtherForm, showNotification, hand
               )}
             </React.Fragment>
           ))}
-          <button type="submit">Submit</button>
+          {(type === 'register' || type === 'partner' || type === 'deliver' || type === 'join') && (
+            <Captcha onVerify={handleCaptchaVerify} />
+          )}
+          <button type="submit" disabled={(type === 'register' || type === 'partner' || type === 'deliver' || type === 'join') && !captchaVerified}>
+            Submit
+          </button>
         </form>
         {switchText && <p className="switch-text" onClick={() => switchToOtherForm(type === 'login' ? 'register' : 'login')} dangerouslySetInnerHTML={{ __html: switchText }}></p>}
       </div>
