@@ -1,0 +1,12 @@
+.footer {
+    background-color: var(--footer-background);
+    color: #fff;
+    padding: 20px 10px;
+    border-top: 2px solid var(--border-color);
+    box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+body.dark-mode .footer {
+    border-top: 2px solid var(--border-color-dark);
+}

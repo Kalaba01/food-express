@@ -8,6 +8,7 @@ import Owner from './components/Owner/Owner';
 import Courier from './components/Courier/Courier';
 import Admin from './components/Admin/Admin';
 import GoTop from './components/GoTop/GoTop';
+import Footer from './components/Footer/Footer';
 import './App.css';
 
 function App() {
@@ -168,9 +169,7 @@ function App() {
         <Route path="/admin" element={<Admin />} />
       </Routes>
       <GoTop />
-      <footer>
-        <p>© 2024 Food Express. All rights reserved.</p>
-      </footer>
+      <Footer />
     </div>
   );
 }
