@@ -10,15 +10,15 @@ from fastapi.security import OAuth2PasswordRequestForm
 from fastapi.middleware.cors import CORSMiddleware
 
 def start_application():
-    app = FastAPI() 
+    app = FastAPI()
     origins = ["*"]
 
     app.add_middleware(
         CORSMiddleware,
-        allow_origins = origins,
-        allow_credentials = True,
-        allow_methods = ["*"],
-        allow_headers = ["*"]
+        allow_origins=origins,
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"]
     )
     return app
 
@@ -29,16 +29,24 @@ Base.metadata.create_all(bind=engine)
 
 @app.post("/register")
 def register_user(user: UserCreate, db: Session = Depends(get_db)):
+    # Provjera korisničkog imena
+    db_user = db.query(User).filter(User.username == user.username).first()
+    if db_user:
+        raise HTTPException(status_code=400, detail="Username already registered")
+
+    # Provjera emaila
     db_user = db.query(User).filter(User.email == user.email).first()
     if db_user:
         raise HTTPException(status_code=400, detail="Email already registered")
+
+    # Kreiranje novog korisnika
     hashed_password = hash_password(user.password)
     new_user = User(username=user.username, email=user.email, hashed_password=hashed_password, role='customer')
     db.add(new_user)
     db.commit()
     db.refresh(new_user)
     
-    # Slanje welcome emaila nakon uspješne registracije
+    # Slanje welcome emaila
     subject = "Welcome to Food Express"
     body = f"Hi {new_user.username},\n\nWelcome to Food Express! We're excited to have you on board."
     send_email(new_user.email, subject, body)
@@ -59,41 +67,13 @@ def login_user(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = D
 def read_users_me(current_user: User = Depends(get_current_user)):
     return current_user
 
-# Rute za upravljanje zahtjevima (partner, driver, team)
-@app.post("/requests/")
-def create_request(request: RequestCreate, db: Session = Depends(get_db)):
-    new_request = Request(**request.dict())
-    db.add(new_request)
-    db.commit()
-    db.refresh(new_request)
-    return new_request
+# Rute za proveru korisničkog imena i email adrese
+@app.get("/check-username/{username}")
+def check_username(username: str, db: Session = Depends(get_db)):
+    user = db.query(User).filter(User.username == username).first()
+    return {"exists": bool(user)}
 
-@app.get("/requests/")
-def get_requests(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
-    return db.query(Request).offset(skip).limit(limit).all()
-
-@app.get("/requests/{request_id}")
-def get_request(request_id: int, db: Session = Depends(get_db)):
-    db_request = db.query(Request).filter(Request.id == request_id).first()
-    if db_request is None:
-        raise HTTPException(status_code=404, detail="Request not found")
-    return db_request
-
-@app.put("/requests/{request_id}/status")
-def update_request_status(request_id: int, status: RequestStatus, db: Session = Depends(get_db)):
-    db_request = db.query(Request).filter(Request.id == request_id).first()
-    if db_request is None:
-        raise HTTPException(status_code=404, detail="Request not found")
-    db_request.status = status
-    db.commit()
-    db.refresh(db_request)
-    return db_request
-
-@app.delete("/requests/{request_id}")
-def delete_request(request_id: int, db: Session = Depends(get_db)):
-    db_request = db.query(Request).filter(Request.id == request_id).first()
-    if db_request is None:
-        raise HTTPException(status_code=404, detail="Request not found")
-    db.delete(db_request)
-    db.commit()
-    return db_request
+@app.get("/check-email/{email}")
+def check_email(email: str, db: Session = Depends(get_db)):
+    user = db.query(User).filter(User.email == email).first()
+    return {"exists": bool(user)}

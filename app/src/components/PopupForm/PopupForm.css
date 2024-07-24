@@ -73,16 +73,32 @@ form {
     width: 100%;
 }
 
-label {
-    margin: 10px 0 5px;
+.form-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 15px;
+}
+
+.input-wrapper {
+    display: flex;
+    align-items: center;
 }
 
 input,
 textarea {
+    flex: 1;
     padding: 10px;
-    margin-bottom: 15px;
     border: 1px solid var(--border-color);
     border-radius: 4px;
+    max-width: 96%;
+    box-sizing: border-box;
+}
+
+.validation-icon {
+    position: absolute;
+    right: 5px;
+    font-size: 1.5em;
+    cursor: pointer;
 }
 
 button {
@@ -99,4 +115,10 @@ button {
 button:hover {
     background-color: var(--secondary-color-dark);
     transform: translateY(-3px);
+}
+
+.error {
+    color: red;
+    font-size: 0.875em;
+    margin-top: 5px;
 }
