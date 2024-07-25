@@ -1,8 +1,6 @@
 import React from 'react';
+import { LoginRegister, Theme, Language } from "../index";
 import './Header.css';
-import LoginRegister from '../LoginRegister/LoginRegister';
-import Theme from '../Theme/Theme';
-import Language from '../Language/Language';
 
 function Header({ darkMode, toggleDarkMode, openPopupModal }) {
   return (

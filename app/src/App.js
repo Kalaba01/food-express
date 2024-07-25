@@ -1,14 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, Routes, Route } from 'react-router-dom';
-import PopupForm from './components/PopupForm/PopupForm';
-import NotificationPopup from './components/NotificationPopup/NotificationPopup';
-import Customer from './components/Customer/Customer';
-import Owner from './components/Owner/Owner';
-import Courier from './components/Courier/Courier';
-import Admin from './components/Admin/Admin';
-import Header from './components/Header/Header';
-import GoTop from './components/GoTop/GoTop';
-import Footer from './components/Footer/Footer';
+import { FormPopup, NotificationPopup, Customer, Owner, Courier, Admin, Header, GoTop, Footer } from './components/index';
 import './App.css';
 
 function App() {
@@ -85,7 +77,7 @@ function App() {
       />
 
       {isPopupOpen && (
-        <PopupForm
+        <FormPopup
           type={formType}
           closeModal={closePopupModal}
           switchToOtherForm={switchToOtherForm}

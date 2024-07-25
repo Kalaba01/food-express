@@ -1,6 +1,6 @@
 import React from 'react';
 import ReCAPTCHA from 'react-google-recaptcha';
-import './Captcha.css'; // Importujemo Captcha.css
+import './Captcha.css';
 
 function Captcha({ onVerify }) {
   const handleCaptchaVerify = (token) => {

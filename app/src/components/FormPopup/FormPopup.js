@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import axios from 'axios';
-import './PopupForm.css';
-import Captcha from '../Captcha/Captcha';
-import { useNavigate } from 'react-router-dom';
 import { FaCheckCircle, FaTimesCircle } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import Captcha from '../Captcha/Captcha';
+import './FormPopup.css';
 
-function PopupForm({ type, closeModal, switchToOtherForm, showNotification, handleLogin }) {
+function FormPopup({ type, closeModal, switchToOtherForm, showNotification, handleLogin }) {
   const [formData, setFormData] = useState({
     username: '',
     email: '',
@@ -312,4 +312,4 @@ function PopupForm({ type, closeModal, switchToOtherForm, showNotification, hand
   );
 }
 
-export default PopupForm;
+export default FormPopup;
