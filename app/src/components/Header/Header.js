@@ -1,6 +1,8 @@
 import React from 'react';
-import { FaUser, FaGlobe, FaSun, FaMoon } from 'react-icons/fa';
 import './Header.css';
+import LoginRegister from '../LoginRegister/LoginRegister';
+import Theme from '../Theme/Theme';
+import Language from '../Language/Language';
 
 function Header({ darkMode, toggleDarkMode, openPopupModal }) {
   return (
@@ -10,11 +12,9 @@ function Header({ darkMode, toggleDarkMode, openPopupModal }) {
         <span className="logo-text">Food Express</span>
       </div>
       <div className="top-bar-icons">
-        <FaUser className="icon" onClick={() => openPopupModal('login')} />
-        <div className="theme-icon" onClick={toggleDarkMode}>
-          {darkMode ? <FaSun className="icon" /> : <FaMoon className="icon" />}
-        </div>
-        <FaGlobe className="icon" />
+        <LoginRegister openPopupModal={openPopupModal} />
+        <Theme darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
+        <Language />
       </div>
     </header>
   );
