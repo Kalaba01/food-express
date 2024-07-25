@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { useNavigate, Routes, Route } from 'react-router-dom';
-import { FaUser, FaGlobe, FaSun, FaMoon } from 'react-icons/fa';
 import PopupForm from './components/PopupForm/PopupForm';
 import NotificationPopup from './components/NotificationPopup/NotificationPopup';
 import Customer from './components/Customer/Customer';
 import Owner from './components/Owner/Owner';
 import Courier from './components/Courier/Courier';
 import Admin from './components/Admin/Admin';
+import Header from './components/Header/Header';
 import GoTop from './components/GoTop/GoTop';
 import Footer from './components/Footer/Footer';
 import './App.css';
@@ -78,19 +78,11 @@ function App() {
 
   return (
     <div className={`App ${darkMode ? 'dark' : ''}`}>
-      <header className="top-bar">
-        <div className="logo-container">
-          <img src="./images/logo.png" alt="Food Express Logo" className="logo" />
-          <span className="logo-text">Food Express</span>
-        </div>
-        <div className="top-bar-icons">
-          <FaUser className="icon" onClick={() => openPopupModal('login')} />
-          <div className="theme-icon" onClick={toggleDarkMode}>
-            {darkMode ? <FaSun className="icon" /> : <FaMoon className="icon" />}
-          </div>
-          <FaGlobe className="icon" />
-        </div>
-      </header>
+      <Header 
+        darkMode={darkMode}
+        toggleDarkMode={toggleDarkMode}
+        openPopupModal={openPopupModal}
+      />
 
       {isPopupOpen && (
         <PopupForm
