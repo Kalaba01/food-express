@@ -1,6 +1,5 @@
 import React from 'react';
 import { FaSun, FaMoon } from 'react-icons/fa';
-import './Theme.css';
 
 function Theme({ darkMode, toggleDarkMode }) {
   return (

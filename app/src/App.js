@@ -1,37 +1,15 @@
 import React, { useState } from 'react';
 import { useNavigate, Routes, Route } from 'react-router-dom';
-import { FormPopup, NotificationPopup, Customer, Owner, Courier, Admin, Header, GoTop, Footer } from './components/index';
+import { FormPopup, NotificationPopup, Customer, Owner, Courier, Admin, LandingPage } from './components/index';
 import './App.css';
 
 function App() {
   const navigate = useNavigate();
 
   const [darkMode, setDarkMode] = useState(false);
-  const [faqOpen, setFaqOpen] = useState(null);
-  const [isAnimating, setIsAnimating] = useState(false);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [formType, setFormType] = useState('');
   const [notification, setNotification] = useState({ message: '', type: '' });
-
-  const toggleFaq = (index) => {
-    if (isAnimating) return;
-    setIsAnimating(true);
-    
-    if (faqOpen === index) {
-      setFaqOpen(null);
-      setTimeout(() => setIsAnimating(false), 300);
-    } else {
-      if (faqOpen !== null) {
-        setTimeout(() => {
-          setFaqOpen(index);
-          setIsAnimating(false);
-        }, 300);
-      } else {
-        setFaqOpen(index);
-        setTimeout(() => setIsAnimating(false), 300);
-      }
-    }
-  };
 
   const toggleDarkMode = () => {
     setDarkMode(!darkMode);
@@ -70,12 +48,6 @@ function App() {
 
   return (
     <div className={`App ${darkMode ? 'dark' : ''}`}>
-      <Header 
-        darkMode={darkMode}
-        toggleDarkMode={toggleDarkMode}
-        openPopupModal={openPopupModal}
-      />
-
       {isPopupOpen && (
         <FormPopup
           type={formType}
@@ -89,71 +61,17 @@ function App() {
 
       <Routes>
         <Route path="/" element={
-          <main>
-            <section className="who-are-we">
-              <h2>Who are we?</h2>
-              <div className="content-row">
-                <img src="https://placehold.co/600x600" alt="About Us" className="content-img" />
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam.</p>
-              </div>
-            </section>
-
-            <section className="cities">
-              <h2>In which cities we operate?</h2>
-              <div className="content-row normal">
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam.</p>
-                <img src="https://placehold.co/600x600" alt="Cities" className="content-img" />
-              </div>
-            </section>
-
-            <section className="partners">
-              <h2>Our partners</h2>
-              <div className="partner-logos">
-                <img src="https://placehold.co/600x600" alt="Partner 1" className="partner-logo" />
-                <img src="https://placehold.co/600x600" alt="Partner 2" className="partner-logo" />
-                <img src="https://placehold.co/600x600" alt="Partner 3" className="partner-logo" />
-                <img src="https://placehold.co/600x600" alt="Partner 4" className="partner-logo" />
-              </div>
-            </section>
-
-            <section className="join-us">
-              <h2>Become part of Food Express</h2>
-              <div className="join-us-cards">
-                <div className="join-card" onClick={() => openPopupModal('partner')}>
-                  <img src="https://placehold.co/400x400" alt="Become a partner" className="join-img" />
-                  <button>Become a partner</button>
-                </div>
-                <div className="join-card" onClick={() => openPopupModal('deliver')}>
-                  <img src="https://placehold.co/400x400" alt="Deliver with us" className="join-img" />
-                  <button>Deliver with us</button>
-                </div>
-                <div className="join-card" onClick={() => openPopupModal('join')}>
-                  <img src="https://placehold.co/400x400" alt="Join the team" className="join-img" />
-                  <button>Join the team</button>
-                </div>
-              </div>
-            </section>
-
-            <section className="faq">
-              <h2>FAQ</h2>
-              {[...Array(3)].map((_, index) => (
-                <div key={index} className={`faq-item ${faqOpen === index ? 'active' : ''}`} onClick={() => toggleFaq(index)}>
-                  <h3>Question {index + 1}</h3>
-                  <div className={`faq-answer ${faqOpen === index ? 'open' : ''}`}>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam.</p>
-                  </div>
-                </div>
-              ))}
-            </section>
-          </main>
+          <LandingPage 
+            openPopupModal={openPopupModal}
+            darkMode={darkMode}
+            toggleDarkMode={toggleDarkMode}
+          />
         } />
         <Route path="/customer" element={<Customer />} />
         <Route path="/owner" element={<Owner />} />
         <Route path="/courier" element={<Courier />} />
         <Route path="/admin" element={<Admin />} />
       </Routes>
-      <GoTop />
-      <Footer />
     </div>
   );
 }

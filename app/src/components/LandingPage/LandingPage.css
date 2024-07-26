@@ -1,0 +1,157 @@
+body.dark-mode {
+    --background-color: var(--background-color-dark);
+    --text-color: var(--text-color-dark);
+    --border-color: var(--border-color-dark);
+}
+
+body {
+    --background-color: var(--background-color-light);
+    --text-color: var(--text-color-light);
+    --border-color: var(--border-color-light);
+    background-color: var(--background-color);
+    color: var(--text-color);
+    margin: 0;
+    padding: 0;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+section {
+    padding: 40px 20px;
+}
+
+.content-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.content-row.reverse {
+    flex-direction: row-reverse;
+}
+
+.content-row.normal {
+    flex-direction: row;
+}
+
+.content-img {
+    width: 200px;
+    height: auto;
+    margin: 0 20px;
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    transition: border-color 0.3s;
+}
+
+.partner-logos {
+    display: flex;
+    justify-content: center;
+}
+
+.partner-logo {
+    width: 200px;
+    height: auto;
+    margin: 0 10px;
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    transition: border-color 0.3s;
+}
+
+.join-us-cards {
+    display: flex;
+    justify-content: space-around;
+    gap: 20px;
+}
+
+.join-card {
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border: 2px solid gainsboro;
+    transition: transform 0.2s, box-shadow 0.2s;
+    width: 200px;
+    padding: 20px;
+}
+
+.join-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+.join-img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+}
+
+button {
+    background-color: #000;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 1em;
+    margin-top: 10px;
+    border-radius: 4px;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+button:hover {
+    background-color: var(--secondary-color);
+    transform: translateY(-3px);
+}
+
+.faq-item {
+    cursor: pointer;
+    margin: 20px 0;
+    padding: 10px 0;
+    transition: all 0.3s ease-in-out;
+}
+
+.faq-item h3 {
+    position: relative;
+    display: inline-block;
+    padding-bottom: 5px;
+    transition: color 0.3s;
+}
+
+.faq-item h3::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 2px;
+    bottom: 0;
+    left: 0;
+    background-color: var(--secondary-color-light);
+    visibility: hidden;
+    transform: scaleX(0);
+    transition: all 0.3s ease-in-out;
+}
+
+body.dark-mode .faq-item h3::after {
+    background-color: var(--secondary-color);
+}
+
+.faq-item:hover h3::after,
+.faq-item.active h3::after {
+    visibility: visible;
+    transform: scaleX(1);
+}
+
+.faq-item.active h3 {
+    border-bottom: 2px solid var(--secondary-color-light);
+}
+
+body.dark-mode .faq-item.active h3 {
+    border-bottom: 2px solid var(--secondary-color);
+}
+
+.faq-answer {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-in-out, padding 0.3s ease-in-out;
+}
+
+.faq-answer.open {
+    max-height: 200px;
+    padding: 10px 0;
+}

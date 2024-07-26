@@ -11,5 +11,6 @@ import LoginRegister from "./LoginRegister/LoginRegister";
 import NotificationPopup from "./NotificationPopup/NotificationPopup";
 import Owner from "./Owner/Owner";
 import Theme from "./Theme/Theme";
+import LandingPage from "./LandingPage/LandingPage";
 
-export  { Admin, Captcha, Courier, Customer, Footer, FormPopup, GoTop, Header, Language, LoginRegister, NotificationPopup, Owner, Theme }
+export  { Admin, Captcha, Courier, Customer, Footer, FormPopup, GoTop, Header, Language, LoginRegister, NotificationPopup, Owner, Theme, LandingPage }
