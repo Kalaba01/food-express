@@ -240,6 +240,7 @@ class Bank(Base):
     id = Column(Integer, primary_key=True, index=True)
     user_id = Column(Integer, ForeignKey("users.id"))
     balance = Column(Float, nullable=False)
+    account_number = Column(String, unique=True, nullable=False)
 
     user = relationship("User", back_populates="bank_account")
 
