@@ -60,8 +60,16 @@ def login_user(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = D
         raise HTTPException(status_code=400, detail="Invalid username or password")
     if not verify_password(form_data.password, db_user.hashed_password):
         raise HTTPException(status_code=400, detail="Invalid username or password")
-    access_token = create_access_token(data={"sub": db_user.username})
+    
+    user_data = {
+        "sub": db_user.username,
+        "id": db_user.id,
+        "email": db_user.email,
+        "role": db_user.role
+    }
+    access_token = create_access_token(data=user_data)
     return {"access_token": access_token, "token_type": "bearer"}
+
 
 @app.get("/users/me")
 def read_users_me(current_user: User = Depends(get_current_user)):

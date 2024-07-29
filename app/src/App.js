@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
-import { useNavigate, Routes, Route } from 'react-router-dom';
+import { Routes, Route, useNavigate } from 'react-router-dom';
 import { FormPopup, NotificationPopup, Customer, Owner, Courier, Admin, LandingPage } from './components/index';
+import ProtectedRoute from './components/ProtectedRoute';
 import './App.css';
 
 function App() {
-  const navigate = useNavigate();
-
   const [darkMode, setDarkMode] = useState(false);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [formType, setFormType] = useState('');
   const [notification, setNotification] = useState({ message: '', type: '' });
+  const navigate = useNavigate();
 
   const toggleDarkMode = () => {
     setDarkMode(!darkMode);
@@ -34,7 +34,9 @@ function App() {
     setTimeout(() => setNotification({ message: '', type: '' }), 3000);
   };
 
-  const handleLogin = (userRole) => {
+  const handleLogin = (userRole, token) => {
+    localStorage.setItem('token', token);
+
     if (userRole === 'customer') {
       navigate('/customer');
     } else if (userRole === 'owner') {
@@ -67,10 +69,11 @@ function App() {
             toggleDarkMode={toggleDarkMode}
           />
         } />
-        <Route path="/customer" element={<Customer />} />
-        <Route path="/owner" element={<Owner />} />
-        <Route path="/courier" element={<Courier />} />
-        <Route path="/admin" element={<Admin />} />
+
+        <Route path="/customer" element={<ProtectedRoute allowedRoles={['customer']}><Customer /></ProtectedRoute>} />
+        <Route path="/owner" element={<ProtectedRoute allowedRoles={['owner']}><Owner /></ProtectedRoute>} />
+        <Route path="/courier" element={<ProtectedRoute allowedRoles={['courier']}><Courier /></ProtectedRoute>} />
+        <Route path="/admin" element={<ProtectedRoute allowedRoles={['administrator']}><Admin /></ProtectedRoute>} />
       </Routes>
     </div>
   );
