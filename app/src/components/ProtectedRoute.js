@@ -12,14 +12,14 @@ const ProtectedRoute = ({ allowedRoles, children }) => {
   try {
     const decodedToken = jwtDecode(token);
     if (!allowedRoles.includes(decodedToken.role)) {
-      return <Navigate to="/" replace />;
+      return <Navigate to="/unauthorized" replace />;
     }
+
+    return children;
   } catch (error) {
     console.error('Invalid token:', error);
     return <Navigate to="/" replace />;
   }
-
-  return children;
 };
 
 export default ProtectedRoute;
