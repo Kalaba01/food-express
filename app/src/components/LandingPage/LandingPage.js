@@ -1,10 +1,37 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect  } from 'react';
 import { Footer, Header } from '../index';
+import { useNavigate } from 'react-router-dom';
+import { jwtDecode } from 'jwt-decode';
 import './LandingPage.css';
 
 function LandingPage({ openPopupModal, darkMode, toggleDarkMode }) {
   const [faqOpen, setFaqOpen] = useState(null);
   const [isAnimating, setIsAnimating] = useState(false);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      try {
+        const decodedToken = jwtDecode(token);
+        const currentTime = Date.now() / 1000;
+
+        if (decodedToken.exp > currentTime) {
+          if (decodedToken.role === 'customer') {
+            navigate('/customer');
+          } else if (decodedToken.role === 'owner') {
+            navigate('/owner');
+          } else if (decodedToken.role === 'courier') {
+            navigate('/courier');
+          } else if (decodedToken.role === 'administrator') {
+            navigate('/admin');
+          }
+        }
+      } catch (error) {
+        console.error("Invalid token", error);
+      }
+    }
+  }, [navigate]);
 
   const toggleFaq = (index) => {
     if (isAnimating) return;

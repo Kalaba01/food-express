@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, Routes, Route } from 'react-router-dom';
 import { FormPopup, NotificationPopup, Customer, Owner, Courier, Admin, LandingPage, Unauthorized } from './components/index';
+import { jwtDecode } from 'jwt-decode';
 import ProtectedRoute from './components/ProtectedRoute';
 import './App.css';
 
@@ -35,16 +36,28 @@ function App() {
   };
 
   const handleLogin = (userRole, token) => {
-    localStorage.setItem('token', token);
-    
-    if (userRole === 'customer') {
-      navigate('/customer');
-    } else if (userRole === 'owner') {
-      navigate('/owner');
-    } else if (userRole === 'courier') {
-      navigate('/courier');
-    } else if (userRole === 'administrator') {
-      navigate('/admin');
+    try {
+      const decodedToken = jwtDecode(token);
+      const currentTime = Date.now() / 1000;
+
+      if (decodedToken.exp > currentTime) {
+        localStorage.setItem('token', token);
+        
+        if (userRole === 'customer') {
+          navigate('/customer');
+        } else if (userRole === 'owner') {
+          navigate('/owner');
+        } else if (userRole === 'courier') {
+          navigate('/courier');
+        } else if (userRole === 'administrator') {
+          navigate('/admin');
+        }
+      } else {
+        showNotification('Session expired. Please log in again.', 'error');
+      }
+    } catch (error) {
+      console.error("Invalid token", error);
+      showNotification('Invalid session. Please log in again.', 'error');
     }
   };
 
