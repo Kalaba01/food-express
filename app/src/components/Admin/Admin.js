@@ -1,10 +1,11 @@
 import React from 'react';
+import { Header } from '../index';
 
-function Admin() {
+function Admin({ darkMode, toggleDarkMode, openPopupModal }) {
   return (
     <div>
+      <Header darkMode={darkMode} toggleDarkMode={toggleDarkMode} openPopupModal={openPopupModal} />
       <h2>Admin Dashboard</h2>
-      {/* Dodajte ovde sve što je potrebno za admin stranicu */}
     </div>
   );
 }

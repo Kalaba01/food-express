@@ -13,5 +13,6 @@ import Owner from "./Owner/Owner";
 import Theme from "./Theme/Theme";
 import LandingPage from "./LandingPage/LandingPage";
 import Unauthorized from "./Unauthorized/Unauthorized";
+import Logout from "./Logout/Logout";
 
-export  { Admin, Captcha, Courier, Customer, Footer, FormPopup, GoTop, Header, Language, LoginRegister, NotificationPopup, Owner, Theme, LandingPage, Unauthorized }
+export  { Admin, Captcha, Courier, Customer, Footer, FormPopup, GoTop, Header, Language, LoginRegister, NotificationPopup, Owner, Theme, LandingPage, Unauthorized, Logout }

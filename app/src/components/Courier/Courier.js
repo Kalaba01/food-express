@@ -1,10 +1,11 @@
 import React from 'react';
+import { Header } from '../index';
 
-function Courier() {
+function Courier({ darkMode, toggleDarkMode, openPopupModal }) {
   return (
     <div>
+      <Header darkMode={darkMode} toggleDarkMode={toggleDarkMode} openPopupModal={openPopupModal} />
       <h2>Courier Dashboard</h2>
-      {/* Dodajte ovde sve što je potrebno za courier stranicu */}
     </div>
   );
 }

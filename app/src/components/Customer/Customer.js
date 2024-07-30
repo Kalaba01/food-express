@@ -1,10 +1,11 @@
 import React from 'react';
+import { Header } from '../index';
 
-function Customer() {
+function Customer({ darkMode, toggleDarkMode, openPopupModal }) {
   return (
     <div>
+      <Header darkMode={darkMode} toggleDarkMode={toggleDarkMode} openPopupModal={openPopupModal} />
       <h2>Customer Dashboard</h2>
-      {/* Dodajte ovde sve što je potrebno za customer stranicu */}
     </div>
   );
 }
