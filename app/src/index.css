@@ -10,6 +10,13 @@
   --footer-background: #343a40;
   --border-color-light: #004a6385;
   --border-color-dark: #00bfff;
+
+  --dropdown-background-color: #ffffff;
+  --dropdown-background-dark: #444444;
+  --dropdown-item-color: #000000;
+  --dropdown-item-dark-color: #ffffff;
+  --dropdown-item-hover-background: #f0f0f0;
+  --dropdown-item-hover-dark-background: #555555;
 }
 
 body {

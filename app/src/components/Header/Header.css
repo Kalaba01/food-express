@@ -51,6 +51,6 @@ body.dark-mode .top-bar {
     margin-top: 0.3em;
 }
 
-.top-bar-icons .icon {
-    margin-bottom: -0.3em;
+.language-selector .icon {
+    margin-top: 0.2em;
 }
