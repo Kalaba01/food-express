@@ -53,6 +53,7 @@ class User(Base):
     email_reports = relationship("EmailReport", back_populates="user")
     bank_account = relationship("Bank", back_populates="user", uselist=False)
     image = relationship("Image")
+    password_reset_tokens = relationship("PasswordResetToken", back_populates="user")
 
 class Restaurant(Base):
     __tablename__ = "restaurants"
@@ -254,3 +255,12 @@ class Request(Base):
     request_type = Column(String, nullable=False)  # 'partner', 'driver', 'team'
     status = Column(Enum(RequestStatus), default=RequestStatus.pending)
     created_at = Column(DateTime, default=datetime.datetime.utcnow)
+
+class PasswordResetToken(Base):
+    __tablename__ = "password_reset_tokens"
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"))
+    token = Column(String, unique=True, nullable=False)
+    expiration = Column(DateTime, nullable=False)
+
+    user = relationship("User", back_populates="password_reset_tokens")

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { FaCheckCircle, FaTimesCircle } from "react-icons/fa";
 import { jwtDecode } from "jwt-decode";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Captcha from "../Captcha/Captcha";
 import "./FormPopup.css";
@@ -12,6 +13,7 @@ function FormPopup({
   showNotification,
   handleLogin,
 }) {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     username: "",
     email: "",
@@ -305,15 +307,16 @@ function FormPopup({
         <span className="close-button" onClick={closeModal}>
           &times;
         </span>
-        <h2>{title}</h2>
+        <h2 className="modal-h2">{title}</h2>
         {error && <p className="error">{error}</p>}
-        <form onSubmit={handleSubmit}>
+        <form className="modal-form" onSubmit={handleSubmit}>
           {formFields.map((field) => (
             <div className="form-group" key={field.name}>
               <label htmlFor={field.name}>{field.label}</label>
               <div className="input-wrapper">
                 {field.type === "textarea" ? (
                   <textarea
+                    className="modal-textarea"
                     id={field.name}
                     name={field.name}
                     value={formData[field.name] || ""}
@@ -322,6 +325,7 @@ function FormPopup({
                   />
                 ) : (
                   <input
+                    className="modal-input"
                     type={field.type}
                     id={field.name}
                     name={field.name}
@@ -399,13 +403,26 @@ function FormPopup({
                     </span>
                   )}
               </div>
+              {type === "login" && field.name === "password" && (
+                <p
+                  className="forgot-password"
+                  onClick={() => {
+                    closeModal();
+                    navigate("/forgot");
+                  }}
+                >
+                  Forgot Password?
+                </p>
+              )}
             </div>
           ))}
           {(type === "register" ||
             type === "partner" ||
             type === "deliver" ||
             type === "join") && <Captcha onVerify={handleCaptchaVerify} />}
-          <button type="submit">Submit</button>
+          <button className="modal-button" type="submit">
+            Submit
+          </button>
         </form>
         {switchText && (
           <p

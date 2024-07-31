@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, Routes, Route } from 'react-router-dom';
-import { FormPopup, NotificationPopup, Customer, Owner, Courier, Admin, LandingPage, Unauthorized } from './components/index';
+import { FormPopup, NotificationPopup, Customer, Owner, Courier, Admin, LandingPage, Unauthorized, ForgotPassword, ResetPassword } from './components/index';
 import { jwtDecode } from 'jwt-decode';
 import ProtectedRoute from './components/ProtectedRoute';
 import './App.css';
@@ -82,10 +82,12 @@ function App() {
             toggleDarkMode={toggleDarkMode}
           />
         } />
-        <Route path="/customer" element={<ProtectedRoute allowedRoles={['customer']}><Customer /></ProtectedRoute>} />
-        <Route path="/owner" element={<ProtectedRoute allowedRoles={['owner']}><Owner /></ProtectedRoute>} />
-        <Route path="/courier" element={<ProtectedRoute allowedRoles={['courier']}><Courier /></ProtectedRoute>} />
-        <Route path="/admin" element={<ProtectedRoute allowedRoles={['administrator']}><Admin /></ProtectedRoute>} />
+        <Route path="/forgot" element={<ForgotPassword darkMode={darkMode} toggleDarkMode={toggleDarkMode} />} />
+        <Route path="/reset-password" element={<ResetPassword darkMode={darkMode} toggleDarkMode={toggleDarkMode} />} />
+        <Route path="/customer" element={<ProtectedRoute allowedRoles={['customer']}><Customer darkMode={darkMode} toggleDarkMode={toggleDarkMode} /></ProtectedRoute>} />
+        <Route path="/owner" element={<ProtectedRoute allowedRoles={['owner']}><Owner darkMode={darkMode} toggleDarkMode={toggleDarkMode} /></ProtectedRoute>} />
+        <Route path="/courier" element={<ProtectedRoute allowedRoles={['courier']}><Courier darkMode={darkMode} toggleDarkMode={toggleDarkMode} /></ProtectedRoute>} />
+        <Route path="/admin" element={<ProtectedRoute allowedRoles={['administrator']}><Admin darkMode={darkMode} toggleDarkMode={toggleDarkMode} /></ProtectedRoute>} />
         <Route path="/unauthorized" element={<Unauthorized />} />
       </Routes>
     </div>

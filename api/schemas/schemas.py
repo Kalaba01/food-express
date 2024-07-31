@@ -251,3 +251,6 @@ class RequestCreate(BaseModel):
     email: str
     additional_info: str
     request_type: str  # 'partner', 'driver', 'team'
+
+class ForgotPasswordRequest(BaseModel):
+    email: str

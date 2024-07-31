@@ -1,10 +1,10 @@
 import React from 'react';
 import { Header } from '../index';
 
-function Admin({ darkMode, toggleDarkMode, openPopupModal }) {
+function Admin({ darkMode, toggleDarkMode }) {
   return (
     <div>
-      <Header darkMode={darkMode} toggleDarkMode={toggleDarkMode} openPopupModal={openPopupModal} />
+      <Header darkMode={darkMode} toggleDarkMode={toggleDarkMode} userType="administrator" />
       <h2>Admin Dashboard</h2>
     </div>
   );

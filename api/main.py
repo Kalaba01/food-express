@@ -1,8 +1,10 @@
+import uuid
+from datetime import datetime, timedelta
 from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.orm import Session
 from database.database import SessionLocal, engine, get_db
-from models.models import Base, User, Request, RequestStatus
-from schemas.schemas import UserCreate, RequestCreate
+from models.models import Base, User, Request, RequestStatus, PasswordResetToken
+from schemas.schemas import UserCreate, RequestCreate, ForgotPasswordRequest
 from auth.auth import create_access_token, get_current_user
 from utils.password_utils import hash_password, verify_password
 from utils.email_utils import send_email
@@ -70,7 +72,6 @@ def login_user(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = D
     access_token = create_access_token(data=user_data)
     return {"access_token": access_token, "token_type": "bearer"}
 
-
 @app.get("/users/me")
 def read_users_me(current_user: User = Depends(get_current_user)):
     return current_user
@@ -85,3 +86,37 @@ def check_username(username: str, db: Session = Depends(get_db)):
 def check_email(email: str, db: Session = Depends(get_db)):
     user = db.query(User).filter(User.email == email).first()
     return {"exists": bool(user)}
+
+@app.post("/forgot-password")
+def forgot_password(request: ForgotPasswordRequest, db: Session = Depends(get_db)):
+    email = request.email
+    user = db.query(User).filter(User.email == email).first()
+    if not user:
+        return {"message": "If the email exists, a reset link has been sent."}
+    token = str(uuid.uuid4())
+    expiration_time = datetime.utcnow() + timedelta(hours=1)
+    reset_token = PasswordResetToken(user_id=user.id, token=token, expiration=expiration_time)
+    db.add(reset_token)
+    db.commit()
+
+    reset_link = f"http://localhost:3000/reset-password?token={token}"
+    send_email(user.email, "Reset Your Password", f"Click the link to reset your password: {reset_link}")
+    return {"message": "If the email exists, a reset link has been sent."}
+
+@app.post("/reset-password")
+def reset_password(token: str, new_password: str, db: Session = Depends(get_db)):
+    reset_token = db.query(PasswordResetToken).filter(PasswordResetToken.token == token).first()
+    if not reset_token or reset_token.expiration < datetime.utcnow():
+        raise HTTPException(status_code=400, detail="Invalid or expired token")
+
+    user = db.query(User).filter(User.id == reset_token.user_id).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    if verify_password(new_password, user.hashed_password):
+        raise HTTPException(status_code=400, detail="New password cannot be the same as the current password")
+
+    user.hashed_password = hash_password(new_password)
+    db.delete(reset_token)
+    db.commit()
+    return {"message": "Password reset successful"}

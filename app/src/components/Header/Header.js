@@ -3,10 +3,10 @@ import { LoginRegister, Theme, Language, Logout } from "../index";
 import { jwtDecode } from "jwt-decode";
 import './Header.css';
 
-function Header({ darkMode, toggleDarkMode, openPopupModal }) {
-  
+function Header({ darkMode, toggleDarkMode, openPopupModal, userType }) {
   const token = localStorage.getItem('token');
   let isLoggedIn = false;
+
   if (token) {
     try {
       const decodedToken = jwtDecode(token);
@@ -33,11 +33,11 @@ function Header({ darkMode, toggleDarkMode, openPopupModal }) {
           <>
             <Theme darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
             <Language />
-            <Logout />
+            {userType !== "forgot" && <Logout />}
           </>
         ) : (
           <>
-            <LoginRegister openPopupModal={openPopupModal} />
+            {userType === "guest" && <LoginRegister openPopupModal={openPopupModal} />}
             <Theme darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
             <Language />
           </>

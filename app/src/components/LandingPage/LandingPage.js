@@ -1,4 +1,4 @@
-import React, { useState, useEffect  } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Footer, Header } from '../index';
 import { useNavigate } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
@@ -55,8 +55,7 @@ function LandingPage({ openPopupModal, darkMode, toggleDarkMode }) {
 
   return (
     <div>
-        <Header openPopupModal={openPopupModal} darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
-
+      <Header openPopupModal={openPopupModal} darkMode={darkMode} toggleDarkMode={toggleDarkMode} userType="guest" />
       <main>
         <section className="who-are-we">
           <h2>Who are we?</h2>
@@ -114,7 +113,6 @@ function LandingPage({ openPopupModal, darkMode, toggleDarkMode }) {
           ))}
         </section>
       </main>
-
       <Footer />
     </div>
   );
