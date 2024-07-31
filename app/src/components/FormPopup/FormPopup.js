@@ -4,6 +4,7 @@ import { jwtDecode } from "jwt-decode";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Captcha from "../Captcha/Captcha";
+import { useTranslation } from 'react-i18next';
 import "./FormPopup.css";
 
 function FormPopup({
@@ -13,6 +14,7 @@ function FormPopup({
   showNotification,
   handleLogin,
 }) {
+  const { t } = useTranslation('global');
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     username: "",
@@ -91,7 +93,7 @@ function FormPopup({
     e.preventDefault();
     if (type === "register") {
       if (formData.password !== formData.confirmPassword) {
-        showNotification("Passwords do not match", "error");
+        showNotification(t("FormPopup.common.validationIcons.passwordsDontMatch"), "error");
         return;
       }
       if (!captchaVerified) {
@@ -106,21 +108,21 @@ function FormPopup({
         });
 
         if (response.status === 200 || response.status === 201) {
-          showNotification("Registration successful", "success");
+          showNotification(t("FormPopup.common.success.registration"), "success");
           closeModal();
         }
       } catch (error) {
         if (error.response && error.response.status === 400) {
           const detail = error.response.data.detail;
           if (detail === "Email already registered") {
-            showNotification("Email already in use", "error");
+            showNotification(t("FormPopup.common.errors.emailInUse"), "error");
           } else if (detail === "Username already registered") {
-            showNotification("Username already taken", "error");
+            showNotification(t("FormPopup.common.errors.usernameTaken"), "error");
           } else {
-            showNotification("Registration failed", "error");
+            showNotification(t("FormPopup.common.errors.registrationFailed"), "error");
           }
         } else {
-          showNotification("Registration failed", "error");
+          showNotification(t("FormPopup.common.errors.registrationFailed"), "error");
         }
       }
     } else if (type === "login") {
@@ -146,14 +148,14 @@ function FormPopup({
 
         handleLogin(decodedToken.role, token);
 
-        showNotification("Login Successful", "success");
+        showNotification(t("FormPopup.common.success.login"), "success");
         closeModal();
       } catch (error) {
-        showNotification("Invalid username or password", "error");
+        showNotification(t("FormPopup.common.errors.invalidLogin"), "error");
       }
     } else if (["partner", "deliver", "join"].includes(type)) {
       if (!captchaVerified) {
-        showNotification("Please complete the CAPTCHA", "error");
+        showNotification(t("FormPopup.common.errors.captcha"), "error");
         return;
       }
       try {
@@ -166,13 +168,13 @@ function FormPopup({
           requestData
         );
         if (response.status === 200 || response.status === 201) {
-          showNotification("Request submitted successfully", "success");
+          showNotification(t("FormPopup.common.success.request"), "success");
         } else {
-          showNotification("Failed to submit request", "error");
+          showNotification(t("FormPopup.common.errors.requestFailed"), "error");
         }
         closeModal();
       } catch (error) {
-        showNotification("Failed to submit request", "error");
+        showNotification(t("FormPopup.common.errors.requestFailed"), "error");
       }
     }
   };
@@ -202,99 +204,52 @@ function FormPopup({
   switch (type) {
     case "login":
       formFields = [
-        { label: "Username", name: "username", type: "text", required: true },
-        {
-          label: "Password",
-          name: "password",
-          type: "password",
-          required: true,
-        },
+        { label: t("FormPopup.login.usernameLabel"), name: "username", type: "text", required: true },
+        { label: t("FormPopup.login.passwordLabel"), name: "password", type: "password", required: true },
       ];
-      title = "Login";
-      switchText =
-        "Don't have an account? <span class='switch-link'>Register</span>";
+      title = t("FormPopup.login.title");
+      switchText = t("FormPopup.login.switchText");
       break;
 
     case "register":
       formFields = [
-        { label: "Username", name: "username", type: "text", required: true },
-        { label: "Email", name: "email", type: "email", required: true },
-        {
-          label: "Password",
-          name: "password",
-          type: "password",
-          required: true,
-        },
-        {
-          label: "Confirm Password",
-          name: "confirmPassword",
-          type: "password",
-          required: true,
-        },
+        { label: t("FormPopup.register.usernameLabel"), name: "username", type: "text", required: true },
+        { label: t("FormPopup.register.emailLabel"), name: "email", type: "email", required: true },
+        { label: t("FormPopup.register.passwordLabel"), name: "password", type: "password", required: true },
+        { label: t("FormPopup.register.confirmPasswordLabel"), name: "confirmPassword", type: "password", required: true },
       ];
-      title = "Register";
-      switchText =
-        "Already have an account? <span class='switch-link'>Login</span>";
+      title = t("FormPopup.register.title");
+      switchText = t("FormPopup.register.switchText");
       break;
 
     case "partner":
       formFields = [
-        {
-          label: "First Name",
-          name: "first_name",
-          type: "text",
-          required: true,
-        },
-        { label: "Last Name", name: "last_name", type: "text", required: true },
-        { label: "Email", name: "email", type: "email", required: true },
-        {
-          label: "Business Information",
-          name: "additional_info",
-          type: "textarea",
-          required: true,
-        },
+        { label: t("FormPopup.partner.firstNameLabel"), name: "first_name", type: "text", required: true },
+        { label: t("FormPopup.partner.lastNameLabel"), name: "last_name", type: "text", required: true },
+        { label: t("FormPopup.partner.emailLabel"), name: "email", type: "email", required: true },
+        { label: t("FormPopup.partner.additionalInfoLabel"), name: "additional_info", type: "textarea", required: true },
       ];
-      title = "Become a Partner";
+      title = t("FormPopup.partner.title");
       break;
 
     case "deliver":
       formFields = [
-        {
-          label: "First Name",
-          name: "first_name",
-          type: "text",
-          required: true,
-        },
-        { label: "Last Name", name: "last_name", type: "text", required: true },
-        { label: "Email", name: "email", type: "email", required: true },
-        {
-          label: "Delivery Experience",
-          name: "additional_info",
-          type: "textarea",
-          required: true,
-        },
+        { label: t("FormPopup.deliver.firstNameLabel"), name: "first_name", type: "text", required: true },
+        { label: t("FormPopup.deliver.lastNameLabel"), name: "last_name", type: "text", required: true },
+        { label: t("FormPopup.deliver.emailLabel"), name: "email", type: "email", required: true },
+        { label: t("FormPopup.deliver.additionalInfoLabel"), name: "additional_info", type: "textarea", required: true },
       ];
-      title = "Deliver with Us";
+      title = t("FormPopup.deliver.title");
       break;
 
     case "join":
       formFields = [
-        {
-          label: "First Name",
-          name: "first_name",
-          type: "text",
-          required: true,
-        },
-        { label: "Last Name", name: "last_name", type: "text", required: true },
-        { label: "Email", name: "email", type: "email", required: true },
-        {
-          label: "Motivation",
-          name: "additional_info",
-          type: "textarea",
-          required: true,
-        },
+        { label: t("FormPopup.join.firstNameLabel"), name: "first_name", type: "text", required: true },
+        { label: t("FormPopup.join.lastNameLabel"), name: "last_name", type: "text", required: true },
+        { label: t("FormPopup.join.emailLabel"), name: "email", type: "email", required: true },
+        { label: t("FormPopup.join.additionalInfoLabel"), name: "additional_info", type: "textarea", required: true },
       ];
-      title = "Join the Team";
+      title = t("FormPopup.join.title");
       break;
 
     default:
@@ -340,7 +295,9 @@ function FormPopup({
                     <span
                       className="validation-icon"
                       title={
-                        usernameValid ? "" : "This username is already taken"
+                        usernameValid
+                          ? ""
+                          : t("FormPopup.common.validationIcons.usernameTaken")
                       }
                     >
                       {usernameValid ? (
@@ -357,9 +314,9 @@ function FormPopup({
                       className="validation-icon"
                       title={
                         !emailFormatValid
-                          ? "Please enter a valid email address"
+                          ? t("FormPopup.common.validationIcons.validEmail")
                           : emailValid === false
-                          ? "This email is already in use"
+                          ? t("FormPopup.common.validationIcons.emailInUse")
                           : ""
                       }
                     >
@@ -377,7 +334,7 @@ function FormPopup({
                       className="validation-icon"
                       title={
                         !passwordValid
-                          ? "Password must be at least 6 characters long and contain at least one number"
+                          ? t("FormPopup.common.validationIcons.invalidPassword")
                           : ""
                       }
                     >
@@ -393,7 +350,11 @@ function FormPopup({
                   formData.confirmPassword && (
                     <span
                       className="validation-icon"
-                      title={!passwordMatch ? "Passwords don't match" : ""}
+                      title={
+                        !passwordMatch
+                          ? t("FormPopup.common.validationIcons.passwordsDontMatch")
+                          : ""
+                      }
                     >
                       {passwordMatch ? (
                         <FaCheckCircle color="green" />
@@ -411,7 +372,7 @@ function FormPopup({
                     navigate("/forgot");
                   }}
                 >
-                  Forgot Password?
+                  {t("FormPopup.login.forgotPassword")}
                 </p>
               )}
             </div>
@@ -421,7 +382,7 @@ function FormPopup({
             type === "deliver" ||
             type === "join") && <Captcha onVerify={handleCaptchaVerify} />}
           <button className="modal-button" type="submit">
-            Submit
+            {t("FormPopup.common.submit")}
           </button>
         </form>
         {switchText && (

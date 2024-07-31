@@ -2,9 +2,11 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Header, NotificationPopup } from '../index';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import './ForgotPassword.css';
 
 function ForgotPassword({ darkMode, toggleDarkMode }) {
+  const { t } = useTranslation('global');
   const [email, setEmail] = useState('');
   const [notification, setNotification] = useState({ message: '', type: '' });
   const navigate = useNavigate();
@@ -13,7 +15,7 @@ function ForgotPassword({ darkMode, toggleDarkMode }) {
     if (notification.type === 'success') {
       const timer = setTimeout(() => {
         navigate('/');
-      }, 3000); // Preusmeri nakon 3 sekunde
+      }, 3000);
 
       return () => clearTimeout(timer);
     }
@@ -23,10 +25,10 @@ function ForgotPassword({ darkMode, toggleDarkMode }) {
     e.preventDefault();
     try {
       await axios.post('http://localhost:8000/forgot-password', { email });
-      setNotification({ message: 'If the email exists, a reset link has been sent.', type: 'success' });
+      setNotification({ message: t('ForgotPassword.successMessage'), type: 'success' });
     } catch (error) {
       console.error("Error sending reset link:", error);
-      setNotification({ message: 'Error sending reset link.', type: 'error' });
+      setNotification({ message: t('ForgotPassword.errorMessage'), type: 'error' });
     }
   };
 
@@ -34,16 +36,16 @@ function ForgotPassword({ darkMode, toggleDarkMode }) {
     <>
       <Header darkMode={darkMode} toggleDarkMode={toggleDarkMode} userType="forgot" />
       <div className="forgot-password-container">
-        <h2>Reset Password</h2>
+        <h2>{t('ForgotPassword.title')}</h2>
         <form onSubmit={handleSubmit}>
-          <label>Email:</label>
+          <label>{t('ForgotPassword.emailLabel')}</label>
           <input 
             type="email" 
             value={email} 
             onChange={(e) => setEmail(e.target.value)} 
             required 
           />
-          <button type="submit">Reset Password</button>
+          <button type="submit">{t('ForgotPassword.submitButton')}</button>
         </form>
       </div>
       {notification.message && <NotificationPopup message={notification.message} type={notification.type} />}

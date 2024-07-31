@@ -1,10 +1,13 @@
 import React from 'react';
 import './Footer.css';
+import { useTranslation } from 'react-i18next';
 
 function Footer() {
+  const { t } = useTranslation('global');
+
   return (
     <footer className="footer">
-      <p>© 2024 Food Express. All rights reserved.</p>
+      <p>{t('Footer.copyRightText')}</p>
     </footer>
   );
 }

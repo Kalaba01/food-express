@@ -50,3 +50,7 @@ body.dark-mode .top-bar {
 .top-bar-icons .theme-icon {
     margin-top: 0.3em;
 }
+
+.top-bar-icons .icon {
+    margin-bottom: -0.3em;
+}

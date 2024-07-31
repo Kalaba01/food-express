@@ -2,9 +2,11 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FcLock, FcUnlock } from "react-icons/fc";
 import { Header } from "../index";
+import { useTranslation } from 'react-i18next';
 import "./Unauthorized.css";
 
 const Unauthorized = () => {
+  const { t } = useTranslation('global');
   const navigate = useNavigate();
   const [isHovered, setIsHovered] = useState(false);
 
@@ -31,15 +33,15 @@ const Unauthorized = () => {
       <div className="unauthorized-container">
         <h1 className="unauthorized-title">403</h1>
         <div className="unauthorized-lock-icon">
-        {isHovered ? (
-                    <FcUnlock className="icon" size={80} color="#FF6347" onMouseLeave={handleMouseLeave} onClick={handleUnlockClick}  />
-                ) : (
-                    <FcLock className="icon" size={80} color="#FF6347" onMouseEnter={handleMouseEnter} />
-                )}
+          {isHovered ? (
+            <FcUnlock className="icon" size={80} color="#FF6347" onMouseLeave={handleMouseLeave} onClick={handleUnlockClick} />
+          ) : (
+            <FcLock className="icon" size={80} color="#FF6347" onMouseEnter={handleMouseEnter} />
+          )}
         </div>
-        <p className="unauthorized-text">Access Forbidden</p>
+        <p className="unauthorized-text">{t('Unauthorized.accessForbidden')}</p>
         <button className="return-home-button" onClick={handleReturnHome}>
-          Return Home
+          {t('Unauthorized.returnHome')}
         </button>
       </div>
     </div>

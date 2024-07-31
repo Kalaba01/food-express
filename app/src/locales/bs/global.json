@@ -1,0 +1,104 @@
+{
+  "Header": {
+    "logoText": "Food Express"
+  },
+  "Footer": {
+    "copyRightText": "© 2024 Food Express. Sva prava zadržana."
+  },
+  "LandingPage": {
+    "whoAreWe": {
+      "header": "Ko smo mi?",
+      "content": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam."
+    },
+    "cities": {
+      "header": "U kojim gradovima poslujemo?",
+      "content": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam."
+    },
+    "partners": {
+      "header": "Naši partneri"
+    },
+    "joinUs": {
+      "header": "Postanite dio Food Expressa",
+      "becomePartnerButton": "Postanite partner",
+      "deliverWithUsButton": "Dostavljajte s nama",
+      "joinTeamButton": "Pridružite se timu"
+    },
+    "faq": {
+      "header": "Česta pitanja",
+      "question1": "Pitanje 1",
+      "question2": "Pitanje 2",
+      "question3": "Pitanje 3",
+      "answer": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam."
+    }
+  },
+  "FormPopup": {
+    "login": {
+      "title": "Prijava",
+      "usernameLabel": "Korisničko ime",
+      "passwordLabel": "Lozinka",
+      "forgotPassword": "Zaboravili ste lozinku?",
+      "switchText": "Nemate račun? Registrujte se"
+    },
+    "register": {
+      "title": "Registracija",
+      "usernameLabel": "Korisničko ime",
+      "emailLabel": "Email",
+      "passwordLabel": "Lozinka",
+      "confirmPasswordLabel": "Potvrdite lozinku",
+      "switchText": "Već imate račun? Prijavite se"
+    },
+    "partner": {
+      "title": "Postanite partner",
+      "firstNameLabel": "Ime",
+      "lastNameLabel": "Prezime",
+      "emailLabel": "Email",
+      "additionalInfoLabel": "Informacije o poslu"
+    },
+    "deliver": {
+      "title": "Dostavljajte s nama",
+      "firstNameLabel": "Ime",
+      "lastNameLabel": "Prezime",
+      "emailLabel": "Email",
+      "additionalInfoLabel": "Iskustvo u dostavi"
+    },
+    "join": {
+      "title": "Pridružite se timu",
+      "firstNameLabel": "Ime",
+      "lastNameLabel": "Prezime",
+      "emailLabel": "Email",
+      "additionalInfoLabel": "Motivacija"
+    },
+    "common": {
+      "submit": "Pošalji",
+      "closeButton": "Zatvori",
+      "validationIcons": {
+        "usernameTaken": "Ovo korisničko ime je već zauzeto",
+        "validEmail": "Unesite važeću email adresu",
+        "emailInUse": "Ovaj email je već u upotrebi",
+        "invalidPassword": "Lozinka mora imati najmanje 6 znakova i sadržavati barem jedan broj",
+        "passwordsDontMatch": "Lozinke se ne poklapaju"
+      }
+    }
+  },
+  "ForgotPassword": {
+    "title": "Resetujte lozinku",
+    "emailLabel": "Email:",
+    "submitButton": "Resetuj lozinku",
+    "successMessage": "Ako email postoji, poslan je link za resetovanje.",
+    "errorMessage": "Greška pri slanju linka za resetovanje."
+  },
+  "ResetPassword": {
+    "title": "Resetujte vašu lozinku",
+    "newPasswordLabel": "Nova lozinka:",
+    "confirmPasswordLabel": "Potvrdite lozinku:",
+    "submitButton": "Pošalji",
+    "passwordMismatch": "Lozinke se ne poklapaju.",
+    "successMessage": "Uspješno resetovana lozinka.",
+    "samePasswordError": "Nova lozinka ne može biti ista kao trenutna lozinka.",
+    "errorMessage": "Greška pri resetovanju lozinke."
+  },
+  "Unauthorized": {
+    "accessForbidden": "Pristup zabranjen",
+    "returnHome": "Vrati se kući"
+  }
+}

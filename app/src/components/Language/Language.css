@@ -1,0 +1,32 @@
+.language-selector {
+    position: relative;
+    display: inline-block;
+}
+
+.icon {
+    cursor: pointer;
+}
+
+.dropdown {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background-color: white;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.dropdown-item {
+    padding: 8px 16px;
+    cursor: pointer;
+}
+
+.dropdown-item img {
+    width: 20px;
+    height: 20px;
+}
+
+.dropdown-item:hover {
+    background-color: #f0f0f0;
+}

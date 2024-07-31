@@ -1,0 +1,104 @@
+{
+  "Header": {
+    "logoText": "Food Express"
+  },
+  "Footer": {
+    "copyRightText": "© 2024 Food Express. All rights reserved."
+  },
+  "LandingPage": {
+    "whoAreWe": {
+      "header": "Who are we?",
+      "content": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam."
+    },
+    "cities": {
+      "header": "In which cities we operate?",
+      "content": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam."
+    },
+    "partners": {
+      "header": "Our partners"
+    },
+    "joinUs": {
+      "header": "Become part of Food Express",
+      "becomePartnerButton": "Become a partner",
+      "deliverWithUsButton": "Deliver with us",
+      "joinTeamButton": "Join the team"
+    },
+    "faq": {
+      "header": "FAQ",
+      "question1": "Question 1",
+      "question2": "Question 2",
+      "question3": "Question 3",
+      "answer": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam."
+    }
+  },
+  "FormPopup": {
+    "login": {
+      "title": "Login",
+      "usernameLabel": "Username",
+      "passwordLabel": "Password",
+      "forgotPassword": "Forgot Password?",
+      "switchText": "Don't have an account? Register"
+    },
+    "register": {
+      "title": "Register",
+      "usernameLabel": "Username",
+      "emailLabel": "Email",
+      "passwordLabel": "Password",
+      "confirmPasswordLabel": "Confirm Password",
+      "switchText": "Already have an account? Login"
+    },
+    "partner": {
+      "title": "Become a Partner",
+      "firstNameLabel": "First Name",
+      "lastNameLabel": "Last Name",
+      "emailLabel": "Email",
+      "additionalInfoLabel": "Business Information"
+    },
+    "deliver": {
+      "title": "Deliver with Us",
+      "firstNameLabel": "First Name",
+      "lastNameLabel": "Last Name",
+      "emailLabel": "Email",
+      "additionalInfoLabel": "Delivery Experience"
+    },
+    "join": {
+      "title": "Join the Team",
+      "firstNameLabel": "First Name",
+      "lastNameLabel": "Last Name",
+      "emailLabel": "Email",
+      "additionalInfoLabel": "Motivation"
+    },
+    "common": {
+      "submit": "Submit",
+      "closeButton": "Close",
+      "validationIcons": {
+        "usernameTaken": "This username is already taken",
+        "validEmail": "Please enter a valid email address",
+        "emailInUse": "This email is already in use",
+        "invalidPassword": "Password must be at least 6 characters long and contain at least one number",
+        "passwordsDontMatch": "Passwords don't match"
+      }
+    }
+  },
+  "ForgotPassword": {
+    "title": "Reset Password",
+    "emailLabel": "Email:",
+    "submitButton": "Reset Password",
+    "successMessage": "If the email exists, a reset link has been sent.",
+    "errorMessage": "Error sending reset link."
+  },
+  "ResetPassword": {
+    "title": "Reset Your Password",
+    "newPasswordLabel": "New Password:",
+    "confirmPasswordLabel": "Confirm Password:",
+    "submitButton": "Submit",
+    "passwordMismatch": "Passwords do not match.",
+    "successMessage": "Password reset successful.",
+    "samePasswordError": "New password cannot be the same as the current password.",
+    "errorMessage": "Error resetting password."
+  },
+  "Unauthorized": {
+    "accessForbidden": "Access Forbidden",
+    "returnHome": "Return Home"
+  }
+}
