@@ -97,7 +97,7 @@ function FormPopup({
         return;
       }
       if (!captchaVerified) {
-        showNotification("Please complete the CAPTCHA", "error");
+        showNotification(t("FormPopup.common.errors.captcha"), "error");
         return;
       }
 

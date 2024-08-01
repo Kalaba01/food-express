@@ -36,8 +36,8 @@
       "title": "Prijava",
       "usernameLabel": "Korisničko ime",
       "passwordLabel": "Lozinka",
-      "forgotPassword": "Zaboravili ste lozinku?",
-      "switchText": "Nemate račun? Registrujte se"
+      "forgotPassword": "Zaboravljena lozinka?",
+      "switchText": "Nemate račun? Registrirajte se"
     },
     "register": {
       "title": "Registracija",
@@ -52,7 +52,7 @@
       "firstNameLabel": "Ime",
       "lastNameLabel": "Prezime",
       "emailLabel": "Email",
-      "additionalInfoLabel": "Informacije o poslu"
+      "additionalInfoLabel": "Poslovne informacije"
     },
     "deliver": {
       "title": "Dostavljajte s nama",
@@ -72,33 +72,46 @@
       "submit": "Pošalji",
       "closeButton": "Zatvori",
       "validationIcons": {
-        "usernameTaken": "Ovo korisničko ime je već zauzeto",
+        "usernameTaken": "Korisničko ime je već zauzeto",
         "validEmail": "Unesite važeću email adresu",
         "emailInUse": "Ovaj email je već u upotrebi",
         "invalidPassword": "Lozinka mora imati najmanje 6 znakova i sadržavati barem jedan broj",
-        "passwordsDontMatch": "Lozinke se ne poklapaju"
+        "passwordsDontMatch": "Lozinke se ne podudaraju"
+      },
+      "errors": {
+        "invalidLogin": "Nevažeće korisničko ime ili lozinka",
+        "emailInUse": "Ovaj email je već u upotrebi",
+        "usernameTaken": "Korisničko ime je već zauzeto",
+        "registrationFailed": "Registracija nije uspjela",
+        "captcha": "Molimo vas da završite CAPTCHA",
+        "requestFailed": "Zahtjev nije uspio"
+      },
+      "success": {
+        "registration": "Registracija uspješna",
+        "login": "Prijava uspješna",
+        "request": "Zahtjev uspješno poslan"
       }
     }
   },
   "ForgotPassword": {
-    "title": "Resetujte lozinku",
+    "title": "Resetiranje lozinke",
     "emailLabel": "Email:",
-    "submitButton": "Resetuj lozinku",
-    "successMessage": "Ako email postoji, poslan je link za resetovanje.",
-    "errorMessage": "Greška pri slanju linka za resetovanje."
+    "submitButton": "Resetiraj lozinku",
+    "successMessage": "Ako email postoji, poslan je link za resetiranje.",
+    "errorMessage": "Greška prilikom slanja linka za resetiranje."
   },
   "ResetPassword": {
-    "title": "Resetujte vašu lozinku",
+    "title": "Resetirajte lozinku",
     "newPasswordLabel": "Nova lozinka:",
     "confirmPasswordLabel": "Potvrdite lozinku:",
     "submitButton": "Pošalji",
-    "passwordMismatch": "Lozinke se ne poklapaju.",
-    "successMessage": "Uspješno resetovana lozinka.",
+    "passwordMismatch": "Lozinke se ne podudaraju.",
+    "successMessage": "Resetiranje lozinke uspješno.",
     "samePasswordError": "Nova lozinka ne može biti ista kao trenutna lozinka.",
-    "errorMessage": "Greška pri resetovanju lozinke."
+    "errorMessage": "Greška prilikom resetiranja lozinke."
   },
   "Unauthorized": {
     "accessForbidden": "Pristup zabranjen",
-    "returnHome": "Vrati se kući"
+    "returnHome": "Vrati se na početnu"
   }
 }

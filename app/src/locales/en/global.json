@@ -77,6 +77,19 @@
         "emailInUse": "This email is already in use",
         "invalidPassword": "Password must be at least 6 characters long and contain at least one number",
         "passwordsDontMatch": "Passwords don't match"
+      },
+      "errors": {
+        "invalidLogin": "Invalid username or password",
+        "emailInUse": "This email is already in use",
+        "usernameTaken": "This username is already taken",
+        "registrationFailed": "Registration failed",
+        "captcha": "Please complete the CAPTCHA",
+        "requestFailed": "Failed to submit request"
+      },
+      "success": {
+        "registration": "Registration successful",
+        "login": "Login Successful",
+        "request": "Request submitted successfully"
       }
     }
   },
