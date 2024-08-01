@@ -50,7 +50,21 @@ def register_user(user: UserCreate, db: Session = Depends(get_db)):
     
     # Slanje welcome emaila
     subject = "Welcome to Food Express"
-    body = f"Hi {new_user.username},\n\nWelcome to Food Express! We're excited to have you on board."
+    body = (
+        f"Dear {new_user.username},\n\n"
+        "Welcome to Food Express! We are thrilled to have you join our community of food lovers. Our platform offers you the best dining experiences, whether you want to explore new restaurants or enjoy your favorite meals at home.\n\n"
+        "Here are some key features you can enjoy:\n"
+        "1. **Wide Selection of Restaurants:** Browse through a variety of restaurants offering different cuisines.\n"
+        "2. **Exclusive Offers and Discounts:** Stay tuned for special offers and discounts exclusively available to our members.\n"
+        "3. **Easy and Secure Payments:** Pay for your orders securely using our integrated payment gateway.\n"
+        "4. **Order Tracking:** Track your orders in real-time from the restaurant to your doorstep.\n\n"
+        "To get started, simply log in to your account and explore the wide range of restaurants and cuisines available. If you have any questions or need assistance, our customer support team is here to help. You can reach us at foodexpressproject@outlook.com or visit our Help Center.\n\n"
+        "We hope you enjoy your experience with Food Express. Bon appétit!\n\n"
+        "Best regards,\n"
+        "The Food Express Team\n"
+        "https://www.foodexpress.com\n\n"
+        "P.S. Don't forget to follow us on social media for the latest updates and promotions!"
+    )
     send_email(new_user.email, subject, body)
     
     return new_user
@@ -100,7 +114,21 @@ def forgot_password(request: ForgotPasswordRequest, db: Session = Depends(get_db
     db.commit()
 
     reset_link = f"http://localhost:3000/reset-password?token={token}"
-    send_email(user.email, "Reset Your Password", f"Click the link to reset your password: {reset_link}")
+    subject = "Reset Your Password - Food Express"
+    body = (
+        f"Dear {user.username},\n\n"
+        "We received a request to reset your password for your Food Express account. If you did not request a password reset, please ignore this email. Otherwise, you can reset your password using the link below:\n\n"
+        f"Reset Password Link: {reset_link}\n\n"
+        "This link is valid for one hour from the time of receipt. If the link expires, you can request a new one by visiting the 'Forgot Password' section on our website.\n\n"
+        "For security reasons, we recommend that you do not share this link with anyone. If you encounter any issues or need further assistance, please contact our support team at foodexpressproject@outlook.com.\n\n"
+        "Thank you for choosing Food Express. We value your security and privacy.\n\n"
+        "Best regards,\n"
+        "The Food Express Team\n"
+        "https://www.foodexpress.com\n\n"
+        "P.S. For more tips on account security, visit our Help Center."
+    )
+    send_email(user.email, subject, body)
+    
     return {"message": "If the email exists, a reset link has been sent."}
 
 @app.post("/reset-password")
