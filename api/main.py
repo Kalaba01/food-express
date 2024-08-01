@@ -1,10 +1,11 @@
 import uuid
 from datetime import datetime, timedelta
 from fastapi import FastAPI, Depends, HTTPException
+from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import Session
 from database.database import SessionLocal, engine, get_db
-from models.models import Base, User, Request, RequestStatus, PasswordResetToken
-from schemas.schemas import UserCreate, RequestCreate, ForgotPasswordRequest
+from models.models import Base, User, PasswordResetToken
+from schemas.schemas import UserCreate, ForgotPasswordRequest
 from auth.auth import create_access_token, get_current_user
 from utils.password_utils import hash_password, verify_password
 from utils.email_utils import send_email
@@ -30,34 +31,30 @@ app = start_application()
 Base.metadata.create_all(bind=engine)
 
 @app.post("/register")
-def register_user(user: UserCreate, db: Session = Depends(get_db)):
-    # Provjera korisničkog imena
+async def register_user(user: UserCreate, db: Session = Depends(get_db)):
     db_user = db.query(User).filter(User.username == user.username).first()
     if db_user:
         raise HTTPException(status_code=400, detail="Username already registered")
 
-    # Provjera emaila
     db_user = db.query(User).filter(User.email == user.email).first()
     if db_user:
         raise HTTPException(status_code=400, detail="Email already registered")
 
-    # Kreiranje novog korisnika
-    hashed_password = hash_password(user.password)
+    hashed_password = await hash_password(user.password)
     new_user = User(username=user.username, email=user.email, hashed_password=hashed_password, role='customer')
     db.add(new_user)
     db.commit()
     db.refresh(new_user)
     
-    # Slanje welcome emaila
     subject = "Welcome to Food Express"
     body = (
         f"Dear {new_user.username},\n\n"
         "Welcome to Food Express! We are thrilled to have you join our community of food lovers. Our platform offers you the best dining experiences, whether you want to explore new restaurants or enjoy your favorite meals at home.\n\n"
         "Here are some key features you can enjoy:\n"
-        "1. **Wide Selection of Restaurants:** Browse through a variety of restaurants offering different cuisines.\n"
-        "2. **Exclusive Offers and Discounts:** Stay tuned for special offers and discounts exclusively available to our members.\n"
-        "3. **Easy and Secure Payments:** Pay for your orders securely using our integrated payment gateway.\n"
-        "4. **Order Tracking:** Track your orders in real-time from the restaurant to your doorstep.\n\n"
+        "1. Wide Selection of Restaurants: Browse through a variety of restaurants offering different cuisines.\n"
+        "2. Exclusive Offers and Discounts: Stay tuned for special offers and discounts exclusively available to our members.\n"
+        "3. Easy and Secure Payments: Pay for your orders securely using our integrated payment gateway.\n"
+        "4. Order Tracking: Track your orders in real-time from the restaurant to your doorstep.\n\n"
         "To get started, simply log in to your account and explore the wide range of restaurants and cuisines available. If you have any questions or need assistance, our customer support team is here to help. You can reach us at foodexpressproject@outlook.com or visit our Help Center.\n\n"
         "We hope you enjoy your experience with Food Express. Bon appétit!\n\n"
         "Best regards,\n"
@@ -65,16 +62,17 @@ def register_user(user: UserCreate, db: Session = Depends(get_db)):
         "https://www.foodexpress.com\n\n"
         "P.S. Don't forget to follow us on social media for the latest updates and promotions!"
     )
-    send_email(new_user.email, subject, body)
+    await send_email(new_user.email, subject, body)
     
     return new_user
 
 @app.post("/token")
-def login_user(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
-    db_user = db.query(User).filter(User.username == form_data.username).first()
+async def login_user(form_data: OAuth2PasswordRequestForm = Depends(), db: AsyncSession = Depends(get_db)):
+    result = await db.execute(select(User).filter(User.username == form_data.username))
+    db_user = result.scalars().first()
     if not db_user:
         raise HTTPException(status_code=400, detail="Invalid username or password")
-    if not verify_password(form_data.password, db_user.hashed_password):
+    if not await verify_password(form_data.password, db_user.hashed_password):
         raise HTTPException(status_code=400, detail="Invalid username or password")
     
     user_data = {
@@ -83,26 +81,25 @@ def login_user(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = D
         "email": db_user.email,
         "role": db_user.role
     }
-    access_token = create_access_token(data=user_data)
+    access_token = await create_access_token(data=user_data)
     return {"access_token": access_token, "token_type": "bearer"}
 
 @app.get("/users/me")
-def read_users_me(current_user: User = Depends(get_current_user)):
+async def read_users_me(current_user: User = Depends(get_current_user)):
     return current_user
 
-# Rute za proveru korisničkog imena i email adrese
 @app.get("/check-username/{username}")
-def check_username(username: str, db: Session = Depends(get_db)):
+async def check_username(username: str, db: Session = Depends(get_db)):
     user = db.query(User).filter(User.username == username).first()
     return {"exists": bool(user)}
 
 @app.get("/check-email/{email}")
-def check_email(email: str, db: Session = Depends(get_db)):
+async def check_email(email: str, db: Session = Depends(get_db)):
     user = db.query(User).filter(User.email == email).first()
     return {"exists": bool(user)}
 
 @app.post("/forgot-password")
-def forgot_password(request: ForgotPasswordRequest, db: Session = Depends(get_db)):
+async def forgot_password(request: ForgotPasswordRequest, db: Session = Depends(get_db)):
     email = request.email
     user = db.query(User).filter(User.email == email).first()
     if not user:
@@ -127,12 +124,12 @@ def forgot_password(request: ForgotPasswordRequest, db: Session = Depends(get_db
         "https://www.foodexpress.com\n\n"
         "P.S. For more tips on account security, visit our Help Center."
     )
-    send_email(user.email, subject, body)
+    await send_email(user.email, subject, body)
     
     return {"message": "If the email exists, a reset link has been sent."}
 
 @app.post("/reset-password")
-def reset_password(token: str, new_password: str, db: Session = Depends(get_db)):
+async def reset_password(token: str, new_password: str, db: Session = Depends(get_db)):
     reset_token = db.query(PasswordResetToken).filter(PasswordResetToken.token == token).first()
     if not reset_token or reset_token.expiration < datetime.utcnow():
         raise HTTPException(status_code=400, detail="Invalid or expired token")
@@ -141,10 +138,10 @@ def reset_password(token: str, new_password: str, db: Session = Depends(get_db))
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
 
-    if verify_password(new_password, user.hashed_password):
+    if await verify_password(new_password, user.hashed_password):
         raise HTTPException(status_code=400, detail="New password cannot be the same as the current password")
 
-    user.hashed_password = hash_password(new_password)
+    user.hashed_password = await hash_password(new_password)
     db.delete(reset_token)
     db.commit()
     return {"message": "Password reset successful"}

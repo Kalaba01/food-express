@@ -1,10 +1,10 @@
-import smtplib
+import aiosmtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
-def send_email(to_email, subject, body):
+async def send_email(to_email, subject, body):
     from_email = "foodexpressproject@outlook.com"
-    from_password = "arivxbmnvicpkbkh"  # Nova lozinka specifična za aplikaciju
+    from_password = "arivxbmnvicpkbkh"
 
     msg = MIMEMultipart()
     msg['From'] = from_email
@@ -13,11 +13,9 @@ def send_email(to_email, subject, body):
     msg.attach(MIMEText(body, 'plain'))
 
     try:
-        server = smtplib.SMTP('smtp-mail.outlook.com', 587)
-        server.starttls()
-        server.login(from_email, from_password)
-        server.send_message(msg)
-        server.quit()
+        await aiosmtplib.send(msg, hostname="smtp-mail.outlook.com", port=587,
+                              username=from_email, password=from_password,
+                              start_tls=True)
         print("Email sent successfully")
     except Exception as e:
         print(f"Failed to send email: {e}")
