@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { FaCheckCircle, FaTimesCircle } from "react-icons/fa";
+import { FaCheckCircle, FaTimesCircle, FaEye, FaEyeSlash } from "react-icons/fa";
 import { jwtDecode } from "jwt-decode";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -32,6 +32,8 @@ function FormPopup({
   const [emailValid, setEmailValid] = useState(null);
   const [emailFormatValid, setEmailFormatValid] = useState(null);
   const [passwordValid, setPasswordValid] = useState(null);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const handleCaptchaVerify = (verified) => {
     setCaptchaVerified(verified);
@@ -195,6 +197,16 @@ function FormPopup({
     setEmailValid(null);
     setEmailFormatValid(null);
     setPasswordValid(null);
+    setShowPassword(false);
+    setShowConfirmPassword(false);
+  };
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+
+  const toggleConfirmPasswordVisibility = () => {
+    setShowConfirmPassword(!showConfirmPassword);
   };
 
   let formFields = [];
@@ -206,7 +218,7 @@ function FormPopup({
     case "login":
       formFields = [
         { label: t("FormPopup.login.usernameLabel"), name: "username", type: "text", required: true },
-        { label: t("FormPopup.login.passwordLabel"), name: "password", type: "password", required: true },
+        { label: t("FormPopup.login.passwordLabel"), name: "password", type: showPassword ? "text" : "password", required: true },
       ];
       title = t("FormPopup.login.title");
       switchText = t("FormPopup.login.switchText");
@@ -217,8 +229,8 @@ function FormPopup({
       formFields = [
         { label: t("FormPopup.register.usernameLabel"), name: "username", type: "text", required: true },
         { label: t("FormPopup.register.emailLabel"), name: "email", type: "email", required: true },
-        { label: t("FormPopup.register.passwordLabel"), name: "password", type: "password", required: true },
-        { label: t("FormPopup.register.confirmPasswordLabel"), name: "confirmPassword", type: "password", required: true },
+        { label: t("FormPopup.register.passwordLabel"), name: "password", type: showPassword ? "text" : "password", required: true },
+        { label: t("FormPopup.register.confirmPasswordLabel"), name: "confirmPassword", type: showConfirmPassword ? "text" : "password", required: true },
       ];
       title = t("FormPopup.register.title");
       switchText = t("FormPopup.register.switchText");
@@ -282,15 +294,27 @@ function FormPopup({
                     required={field.required}
                   />
                 ) : (
-                  <input
-                    className="modal-input"
-                    type={field.type}
-                    id={field.name}
-                    name={field.name}
-                    value={formData[field.name] || ""}
-                    onChange={handleChange}
-                    required={field.required}
-                  />
+                  <div className="password-wrapper">
+                    <input
+                      className="modal-input"
+                      type={field.type}
+                      id={field.name}
+                      name={field.name}
+                      value={formData[field.name] || ""}
+                      onChange={handleChange}
+                      required={field.required}
+                    />
+                    {(field.name === "password" && type !== "confirmPassword") && (
+                      <span className="password-toggle-icon" onClick={togglePasswordVisibility}>
+                        {showPassword ? <FaEyeSlash /> : <FaEye />}
+                      </span>
+                    )}
+                    {(field.name === "confirmPassword" && type === "register") && (
+                      <span className="password-toggle-icon" onClick={toggleConfirmPasswordVisibility}>
+                        {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
+                      </span>
+                    )}
+                  </div>
                 )}
                 {field.name === "username" &&
                   usernameValid !== null &&
