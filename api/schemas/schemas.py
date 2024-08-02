@@ -26,12 +26,12 @@ class RequestStatusEnum(str, Enum):
 
 # Slike
 class ImageCreate(BaseModel):
-    url: str
+    image: bytes
     item_id: Optional[int]
     restaurant_id: Optional[int]
 
 class ImageUpdate(BaseModel):
-    url: Optional[str]
+    image: Optional[bytes]
     item_id: Optional[int]
     restaurant_id: Optional[int]
 

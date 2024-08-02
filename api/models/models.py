@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Float, ForeignKey, DateTime, Boolean, Text, Enum, Time
+from sqlalchemy import Column, Integer, String, Float, ForeignKey, DateTime, Boolean, Text, Enum, Time, LargeBinary
 from sqlalchemy.orm import relationship
 from database.database import Base
 import datetime
@@ -28,7 +28,7 @@ class RequestStatus(enum.Enum):
 class Image(Base):
     __tablename__ = "images"
     id = Column(Integer, primary_key=True, index=True)
-    url = Column(String, nullable=False)
+    image = Column(LargeBinary, nullable=False)
     item_id = Column(Integer, ForeignKey("items.id"), nullable=True)
     restaurant_id = Column(Integer, ForeignKey("restaurants.id"), nullable=True)
 

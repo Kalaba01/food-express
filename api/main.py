@@ -1,10 +1,10 @@
 import uuid
 from datetime import datetime, timedelta
-from fastapi import FastAPI, Depends, HTTPException
+from fastapi import FastAPI, Depends, HTTPException, File, UploadFile
 from sqlalchemy.orm import Session
 from database.database import SessionLocal, engine, get_db
-from models.models import Base, User, PasswordResetToken
-from schemas.schemas import UserCreate, ForgotPasswordRequest
+from models.models import Base, User, PasswordResetToken, Image
+from schemas.schemas import UserCreate, ForgotPasswordRequest, ImageCreate
 from auth.auth import create_access_token, get_current_user
 from utils.password_utils import hash_password, verify_password
 from utils.email_utils import send_email
@@ -40,7 +40,13 @@ async def register_user(user: UserCreate, db: Session = Depends(get_db)):
         raise HTTPException(status_code=400, detail="Email already registered")
 
     hashed_password = await hash_password(user.password)
-    new_user = User(username=user.username, email=user.email, hashed_password=hashed_password, role='customer')
+    new_user = User(
+        username=user.username,
+        email=user.email,
+        hashed_password=hashed_password,
+        role='customer',
+        image_id=1  # Assigning the default profile image
+    )
     db.add(new_user)
     db.commit()
     db.refresh(new_user)
@@ -139,3 +145,12 @@ async def reset_password(token: str, new_password: str, db: Session = Depends(ge
     db.delete(reset_token)
     db.commit()
     return {"message": "Password reset successful"}
+
+@app.post("/upload-image/")
+async def upload_image(item_id: int = None, restaurant_id: int = None, file: UploadFile = File(...), db: Session = Depends(get_db)):
+    image_data = await file.read()
+    new_image = Image(image=image_data, item_id=item_id, restaurant_id=restaurant_id)
+    db.add(new_image)
+    db.commit()
+    db.refresh(new_image)
+    return {"message": "Image uploaded successfully", "image_id": new_image.id}
