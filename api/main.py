@@ -1,7 +1,6 @@
 import uuid
 from datetime import datetime, timedelta
 from fastapi import FastAPI, Depends, HTTPException
-from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import Session
 from database.database import SessionLocal, engine, get_db
 from models.models import Base, User, PasswordResetToken
@@ -67,9 +66,8 @@ async def register_user(user: UserCreate, db: Session = Depends(get_db)):
     return new_user
 
 @app.post("/token")
-async def login_user(form_data: OAuth2PasswordRequestForm = Depends(), db: AsyncSession = Depends(get_db)):
-    result = await db.execute(select(User).filter(User.username == form_data.username))
-    db_user = result.scalars().first()
+async def login_user(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
+    db_user = db.query(User).filter(User.username == form_data.username).first()
     if not db_user:
         raise HTTPException(status_code=400, detail="Invalid username or password")
     if not await verify_password(form_data.password, db_user.hashed_password):
@@ -83,10 +81,6 @@ async def login_user(form_data: OAuth2PasswordRequestForm = Depends(), db: Async
     }
     access_token = await create_access_token(data=user_data)
     return {"access_token": access_token, "token_type": "bearer"}
-
-@app.get("/users/me")
-async def read_users_me(current_user: User = Depends(get_current_user)):
-    return current_user
 
 @app.get("/check-username/{username}")
 async def check_username(username: str, db: Session = Depends(get_db)):

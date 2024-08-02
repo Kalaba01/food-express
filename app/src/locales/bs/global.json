@@ -37,7 +37,8 @@
       "usernameLabel": "Korisničko ime",
       "passwordLabel": "Lozinka",
       "forgotPassword": "Zaboravljena lozinka?",
-      "switchText": "Nemate račun? Registrirajte se"
+      "switchText": "Nemate račun?",
+      "switchTextLink": "Registrirajte se"
     },
     "register": {
       "title": "Registracija",
@@ -45,7 +46,8 @@
       "emailLabel": "Email",
       "passwordLabel": "Lozinka",
       "confirmPasswordLabel": "Potvrdite lozinku",
-      "switchText": "Već imate račun? Prijavite se"
+      "switchText": "Već imate račun?",
+      "switchTextLink": "Prijavite se"
     },
     "partner": {
       "title": "Postanite partner",

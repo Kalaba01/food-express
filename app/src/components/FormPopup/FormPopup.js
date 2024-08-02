@@ -200,6 +200,7 @@ function FormPopup({
   let formFields = [];
   let title = "";
   let switchText = "";
+  let switchTextLink = "";
 
   switch (type) {
     case "login":
@@ -209,6 +210,7 @@ function FormPopup({
       ];
       title = t("FormPopup.login.title");
       switchText = t("FormPopup.login.switchText");
+      switchTextLink = t("FormPopup.login.switchTextLink");
       break;
 
     case "register":
@@ -220,6 +222,7 @@ function FormPopup({
       ];
       title = t("FormPopup.register.title");
       switchText = t("FormPopup.register.switchText");
+      switchTextLink = t("FormPopup.register.switchTextLink");
       break;
 
     case "partner":
@@ -386,14 +389,18 @@ function FormPopup({
           </button>
         </form>
         {switchText && (
-          <p
-            className="switch-text"
-            onClick={() => {
-              switchToOtherForm(type === "login" ? "register" : "login");
-              resetFormData();
-            }}
-            dangerouslySetInnerHTML={{ __html: switchText }}
-          ></p>
+          <p className="switch-text">
+            {switchText}{" "}
+            <span
+              className="switch-link"
+              onClick={() => {
+                switchToOtherForm(type === "login" ? "register" : "login");
+                resetFormData();
+              }}
+            >
+              {switchTextLink}
+            </span>
+          </p>
         )}
       </div>
     </div>

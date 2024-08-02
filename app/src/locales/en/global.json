@@ -37,7 +37,8 @@
       "usernameLabel": "Username",
       "passwordLabel": "Password",
       "forgotPassword": "Forgot Password?",
-      "switchText": "Don't have an account? Register"
+      "switchText": "Don't have an account?",
+      "switchTextLink": "Register"
     },
     "register": {
       "title": "Register",
@@ -45,7 +46,8 @@
       "emailLabel": "Email",
       "passwordLabel": "Password",
       "confirmPasswordLabel": "Confirm Password",
-      "switchText": "Already have an account? Login"
+      "switchText": "Already have an account?",
+      "switchTextLink": "Login"
     },
     "partner": {
       "title": "Become a Partner",

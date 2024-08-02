@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Footer, Header } from '../index';
+import { Footer, Header, GoTop } from '../index';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { jwtDecode } from 'jwt-decode';
@@ -116,6 +116,7 @@ function LandingPage({ openPopupModal, darkMode, toggleDarkMode }) {
         </section>
       </main>
       <Footer />
+      <GoTop />
     </div>
   );
 }
