@@ -26,7 +26,6 @@ def start_application():
 
 app = start_application()
 
-# Kreiranje tabela prilikom pokretanja aplikacije
 Base.metadata.create_all(bind=engine)
 
 @app.post("/register")
@@ -45,7 +44,7 @@ async def register_user(user: UserCreate, db: Session = Depends(get_db)):
         email=user.email,
         hashed_password=hashed_password,
         role='customer',
-        image_id=1  # Assigning the default profile image
+        image_id=1
     )
     db.add(new_user)
     db.commit()

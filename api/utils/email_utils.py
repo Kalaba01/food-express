@@ -1,10 +1,14 @@
 import aiosmtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
 
 async def send_email(to_email, subject, body):
-    from_email = "foodexpressproject@outlook.com"
-    from_password = "arivxbmnvicpkbkh"
+    from_email = os.getenv('EMAIL_USER')
+    from_password = os.getenv('EMAIL_PASSWORD')
 
     msg = MIMEMultipart()
     msg['From'] = from_email
