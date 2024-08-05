@@ -42,7 +42,7 @@ class User(Base):
     email = Column(String, unique=True, index=True, nullable=False)
     hashed_password = Column(String, nullable=False)
     role = Column(String, nullable=False)  # 'administrator', 'owner', 'courier', 'customer'
-    image_id = Column(Integer, ForeignKey("images.id"), nullable=True)  # Dodata kolona za sliku
+    image_id = Column(Integer, ForeignKey("images.id"), nullable=True)
 
     owned_restaurants = relationship("Restaurant", back_populates="owner")
     couriers = relationship("Courier", back_populates="user")
