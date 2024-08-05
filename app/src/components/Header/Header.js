@@ -1,5 +1,5 @@
 import React from 'react';
-import { LoginRegister, Theme, Language, Logout } from "../index";
+import { LoginRegister, Theme, Language, Logout, HamburgerMenu } from "../index";
 import { jwtDecode } from "jwt-decode";
 import { useTranslation } from 'react-i18next';
 import './Header.css';
@@ -26,7 +26,9 @@ function Header({ darkMode, toggleDarkMode, openPopupModal, userType }) {
 
   return (
     <header className="top-bar">
-      <div className="logo-container">
+      {isLoggedIn && <HamburgerMenu />}
+      <div className={`logo-container ${!isLoggedIn ? 'login' : 'notlogin'}`}>
+        
         <img src="./images/logo.png" alt="Food Express Logo" className="logo" />
         <span className="logo-text">{t('Header.logoText')}</span>
       </div>

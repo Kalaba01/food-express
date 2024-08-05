@@ -4,13 +4,16 @@
     align-items: center;
     padding: 10px 20px;
     background-color: var(--header-background);
-    border-bottom: 2px solid var(--border-color);
+    border-bottom: 2px solid var(--border-color-light);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     transition: background-color 0.3s, border-color 0.3s;
+    position: relative;
+    z-index: 0;
 }
 
 body.dark-mode .top-bar {
     background-color: #444;
+    border-color: var(--border-color-dark);
 }
 
 .logo-container {
@@ -53,4 +56,12 @@ body.dark-mode .top-bar {
 
 .language-selector .icon {
     margin-top: 0.2em;
+}
+
+.logo-container.notlogin {
+    margin-right: -7.5%;
+}
+
+.logo-container.login {
+    margin-left: 41.5%;
 }
