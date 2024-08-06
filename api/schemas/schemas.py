@@ -16,13 +16,8 @@ class RestaurantCapacityEnum(str, Enum):
 
 class RequestTypeEnum(str, Enum):
     partner = "partner"
-    driver = "driver"
-    team = "team"
-
-class RequestStatusEnum(str, Enum):
-    pending = "pending"
-    denied = "denied"
-    accepted = "accepted"
+    deliver = "deliver"
+    join = "join"
 
 # Slike
 class ImageCreate(BaseModel):
@@ -249,8 +244,8 @@ class RequestCreate(BaseModel):
     first_name: str
     last_name: str
     email: str
-    additional_info: str
-    request_type: str  # 'partner', 'driver', 'team'
+    additional_info: Optional[str] = None
+    request_type: RequestTypeEnum
 
 class ForgotPasswordRequest(BaseModel):
     email: str

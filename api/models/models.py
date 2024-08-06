@@ -17,8 +17,8 @@ class RestaurantCapacity(enum.Enum):
 
 class RequestType(enum.Enum):
     partner = "partner"
-    driver = "driver"
-    team = "team"
+    deliver = "deliver"
+    join = "join"
 
 class RequestStatus(enum.Enum):
     pending = "pending"
@@ -251,8 +251,8 @@ class Request(Base):
     first_name = Column(String, nullable=False)
     last_name = Column(String, nullable=False)
     email = Column(String, nullable=False)
-    additional_info = Column(String, nullable=False)
-    request_type = Column(String, nullable=False)  # 'partner', 'driver', 'team'
+    additional_info = Column(String, nullable=True)
+    request_type = Column(Enum(RequestType), nullable=False)
     status = Column(Enum(RequestStatus), default=RequestStatus.pending)
     created_at = Column(DateTime, default=datetime.datetime.utcnow)
 

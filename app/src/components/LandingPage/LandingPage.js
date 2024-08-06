@@ -90,15 +90,15 @@ function LandingPage({ openPopupModal, darkMode, toggleDarkMode }) {
           <div className="join-us-cards">
             <div className="join-card">
               <img src="https://placehold.co/400x400" alt="Become a partner" className="join-img" />
-              <button>{t('LandingPage.joinUs.becomePartnerButton')}</button>
+              <button onClick={() => openPopupModal('partner')}>{t('LandingPage.joinUs.becomePartnerButton')}</button>
             </div>
             <div className="join-card">
               <img src="https://placehold.co/400x400" alt="Deliver with us" className="join-img" />
-              <button>{t('LandingPage.joinUs.deliverWithUsButton')}</button>
+              <button onClick={() => openPopupModal('deliver')}>{t('LandingPage.joinUs.deliverWithUsButton')}</button>
             </div>
             <div className="join-card">
               <img src="https://placehold.co/400x400" alt="Join the team" className="join-img" />
-              <button>{t('LandingPage.joinUs.joinTeamButton')}</button>
+              <button onClick={() => openPopupModal('join')}>{t('LandingPage.joinUs.joinTeamButton')}</button>
             </div>
           </div>
         </section>

@@ -3,8 +3,8 @@ from datetime import datetime, timedelta
 from fastapi import FastAPI, Depends, HTTPException, File, UploadFile
 from sqlalchemy.orm import Session
 from database.database import SessionLocal, engine, get_db
-from models.models import Base, User, PasswordResetToken, Image
-from schemas.schemas import UserCreate, ForgotPasswordRequest, ImageCreate
+from models.models import Base, User, PasswordResetToken, Image, Request
+from schemas.schemas import UserCreate, ForgotPasswordRequest, ImageCreate, RequestCreate
 from auth.auth import create_access_token, get_current_user
 from utils.password_utils import hash_password, verify_password
 from utils.email_utils import send_email
@@ -153,3 +153,19 @@ async def upload_image(item_id: int = None, restaurant_id: int = None, file: Upl
     db.commit()
     db.refresh(new_image)
     return {"message": "Image uploaded successfully", "image_id": new_image.id}
+
+@app.post("/requests/")
+async def create_request(request: RequestCreate, db: Session = Depends(get_db)):
+    new_request = Request(
+        first_name=request.first_name,
+        last_name=request.last_name,
+        email=request.email,
+        additional_info=request.additional_info if request.additional_info else None,
+        request_type=request.request_type,
+        status="pending",
+        created_at=datetime.utcnow()
+    )
+    db.add(new_request)
+    db.commit()
+    db.refresh(new_request)
+    return new_request

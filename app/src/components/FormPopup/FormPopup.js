@@ -102,13 +102,13 @@ function FormPopup({
         showNotification(t("FormPopup.common.errors.captcha"), "error");
         return;
       }
-
+  
       try {
         const response = await axios.post("http://localhost:8000/register", {
           ...formData,
           role: "customer",
         });
-
+  
         if (response.status === 200 || response.status === 201) {
           showNotification(t("FormPopup.common.success.registration"), "success");
           closeModal();
@@ -132,7 +132,7 @@ function FormPopup({
         const loginData = new URLSearchParams();
         loginData.append("username", formData.username);
         loginData.append("password", formData.password);
-
+  
         const response = await axios.post(
           "http://localhost:8000/token",
           loginData,
@@ -142,14 +142,14 @@ function FormPopup({
             },
           }
         );
-
+  
         const token = response.data.access_token;
         localStorage.setItem("token", token);
-
+  
         const decodedToken = jwtDecode(token);
-
+  
         handleLogin(decodedToken.role, token);
-
+  
         showNotification(t("FormPopup.common.success.login"), "success");
         closeModal();
       } catch (error) {
@@ -164,6 +164,7 @@ function FormPopup({
         const requestData = {
           ...formData,
           request_type: type,
+          additional_info: formData.additional_info || null,
         };
         const response = await axios.post(
           "http://localhost:8000/requests/",
@@ -179,7 +180,7 @@ function FormPopup({
         showNotification(t("FormPopup.common.errors.requestFailed"), "error");
       }
     }
-  };
+  };  
 
   const resetFormData = () => {
     setFormData({
@@ -242,7 +243,7 @@ function FormPopup({
         { label: t("FormPopup.partner.firstNameLabel"), name: "first_name", type: "text", required: true },
         { label: t("FormPopup.partner.lastNameLabel"), name: "last_name", type: "text", required: true },
         { label: t("FormPopup.partner.emailLabel"), name: "email", type: "email", required: true },
-        { label: t("FormPopup.partner.additionalInfoLabel"), name: "additional_info", type: "textarea", required: true },
+        { label: t("FormPopup.partner.additionalInfoLabel"), name: "additional_info", type: "textarea", required: false },
       ];
       title = t("FormPopup.partner.title");
       break;
@@ -252,7 +253,7 @@ function FormPopup({
         { label: t("FormPopup.deliver.firstNameLabel"), name: "first_name", type: "text", required: true },
         { label: t("FormPopup.deliver.lastNameLabel"), name: "last_name", type: "text", required: true },
         { label: t("FormPopup.deliver.emailLabel"), name: "email", type: "email", required: true },
-        { label: t("FormPopup.deliver.additionalInfoLabel"), name: "additional_info", type: "textarea", required: true },
+        { label: t("FormPopup.deliver.additionalInfoLabel"), name: "additional_info", type: "textarea", required: false },
       ];
       title = t("FormPopup.deliver.title");
       break;
@@ -262,7 +263,7 @@ function FormPopup({
         { label: t("FormPopup.join.firstNameLabel"), name: "first_name", type: "text", required: true },
         { label: t("FormPopup.join.lastNameLabel"), name: "last_name", type: "text", required: true },
         { label: t("FormPopup.join.emailLabel"), name: "email", type: "email", required: true },
-        { label: t("FormPopup.join.additionalInfoLabel"), name: "additional_info", type: "textarea", required: true },
+        { label: t("FormPopup.join.additionalInfoLabel"), name: "additional_info", type: "textarea", required: false },
       ];
       title = t("FormPopup.join.title");
       break;
