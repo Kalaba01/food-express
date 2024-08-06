@@ -1,11 +1,12 @@
 import React from 'react';
-import { Header } from '../index';
+import { Header, Footer } from '../index';
 
 function Admin({ darkMode, toggleDarkMode }) {
   return (
     <div>
       <Header darkMode={darkMode} toggleDarkMode={toggleDarkMode} userType="administrator" />
       <h2>Admin Dashboard</h2>
+      <Footer />
     </div>
   );
 }

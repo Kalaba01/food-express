@@ -4,7 +4,7 @@ from fastapi import FastAPI, Depends, HTTPException, File, UploadFile
 from sqlalchemy.orm import Session
 from database.database import SessionLocal, engine, get_db
 from models.models import Base, User, PasswordResetToken, Image, Request
-from schemas.schemas import UserCreate, ForgotPasswordRequest, ImageCreate, RequestCreate
+from schemas.schemas import UserCreate, ForgotPasswordRequest, ImageCreate, RequestCreate, RequestStatusUpdate
 from auth.auth import create_access_token, get_current_user
 from utils.password_utils import hash_password, verify_password
 from utils.email_utils import send_email
@@ -169,3 +169,17 @@ async def create_request(request: RequestCreate, db: Session = Depends(get_db)):
     db.commit()
     db.refresh(new_request)
     return new_request
+
+@app.get("/requests/")
+def read_requests(db: Session = Depends(get_db)):
+    return db.query(Request).all()
+
+@app.put("/requests/{request_id}")
+async def update_request_status(request_id: int, status_update: RequestStatusUpdate, db: Session = Depends(get_db)):
+    request = db.query(Request).filter(Request.id == request_id).first()
+    if not request:
+        raise HTTPException(status_code=404, detail="Request not found")
+    request.status = status_update.status
+    db.commit()
+    db.refresh(request)
+    return request

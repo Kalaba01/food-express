@@ -28,8 +28,7 @@ function Header({ darkMode, toggleDarkMode, openPopupModal, userType }) {
     <header className="top-bar">
       {isLoggedIn && <HamburgerMenu />}
       <div className={`logo-container ${!isLoggedIn ? 'login' : 'notlogin'}`}>
-        
-        <img src="./images/logo.png" alt="Food Express Logo" className="logo" />
+        <img src="/images/logo.png" alt="Food Express Logo" className="logo" />
         <span className="logo-text">{t('Header.logoText')}</span>
       </div>
       <div className="top-bar-icons">

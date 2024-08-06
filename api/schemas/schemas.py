@@ -247,5 +247,8 @@ class RequestCreate(BaseModel):
     additional_info: Optional[str] = None
     request_type: RequestTypeEnum
 
+class RequestStatusUpdate(BaseModel):
+    status: str
+
 class ForgotPasswordRequest(BaseModel):
     email: str

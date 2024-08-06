@@ -9,3 +9,94 @@ body.dark-mode .requests-container {
     background-color: var(--background-color-dark);
     color: var(--text-color-dark);
 }
+
+.filter-buttons {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.filter-buttons button {
+    background-color: var(--secondary-color);
+    color: var(--primary-color);
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.filter-buttons button:hover {
+    background-color: var(--secondary-color-light);
+    transform: translateY(-2px);
+}
+
+.requests-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.requests-table th,
+.requests-table td {
+    padding: 12px 15px;
+    border: 1px solid var(--border-color-light);
+    text-align: left;
+}
+
+body.dark-mode .requests-table th,
+body.dark-mode .requests-table td {
+    border: 1px solid var(--border-color-dark);
+}
+
+.requests-table th {
+    background-color: var(--secondary-color);
+    color: var(--primary-color);
+}
+
+body.dark-mode .requests-table th {
+    background-color: var(--border-color-dark);
+}
+
+.requests-table tr:nth-child(even) {
+    background-color: var(--background-color-light);
+}
+
+body.dark-mode .requests-table tr:nth-child(even) {
+    background-color: var(--background-color-dark);
+}
+
+.requests-table tr:nth-child(odd) {
+    background-color: var(--dropdown-background-color);
+}
+
+body.dark-mode .requests-table tr:nth-child(odd) {
+    background-color: var(--dropdown-background-dark);
+}
+
+.accept-button,
+.deny-button {
+    padding: 5px 10px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+    margin: 0 5px;
+}
+
+.accept-button {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.accept-button:hover {
+    background-color: #45a049;
+    transform: translateY(-2px);
+}
+
+.deny-button {
+    background-color: #f44336;
+    color: white;
+}
+
+.deny-button:hover {
+    background-color: #da190b;
+    transform: translateY(-2px);
+}
