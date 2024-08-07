@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Routes, Route } from 'react-router-dom';
-import { FormPopup, NotificationPopup, Customer, Owner, Courier, Admin, LandingPage, Unauthorized, ForgotPassword, ResetPassword, Requests, Users, NotFound } from './components/index';
+import { FormPopup, NotificationPopup, Customer, Owner, Courier, Admin, LandingPage, Unauthorized, ForgotPassword, ResetPassword, Requests, Users, NotFound, Footer } from './components/index';
 import { jwtDecode } from 'jwt-decode';
 import ProtectedRoute from './components/ProtectedRoute';
 import './App.css';
@@ -96,25 +96,29 @@ function App() {
       )}
       {notification.message && <NotificationPopup message={notification.message} type={notification.type} />}
 
-      <Routes>
-        <Route path="/" element={
-          <LandingPage 
-            openPopupModal={openPopupModal}
-            darkMode={darkMode}
-            toggleDarkMode={toggleDarkMode}
-          />
-        } />
-        <Route path="/forgot" element={<ForgotPassword darkMode={darkMode} toggleDarkMode={toggleDarkMode} />} />
-        <Route path="/reset-password" element={<ResetPassword darkMode={darkMode} toggleDarkMode={toggleDarkMode} />} />
-        <Route path="/customer" element={<ProtectedRoute allowedRoles={['customer']}><Customer darkMode={darkMode} toggleDarkMode={toggleDarkMode} /></ProtectedRoute>} />
-        <Route path="/owner" element={<ProtectedRoute allowedRoles={['owner']}><Owner darkMode={darkMode} toggleDarkMode={toggleDarkMode} /></ProtectedRoute>} />
-        <Route path="/courier" element={<ProtectedRoute allowedRoles={['courier']}><Courier darkMode={darkMode} toggleDarkMode={toggleDarkMode} /></ProtectedRoute>} />
-        <Route path="/admin" element={<ProtectedRoute allowedRoles={['administrator']}><Admin darkMode={darkMode} toggleDarkMode={toggleDarkMode} /></ProtectedRoute>} />
-        <Route path="/admin/requests" element={<ProtectedRoute allowedRoles={['administrator']}><Requests darkMode={darkMode} toggleDarkMode={toggleDarkMode} /></ProtectedRoute>} />
-        <Route path="/admin/users" element={<ProtectedRoute allowedRoles={['administrator']}><Users darkMode={darkMode} toggleDarkMode={toggleDarkMode} /></ProtectedRoute>} />
-        <Route path="/unauthorized" element={<Unauthorized darkMode={darkMode} toggleDarkMode={toggleDarkMode} />} />
-        <Route path="*" element={<NotFound darkMode={darkMode} toggleDarkMode={toggleDarkMode} />} />
-      </Routes>
+      <div className="main-content">
+        <Routes>
+          <Route path="/" element={
+            <LandingPage 
+              openPopupModal={openPopupModal}
+              darkMode={darkMode}
+              toggleDarkMode={toggleDarkMode}
+            />
+          } />
+          <Route path="/forgot" element={<ForgotPassword darkMode={darkMode} toggleDarkMode={toggleDarkMode} />} />
+          <Route path="/reset-password" element={<ResetPassword darkMode={darkMode} toggleDarkMode={toggleDarkMode} />} />
+          <Route path="/customer" element={<ProtectedRoute allowedRoles={['customer']}><Customer darkMode={darkMode} toggleDarkMode={toggleDarkMode} /></ProtectedRoute>} />
+          <Route path="/owner" element={<ProtectedRoute allowedRoles={['owner']}><Owner darkMode={darkMode} toggleDarkMode={toggleDarkMode} /></ProtectedRoute>} />
+          <Route path="/courier" element={<ProtectedRoute allowedRoles={['courier']}><Courier darkMode={darkMode} toggleDarkMode={toggleDarkMode} /></ProtectedRoute>} />
+          <Route path="/admin" element={<ProtectedRoute allowedRoles={['administrator']}><Admin darkMode={darkMode} toggleDarkMode={toggleDarkMode} /></ProtectedRoute>} />
+          <Route path="/admin/requests" element={<ProtectedRoute allowedRoles={['administrator']}><Requests darkMode={darkMode} toggleDarkMode={toggleDarkMode} /></ProtectedRoute>} />
+          <Route path="/admin/users" element={<ProtectedRoute allowedRoles={['administrator']}><Users darkMode={darkMode} toggleDarkMode={toggleDarkMode} /></ProtectedRoute>} />
+          <Route path="/unauthorized" element={<Unauthorized darkMode={darkMode} toggleDarkMode={toggleDarkMode} />} />
+          <Route path="*" element={<NotFound darkMode={darkMode} toggleDarkMode={toggleDarkMode} />} />
+        </Routes>
+      </div>
+
+      <Footer />
     </div>
   );
 }

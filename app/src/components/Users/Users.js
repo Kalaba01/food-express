@@ -175,7 +175,7 @@ function Users({ darkMode, toggleDarkMode }) {
         </div>
       )}
 
-      <Footer />
+      
     </div>
   );
 }

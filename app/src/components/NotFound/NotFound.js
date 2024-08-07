@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Footer, Header } from '../index';
+import { Header } from '../index';
 import { useTranslation } from 'react-i18next';
 import './NotFound.css';
 
@@ -22,7 +22,6 @@ const NotFound = ({ darkMode, toggleDarkMode }) => {
           {t('NotFound.returnHome')}
         </button>
       </div>
-      <Footer />
     </div>
   );
 };

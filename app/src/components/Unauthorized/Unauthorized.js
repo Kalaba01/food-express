@@ -44,7 +44,7 @@ const Unauthorized = ({ darkMode, toggleDarkMode }) => {
           {t('Unauthorized.returnHome')}
         </button>
       </div>
-      <Footer />
+      
     </div>
   );
 };

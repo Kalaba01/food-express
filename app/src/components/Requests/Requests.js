@@ -79,7 +79,7 @@ function Requests({ darkMode, toggleDarkMode }) {
         </table>
       </div>
       {notification.message && <NotificationPopup message={notification.message} type={notification.type} />}
-      <Footer />
+      
     </div>
   );
 }

@@ -16,9 +16,26 @@ body {
   transition: background-color 0.3s, color 0.3s;
 }
 
+html,
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+
 .App {
   font-family: Arial, sans-serif;
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.main-content {
+  flex: 1;
+  /* Ensure the main content takes up remaining space */
 }
 
 .modal {

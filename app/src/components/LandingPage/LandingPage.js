@@ -115,7 +115,6 @@ function LandingPage({ openPopupModal, darkMode, toggleDarkMode }) {
           ))}
         </section>
       </main>
-      <Footer />
       <GoTop />
     </div>
   );
