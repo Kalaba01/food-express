@@ -1,0 +1,151 @@
+.users-container {
+    padding: 20px;
+    background-color: var(--background-color-light);
+    color: var(--text-color-light);
+    transition: background-color 0.3s, color 0.3s;
+}
+
+body.dark-mode .users-container {
+    background-color: var(--background-color-dark);
+    color: var(--text-color-dark);
+}
+
+.users-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.users-table th,
+.users-table td {
+    border: 1px solid var(--border-color-light);
+    padding: 8px;
+    text-align: left;
+}
+
+body.dark-mode .users-table th,
+body.dark-mode .users-table td {
+    border: 1px solid var(--border-color-dark);
+}
+
+.users-table th {
+    background-color: var(--secondary-color);
+    color: var(--primary-color);
+}
+
+body.dark-mode .users-table th {
+    background-color: var(--secondary-color-dark);
+}
+
+.edit-button {
+    padding: 5px 10px;
+    background-color: var(--secondary-color);
+    color: var(--primary-color);
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.edit-button:hover {
+    background-color: var(--secondary-color-light);
+    transform: translateY(-2px);
+}
+
+.modal {
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background-color: var(--background-color);
+    color: var(--text-color);
+    padding: 20px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    width: 90%;
+    max-width: 400px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    position: relative;
+}
+
+.close-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 1.5em;
+    cursor: pointer;
+    color: var(--text-color);
+}
+
+.close-button:hover {
+    color: var(--secondary-color);
+}
+
+.save-button {
+    padding: 10px 20px;
+    background-color: var(--secondary-color);
+    color: var(--primary-color);
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+    margin-top: 10px;
+}
+
+.save-button:hover {
+    background-color: var(--secondary-color-light);
+    transform: translateY(-2px);
+}
+
+.input-field,
+.select-field {
+    width: calc(100% - 20px);
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    font-size: 1em;
+    color: var(--text-color);
+    background-color: var(--input-background-color);
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.input-field:focus,
+.select-field:focus {
+    border-color: var(--secondary-color);
+    box-shadow: 0 0 5px var(--secondary-color);
+}
+
+.filter-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto 20px auto;
+}
+
+.filter-button {
+    background-color: var(--secondary-color);
+    color: var(--primary-color);
+    border: none;
+    padding: 10px 20px;
+    margin: 0 10px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+    flex: 1;
+    text-align: center;
+}
+
+.filter-button:hover {
+    background-color: var(--secondary-color-light);
+    transform: translateY(-2px);
+}

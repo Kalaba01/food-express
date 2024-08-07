@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, EmailStr, Field, constr
 from typing import List, Optional
 from enum import Enum
 import datetime
@@ -41,11 +41,10 @@ class UserLogin(BaseModel):
     password: str
 
 class UserUpdate(BaseModel):
-    username: Optional[str]
-    email: Optional[str]
-    password: Optional[str]
-    role: Optional[str]
-    image_id: Optional[int]
+    username: Optional[constr(min_length=1)] = Field(None)
+    email: Optional[EmailStr] = Field(None)
+    password: Optional[constr(min_length=6)] = Field(None)
+    role: Optional[constr(min_length=1)] = Field(None)
 
 # Restorani
 class RestaurantCreate(BaseModel):

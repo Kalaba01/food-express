@@ -11,6 +11,12 @@ const ProtectedRoute = ({ allowedRoles, children }) => {
 
   try {
     const decodedToken = jwtDecode(token);
+    const currentTime = Date.now() / 1000;
+    if (decodedToken.exp < currentTime) {
+      localStorage.removeItem('token');
+      return <Navigate to="/" replace />;
+    }
+
     if (!allowedRoles.includes(decodedToken.role)) {
       return <Navigate to="/unauthorized" replace />;
     }

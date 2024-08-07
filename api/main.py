@@ -1,10 +1,12 @@
+import os
+import asyncio
 import uuid
 from datetime import datetime, timedelta
 from fastapi import FastAPI, Depends, HTTPException, File, UploadFile
 from sqlalchemy.orm import Session
 from database.database import SessionLocal, engine, get_db
 from models.models import Base, User, PasswordResetToken, Image, Request
-from schemas.schemas import UserCreate, ForgotPasswordRequest, ImageCreate, RequestCreate, RequestStatusUpdate
+from schemas.schemas import UserCreate, ForgotPasswordRequest, ImageCreate, RequestCreate, RequestStatusUpdate, UserUpdate
 from auth.auth import create_access_token, get_current_user
 from utils.password_utils import hash_password, verify_password
 from utils.email_utils import send_email
@@ -12,8 +14,6 @@ from fastapi.security import OAuth2PasswordRequestForm
 from fastapi.middleware.cors import CORSMiddleware
 from apscheduler.schedulers.background import BackgroundScheduler
 from apscheduler.triggers.cron import CronTrigger
-import os
-import asyncio
 
 def start_application():
     app = FastAPI()
@@ -244,3 +244,29 @@ scheduler.start()
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000)
+
+@app.get("/users/")
+async def read_users(db: Session = Depends(get_db)):
+    users = db.query(User).all()
+    return users
+
+@app.put("/users/{user_id}")
+async def update_user(user_id: int, user_update: UserUpdate, db: Session = Depends(get_db)):
+    user = db.query(User).filter(User.id == user_id).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    if user_update.username:
+        user.username = user_update.username
+    if user_update.email:
+        user.email = user_update.email
+    if user_update.password:
+        if await verify_password(user_update.password, user.hashed_password):
+            raise HTTPException(status_code=400, detail="New password cannot be the same as the old password")
+        user.hashed_password = await hash_password(user_update.password)
+    if user_update.role:
+        user.role = user_update.role
+    
+    db.commit()
+    db.refresh(user)
+    return user
