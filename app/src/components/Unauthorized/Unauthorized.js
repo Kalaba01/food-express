@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { FcLock, FcUnlock } from "react-icons/fc";
-import { Footer, Header } from "../index";
+import { useNavigate } from "react-router-dom";
+import { Header } from "../index";
 import { useTranslation } from 'react-i18next';
 import "./Unauthorized.css";
 

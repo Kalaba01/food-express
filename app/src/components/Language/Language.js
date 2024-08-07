@@ -17,10 +17,10 @@ function Language() {
       <FaGlobe className="icon" onClick={() => setShowDropdown(!showDropdown)} />
       <div className={`dropdown ${showDropdown ? 'show' : ''}`}>
         <div className="dropdown-item" onClick={() => changeLanguage('en')}>
-          <img src="./images/usa.png" alt="English" />
+          <img src="/images/usa.png" alt="English" />
         </div>
         <div className="dropdown-item" onClick={() => changeLanguage('bs')}>
-          <img src="./images/bih.png" alt="Bosnian" />
+          <img src="/images/bih.png" alt="Bosnian" />
         </div>
       </div>
     </div>

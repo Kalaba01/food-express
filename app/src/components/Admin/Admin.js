@@ -1,5 +1,5 @@
 import React from 'react';
-import { Header, Footer } from '../index';
+import { Header } from '../index';
 
 function Admin({ darkMode, toggleDarkMode }) {
   return (

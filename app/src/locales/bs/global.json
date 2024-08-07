@@ -119,5 +119,44 @@
   "NotFound": {
     "pageNotFound": "Stranica nije pronađena",
     "returnHome": "Vrati se na početnu"
+  },
+  "Users": {
+    "title": "Korisnici",
+    "all": "Svi",
+    "administrator": "Administrator",
+    "owner": "Vlasnik",
+    "courier": "Kurir",
+    "customer": "Kupac",
+    "username": "Korisničko ime",
+    "email": "E-mail",
+    "role": "Uloga",
+    "actions": "Akcije",
+    "edit": "Uredi",
+    "editUser": "Uredi korisnika",
+    "selectField": "Odaberite polje za uređivanje",
+    "enterNewUsername": "Unesite novo korisničko ime",
+    "enterNewEmail": "Unesite novi email",
+    "enterNewPassword": "Unesite novu lozinku",
+    "confirmPassword": "Potvrdite lozinku",
+    "password": "Lozinka",
+    "passwordSameAsOld": "Nova lozinka ne može biti ista kao stara lozinka",
+    "passwordRequirements": "Lozinka mora biti najmanje 6 znakova duga i sadržavati barem jedan broj.",
+    "save": "Sačuvaj"
+  },
+  "Requests": {
+    "title": "Zahtjevi",
+    "pending": "Na čekanju",
+    "accepted": "Prihvaćeni",
+    "denied": "Odbijeni",
+    "ime": "Ime",
+    "prezime": "Prezime",
+    "email": "E-mail",
+    "info": "Info",
+    "noInfo": "Nema informacija",
+    "type": "Tip",
+    "created": "Kreirano",
+    "actions": "Akcije",
+    "accept": "Prihvati",
+    "deny": "Odbij"
   }
 }

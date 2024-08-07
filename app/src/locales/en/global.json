@@ -119,5 +119,44 @@
   "NotFound": {
     "pageNotFound": "Page Not Found",
     "returnHome": "Return Home"
+  },
+  "Users": {
+    "title": "Users",
+    "all": "All",
+    "administrator": "Administrator",
+    "owner": "Owner",
+    "courier": "Courier",
+    "customer": "Customer",
+    "username": "Username",
+    "email": "E-mail",
+    "role": "Role",
+    "actions": "Actions",
+    "edit": "Edit",
+    "editUser": "Edit User",
+    "selectField": "Select field to edit",
+    "enterNewUsername": "Enter new Username",
+    "enterNewEmail": "Enter new Email",
+    "enterNewPassword": "Enter new Password",
+    "confirmPassword": "Confirm Password",
+    "password": "Password",
+    "passwordSameAsOld": "New password cannot be the same as the old password",
+    "passwordRequirements": "Password must be at least 6 characters long and contain at least one number.",
+    "save": "Save"
+  },
+  "Requests": {
+    "title": "Requests",
+    "pending": "Pending",
+    "accepted": "Accepted",
+    "denied": "Denied",
+    "ime": "First Name",
+    "prezime": "Last Name",
+    "email": "E-mail",
+    "info": "Info",
+    "noInfo": "No Info",
+    "type": "Type",
+    "created": "Created",
+    "actions": "Actions",
+    "accept": "Accept",
+    "deny": "Deny"
   }
 }
