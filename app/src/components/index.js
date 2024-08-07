@@ -19,5 +19,6 @@ import ResetPassword from "./ResetPassword/ResetPassword";
 import HamburgerMenu from "./HamburgerMenu/HamburgerMenu";
 import Requests from "./Requests/Requests";
 import Users from "./Users/Users";
+import NotFound from "./NotFound/NotFound";
 
-export  { Admin, Captcha, Courier, Customer, Footer, FormPopup, GoTop, Header, Language, LoginRegister, NotificationPopup, Owner, Theme, LandingPage, Unauthorized, Logout, ForgotPassword, ResetPassword, HamburgerMenu, Requests, Users }
+export  { Admin, Captcha, Courier, Customer, Footer, FormPopup, GoTop, Header, Language, LoginRegister, NotificationPopup, Owner, Theme, LandingPage, Unauthorized, Logout, ForgotPassword, ResetPassword, HamburgerMenu, Requests, Users, NotFound }

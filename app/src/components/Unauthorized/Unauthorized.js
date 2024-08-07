@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FcLock, FcUnlock } from "react-icons/fc";
-import { Header } from "../index";
+import { Footer, Header } from "../index";
 import { useTranslation } from 'react-i18next';
 import "./Unauthorized.css";
 
-const Unauthorized = () => {
+const Unauthorized = ({ darkMode, toggleDarkMode }) => {
   const { t } = useTranslation('global');
   const navigate = useNavigate();
   const [isHovered, setIsHovered] = useState(false);
@@ -29,7 +29,7 @@ const Unauthorized = () => {
 
   return (
     <div className="unauthorized-page">
-      <Header showIcons={false} />
+      <Header darkMode={darkMode} toggleDarkMode={toggleDarkMode} showIcons={false} hideHamburgerMenu={true} />
       <div className="unauthorized-container">
         <h1 className="unauthorized-title">403</h1>
         <div className="unauthorized-lock-icon">
@@ -44,6 +44,7 @@ const Unauthorized = () => {
           {t('Unauthorized.returnHome')}
         </button>
       </div>
+      <Footer />
     </div>
   );
 };

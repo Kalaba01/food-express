@@ -115,5 +115,9 @@
   "Unauthorized": {
     "accessForbidden": "Access Forbidden",
     "returnHome": "Return Home"
+  },
+  "NotFound": {
+    "pageNotFound": "Page Not Found",
+    "returnHome": "Return Home"
   }
 }

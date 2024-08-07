@@ -115,5 +115,9 @@
   "Unauthorized": {
     "accessForbidden": "Pristup zabranjen",
     "returnHome": "Vrati se na početnu"
+  },
+  "NotFound": {
+    "pageNotFound": "Stranica nije pronađena",
+    "returnHome": "Vrati se na početnu"
   }
 }
