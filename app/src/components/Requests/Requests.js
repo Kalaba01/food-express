@@ -26,11 +26,16 @@ function Requests({ darkMode, toggleDarkMode }) {
 
   const updateRequestStatus = async (id, status) => {
     try {
-      await axios.put(`http://localhost:8000/requests/${id}`, { status });
+      const response = await axios.put(`http://localhost:8000/requests/${id}`, { status });
       setRequests(requests.map(request => 
         request.id === id ? { ...request, status } : request
       ));
       setNotification({ message: `Request ${status}`, type: 'success' });
+
+      // Provjeri da li je zahtjev odobren i prikaži obavijest
+      if (status === 'accepted' && response.data.status === 'accepted') {
+        setNotification({ message: 'User account created and email sent successfully.', type: 'success' });
+      }
     } catch (error) {
       setNotification({ message: 'Error updating request status', type: 'error' });
       console.error('Error updating request status:', error);

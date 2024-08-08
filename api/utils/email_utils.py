@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 import os
 
 load_dotenv()
-
+    
 async def send_email(to_email, subject, body):
     from_email = os.getenv('EMAIL_USER')
     from_password = os.getenv('EMAIL_PASSWORD')
