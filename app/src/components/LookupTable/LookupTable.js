@@ -2,7 +2,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import './LookupTable.css';
 
-function LookupTable({ columns, data, actions, filterRole }) {
+function LookupTable({ columns, data, actions, filterRole, showActions }) {
   const { t } = useTranslation('global');
 
   const getColumnKey = (col) => {
@@ -24,7 +24,7 @@ function LookupTable({ columns, data, actions, filterRole }) {
     const key = getColumnKey(col);
     const value = item[key];
     if (key === 'additional_info' && !value) {
-      return t('Requests.noInfo'); // Dodajemo ključ za prevod u JSON fajlovima
+      return t('Requests.noInfo');
     }
     return value;
   };
@@ -37,7 +37,7 @@ function LookupTable({ columns, data, actions, filterRole }) {
             {columns.map((col, index) => (
               <th key={index}>{col}</th>
             ))}
-            {filterRole === 'pending' && <th>Actions</th>}
+            {showActions && <th>Actions</th>}
           </tr>
         </thead>
         <tbody>
@@ -46,7 +46,7 @@ function LookupTable({ columns, data, actions, filterRole }) {
               {columns.map((col, colIndex) => (
                 <td key={colIndex}>{getCellValue(col, item)}</td>
               ))}
-              {filterRole === 'pending' && (
+              {showActions && (
                 <td>
                   {actions.map(
                     (action, actionIndex) =>

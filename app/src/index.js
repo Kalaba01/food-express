@@ -5,7 +5,7 @@ import App from './App';
 import './index.css';
 
 import { I18nextProvider } from 'react-i18next';
-import i18n from './i18n'; // Import the i18n configuration
+import i18n from './i18n';
 
 const container = document.getElementById('root');
 const root = createRoot(container);

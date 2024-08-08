@@ -129,6 +129,8 @@ function Users({ darkMode, toggleDarkMode }) {
               handler: handleEditClick,
             }
           ]}
+          filterRole={filterRole}
+          showActions={true}
         />
       </div>
 

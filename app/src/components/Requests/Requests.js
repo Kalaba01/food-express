@@ -79,6 +79,7 @@ function Requests({ darkMode, toggleDarkMode }) {
             },
           ]}
           filterRole={filterRole}
+          showActions={filterRole === 'pending'}
         />
       </div>
     </div>

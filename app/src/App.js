@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Routes, Route } from 'react-router-dom';
-import { FormPopup, NotificationPopup, Customer, Owner, Courier, Admin, LandingPage, Unauthorized, ForgotPassword, ResetPassword, Requests, Users, NotFound, Footer } from './components/index';
+import { FormPopup, NotificationPopup, Customer, Owner, Courier, Admin, LandingPage, Unauthorized, ForgotPassword, ResetPassword, Requests, Users, NotFound, Footer, GoTop } from './components/index';
 import { jwtDecode } from 'jwt-decode';
 import ProtectedRoute from './components/ProtectedRoute';
 import './App.css';
@@ -118,6 +118,7 @@ function App() {
         </Routes>
       </div>
 
+      <GoTop />
       <Footer />
     </div>
   );
