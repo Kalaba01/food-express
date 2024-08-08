@@ -158,5 +158,26 @@
     "actions": "Akcije",
     "accept": "Prihvati",
     "deny": "Odbij"
+  },
+  "DeliveryZones": {
+    "title": "Zone Dostave",
+    "create": "Kreiraj Novu Zonu",
+    "edit": "Uredi Zonu",
+    "delete": "Obriši Zonu",
+    "enterName": "Molimo unesite naziv zone",
+    "selectArea": "Molimo odaberite područje na karti",
+    "duplicateName": "Zona s ovim imenom već postoji",
+    "editZone": "Uredi Zonu",
+    "createZone": "Kreiraj Zonu",
+    "viewZone": "Pregled Zonu",
+    "name": "Naziv Zone",
+    "success": {
+      "edit": "Zona uspješno uređena!",
+      "create": "Zona uspješno kreirana!",
+      "delete": "Zona uspješno obrisana!"
+    },
+    "errors": {
+      "requestFailed": "Zahtjev nije uspio. Molimo pokušajte ponovo."
+    }
   }
 }

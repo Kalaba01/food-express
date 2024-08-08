@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import { Header, NotificationPopup } from '../index';
-import LookupTable from '../LookupTable/LookupTable';
-import './Users.css';
+import { Header, NotificationPopup, LookupTable } from '../index';
 import { useTranslation } from 'react-i18next';
+import axios from 'axios';
+import '../LookupTable/LookupTable.css';
 
 function Users({ darkMode, toggleDarkMode }) {
   const { t } = useTranslation('global');

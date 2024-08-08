@@ -2,7 +2,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import './LookupTable.css';
 
-function LookupTable({ columns, data, actions, filterRole, showActions }) {
+function LookupTable({ columns, data, actions, showActions }) {
   const { t } = useTranslation('global');
 
   const getColumnKey = (col) => {
@@ -16,6 +16,7 @@ function LookupTable({ columns, data, actions, filterRole, showActions }) {
       [t('Users.username')]: 'username',
       [t('Users.email')]: 'email',
       [t('Users.role')]: 'role',
+      [t('DeliveryZones.name')]: 'name',
     };
     return map[col] || col.toLowerCase().replace(/\s+/g, '');
   };
@@ -37,7 +38,7 @@ function LookupTable({ columns, data, actions, filterRole, showActions }) {
             {columns.map((col, index) => (
               <th key={index}>{col}</th>
             ))}
-            {showActions && <th>Actions</th>}
+            {showActions && !columns.includes('Actions') && <th>Actions</th>}
           </tr>
         </thead>
         <tbody>

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Routes, Route } from 'react-router-dom';
-import { FormPopup, NotificationPopup, Customer, Owner, Courier, Admin, LandingPage, Unauthorized, ForgotPassword, ResetPassword, Requests, Users, NotFound, Footer, GoTop } from './components/index';
+import { FormPopup, NotificationPopup, Customer, Owner, Courier, Admin, LandingPage, Unauthorized, ForgotPassword, ResetPassword, Requests, Users, NotFound, Footer, GoTop, DeliveryZones } from './components/index';
 import { jwtDecode } from 'jwt-decode';
 import ProtectedRoute from './components/ProtectedRoute';
 import './App.css';
@@ -113,6 +113,7 @@ function App() {
           <Route path="/admin" element={<ProtectedRoute allowedRoles={['administrator']}><Admin darkMode={darkMode} toggleDarkMode={toggleDarkMode} /></ProtectedRoute>} />
           <Route path="/admin/requests" element={<ProtectedRoute allowedRoles={['administrator']}><Requests darkMode={darkMode} toggleDarkMode={toggleDarkMode} /></ProtectedRoute>} />
           <Route path="/admin/users" element={<ProtectedRoute allowedRoles={['administrator']}><Users darkMode={darkMode} toggleDarkMode={toggleDarkMode} /></ProtectedRoute>} />
+          <Route path="/admin/delivery-zones" element={<ProtectedRoute allowedRoles={['administrator']}><DeliveryZones darkMode={darkMode} toggleDarkMode={toggleDarkMode} /></ProtectedRoute>} />
           <Route path="/unauthorized" element={<Unauthorized darkMode={darkMode} toggleDarkMode={toggleDarkMode} />} />
           <Route path="*" element={<NotFound darkMode={darkMode} toggleDarkMode={toggleDarkMode} />} />
         </Routes>

@@ -20,6 +20,7 @@ body.dark-mode .lookup-table-container {
 .lookup-table td {
     border: 1px solid var(--border-color-light);
     padding: 8px;
+    text-align: center;
 }
 
 .lookup-table th {
@@ -43,36 +44,85 @@ body.dark-mode .lookup-table th {
 
 .lookup-table td:last-child {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
+    justify-content: space-evenly;
+    padding: 10px;
 }
 
-.edit-button {
+.edit-button,
+.map-icon,
+.delete-button {
     background-color: #4A90E2;
     color: white;
     padding: 10px 20px;
     border: none;
     border-radius: 5px;
-    font-size: 1em;
+    font-size: 1.1em;
     cursor: pointer;
     transition: background-color 0.3s, transform 0.2s;
-    margin: 0 auto;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
 }
 
-.edit-button:hover {
+.edit-button:hover,
+.map-icon:hover,
+.delete-button:hover {
     background-color: #357ABD;
     transform: translateY(-2px);
 }
 
-.accept-button {
-    background-color: #4CAF50;
+.map-icon {
+    background-color: #28a745;
+}
+
+.map-icon:hover {
+    background-color: #218838;
+}
+
+.delete-button {
+    background-color: #dc3545;
+}
+
+.delete-button:hover {
+    background-color: #c82333;
+}
+
+.create-button {
+    background-color: #4A90E2;
     color: white;
-    padding: 5px 10px;
+    padding: 10px 20px;
     border: none;
     border-radius: 5px;
-    font-size: 1em;
-    cursor: pointer; 
+    font-size: 1.2em;
+    cursor: pointer;
     transition: background-color 0.3s, transform 0.2s;
+    margin-bottom: 20px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.create-button:hover {
+    background-color: #357ABD;
+    transform: translateY(-2px);
+}
+
+.accept-button,
+.deny-button {
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 0.9em;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.accept-button {
+    background-color: #4CAF50;
 }
 
 .accept-button:hover {
@@ -82,13 +132,6 @@ body.dark-mode .lookup-table th {
 
 .deny-button {
     background-color: #f44336;
-    color: white;
-    padding: 5px 10px;
-    border: none;
-    border-radius: 5px;
-    font-size: 1em;
-    cursor: pointer;
-    transition: background-color 0.3s, transform 0.2s;
 }
 
 .deny-button:hover {

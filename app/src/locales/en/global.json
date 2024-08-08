@@ -158,5 +158,26 @@
     "actions": "Actions",
     "accept": "Accept",
     "deny": "Deny"
+  },
+  "DeliveryZones": {
+    "title": "Delivery Zones",
+    "create": "Create New Zone",
+    "edit": "Edit Zone",
+    "delete": "Delete Zone",
+    "enterName": "Please enter a zone name",
+    "selectArea": "Please select an area on the map",
+    "duplicateName": "A zone with this name already exists",
+    "editZone": "Edit Zone",
+    "createZone": "Create Zone",
+    "viewZone": "View Zone",
+    "name": "Zone Name",
+    "success": {
+      "edit": "Zone edited successfully!",
+      "create": "Zone created successfully!",
+      "delete": "Zone deleted successfully!"
+    },
+    "errors": {
+      "requestFailed": "Request failed. Please try again."
+    }
   }
 }

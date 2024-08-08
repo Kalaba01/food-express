@@ -21,5 +21,6 @@ import Requests from "./Requests/Requests";
 import Users from "./Users/Users";
 import NotFound from "./NotFound/NotFound";
 import LookupTable from "./LookupTable/LookupTable";
+import DeliveryZones from "./DeliveryZones/DeliveryZones";
 
-export  { Admin, Captcha, Courier, Customer, Footer, FormPopup, GoTop, Header, Language, LoginRegister, NotificationPopup, Owner, Theme, LandingPage, Unauthorized, Logout, ForgotPassword, ResetPassword, HamburgerMenu, Requests, Users, NotFound, LookupTable }
+export  { Admin, Captcha, Courier, Customer, Footer, FormPopup, GoTop, Header, Language, LoginRegister, NotificationPopup, Owner, Theme, LandingPage, Unauthorized, Logout, ForgotPassword, ResetPassword, HamburgerMenu, Requests, Users, NotFound, LookupTable, DeliveryZones }

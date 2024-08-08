@@ -35,6 +35,7 @@ function HamburgerMenu() {
           <>
             <a href="/admin/requests">Requests</a>
             <a href="/admin/users">Users</a>
+            <a href="/admin/delivery-zones">Delivery Zones</a>
           </>
         );
       case 'customer':

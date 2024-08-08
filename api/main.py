@@ -1,23 +1,28 @@
 import os
 import asyncio
 import uuid
+
 from datetime import datetime, timedelta
 from fastapi import FastAPI, Depends, HTTPException, File, UploadFile
+from fastapi.security import OAuth2PasswordRequestForm
+from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
+from apscheduler.schedulers.background import BackgroundScheduler
+from apscheduler.triggers.cron import CronTrigger
+
 from database.database import SessionLocal, engine, get_db
-from models.models import Base, User, PasswordResetToken, Image, Request
-from schemas.schemas import UserCreate, ForgotPasswordRequest, ImageCreate, RequestCreate, RequestStatusUpdate, UserUpdate
+from models.models import Base, User, PasswordResetToken, Image, Request, DeliveryZone
+from schemas.schemas import UserCreate, ForgotPasswordRequest, ImageCreate, RequestCreate, RequestStatusUpdate, UserUpdate, DeliveryZoneCreate, DeliveryZoneUpdate
+
 from auth.auth import create_access_token, get_current_user
 from utils.password_utils import hash_password, verify_password, generate_temp_password
 from utils.email_utils import send_email
 from utils.email_templates_utils import welcome_email, reset_password_email, request_denied_email, request_reminder_email, account_creation_email
 from utils.scheduled_tasks_utils import deny_requests_and_send_emails, remind_pending_requests
-from fastapi.security import OAuth2PasswordRequestForm
-from fastapi.middleware.cors import CORSMiddleware
-from apscheduler.schedulers.background import BackgroundScheduler
-from apscheduler.triggers.cron import CronTrigger
+
 from crud.user_crud import create_user, get_user_by_username, get_user_by_email, create_password_reset_token, verify_password_reset_token, update_user_password, check_user_exists, create_user_from_request
 from crud.request_crud import create_request, get_all_requests, update_request_status
+from crud.delivery_zone_crud import get_all_zones, create_zone, update_zone
 
 def start_application():
     app = FastAPI()
@@ -179,3 +184,28 @@ async def update_user(user_id: int, user_update: UserUpdate, db: Session = Depen
     db.commit()
     db.refresh(user)
     return user
+
+@app.get("/delivery-zones/")
+async def read_delivery_zones(db: Session = Depends(get_db)):
+    return await get_all_zones(db)
+
+@app.post("/delivery-zones/")
+async def create_delivery_zone(zone: DeliveryZoneCreate, db: Session = Depends(get_db)):
+    return await create_zone(db, zone)
+
+@app.put("/delivery-zones/{zone_id}")
+async def update_delivery_zone(zone_id: int, zone: DeliveryZoneUpdate, db: Session = Depends(get_db)):
+    updated_zone = await update_zone(db, zone_id, zone)
+    if not updated_zone:
+        raise HTTPException(status_code=404, detail="Zone not found")
+    return updated_zone
+
+@app.delete("/delivery-zones/{zone_id}")
+async def delete_delivery_zone(zone_id: int, db: Session = Depends(get_db)):
+    zone = db.query(DeliveryZone).filter(DeliveryZone.id == zone_id).first()
+    if not zone:
+        raise HTTPException(status_code=404, detail="Zone not found")
+    
+    db.delete(zone)
+    db.commit()
+    return {"message": "Zone deleted successfully"}
