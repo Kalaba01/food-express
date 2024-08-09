@@ -2,7 +2,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import './LookupTable.css';
 
-function LookupTable({ columns, data, actions, showActions }) {
+function LookupTable({ columns, data, actions, showActions, customRenderers }) {
   const { t } = useTranslation('global');
 
   const getColumnKey = (col) => {
@@ -17,12 +17,19 @@ function LookupTable({ columns, data, actions, showActions }) {
       [t('Users.email')]: 'email',
       [t('Users.role')]: 'role',
       [t('DeliveryZones.name')]: 'name',
+      [t('Restaurants.rating')]: 'rating',
     };
     return map[col] || col.toLowerCase().replace(/\s+/g, '');
   };
 
   const getCellValue = (col, item) => {
     const key = getColumnKey(col);
+
+    // Provera da li postoji custom renderer za ovu kolonu
+    if (customRenderers && customRenderers[col]) {
+      return customRenderers[col](item);
+    }
+
     const value = item[key];
     if (key === 'additional_info' && !value) {
       return t('Requests.noInfo');

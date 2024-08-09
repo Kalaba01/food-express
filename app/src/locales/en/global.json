@@ -179,5 +179,25 @@
     "errors": {
       "requestFailed": "Request failed. Please try again."
     }
+  },
+  "Restaurants": {
+    "title": "Restaurants",
+    "create": "Create New Restaurant",
+    "edit": "Edit",
+    "delete": "Delete",
+    "save": "Save",
+    "name": "Name",
+    "address": "Address",
+    "city": "City",
+    "category": "Category",
+    "rating": "Rating",
+    "contact": "Contact",
+    "deliveryZone": "Delivery Zone",
+    "normal": "Normal",
+    "busy": "Busy",
+    "crowded": "Crowded",
+    "editRestaurant": "Edit Restaurant",
+    "createRestaurant": "Create Restaurant",
+    "viewLocation": "View Location"
   }
 }

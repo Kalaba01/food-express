@@ -58,7 +58,7 @@ class RestaurantCreate(BaseModel):
     contact: str
     owner_id: int
     delivery_zone_id: int
-    capacity: RestaurantCapacityEnum
+    capacity: RestaurantCapacityEnum = RestaurantCapacityEnum.normal
     image_ids: Optional[List[int]]  # Lista slika
 
 class RestaurantUpdate(BaseModel):

@@ -11,8 +11,8 @@ from apscheduler.schedulers.background import BackgroundScheduler
 from apscheduler.triggers.cron import CronTrigger
 
 from database.database import SessionLocal, engine, get_db
-from models.models import Base, User, PasswordResetToken, Image, Request, DeliveryZone
-from schemas.schemas import UserCreate, ForgotPasswordRequest, ImageCreate, RequestCreate, RequestStatusUpdate, UserUpdate, DeliveryZoneCreate, DeliveryZoneUpdate
+from models.models import Base, User, PasswordResetToken, Image, Request, DeliveryZone, Restaurant, MenuCategory, Item
+from schemas.schemas import UserCreate, ForgotPasswordRequest, ImageCreate, RequestCreate, RequestStatusUpdate, UserUpdate, DeliveryZoneCreate, DeliveryZoneUpdate, RestaurantCreate, RestaurantUpdate, MenuCategoryCreate, MenuCategoryUpdate, ItemCreate, ItemUpdate
 
 from auth.auth import create_access_token, get_current_user
 from utils.password_utils import hash_password, verify_password, generate_temp_password
@@ -209,3 +209,102 @@ async def delete_delivery_zone(zone_id: int, db: Session = Depends(get_db)):
     db.delete(zone)
     db.commit()
     return {"message": "Zone deleted successfully"}
+
+@app.get("/restaurants/")
+async def read_restaurants(db: Session = Depends(get_db)):
+    return db.query(Restaurant).all()
+
+@app.post("/restaurants/")
+async def create_restaurant(restaurant: RestaurantCreate, db: Session = Depends(get_db)):
+    new_restaurant = Restaurant(**restaurant.dict())
+    db.add(new_restaurant)
+    db.commit()
+    db.refresh(new_restaurant)
+    return new_restaurant
+
+@app.put("/restaurants/{restaurant_id}")
+async def update_restaurant(restaurant_id: int, restaurant: RestaurantUpdate, db: Session = Depends(get_db)):
+    db_restaurant = db.query(Restaurant).filter(Restaurant.id == restaurant_id).first()
+    if not db_restaurant:
+        raise HTTPException(status_code=404, detail="Restaurant not found")
+    for key, value in restaurant.dict(exclude_unset=True).items():
+        setattr(db_restaurant, key, value)
+    db.commit()
+    db.refresh(db_restaurant)
+    return db_restaurant
+
+@app.delete("/restaurants/{restaurant_id}")
+async def delete_restaurant(restaurant_id: int, db: Session = Depends(get_db)):
+    db_restaurant = db.query(Restaurant).filter(Restaurant.id == restaurant_id).first()
+    if not db_restaurant:
+        raise HTTPException(status_code=404, detail="Restaurant not found")
+    db.delete(db_restaurant)
+    db.commit()
+    return {"message": "Restaurant deleted successfully"}
+
+# Rute za MenuCategory
+@app.get("/menu-categories/")
+async def read_menu_categories(restaurant_id: int, db: Session = Depends(get_db)):
+    return db.query(MenuCategory).filter(MenuCategory.restaurant_id == restaurant_id).all()
+
+@app.post("/menu-categories/")
+async def create_menu_category(menu_category: MenuCategoryCreate, db: Session = Depends(get_db)):
+    new_category = MenuCategory(**menu_category.dict())
+    db.add(new_category)
+    db.commit()
+    db.refresh(new_category)
+    return new_category
+
+@app.put("/menu-categories/{category_id}")
+async def update_menu_category(category_id: int, menu_category: MenuCategoryUpdate, db: Session = Depends(get_db)):
+    db_category = db.query(MenuCategory).filter(MenuCategory.id == category_id).first()
+    if not db_category:
+        raise HTTPException(status_code=404, detail="Menu category not found")
+    for key, value in menu_category.dict(exclude_unset=True).items():
+        setattr(db_category, key, value)
+    db.commit()
+    db.refresh(db_category)
+    return db_category
+
+@app.delete("/menu-categories/{category_id}")
+async def delete_menu_category(category_id: int, db: Session = Depends(get_db)):
+    db_category = db.query(MenuCategory).filter(MenuCategory.id == category_id).first()
+    if not db_category:
+        raise HTTPException(status_code=404, detail="Menu category not found")
+    db.delete(db_category)
+    db.commit()
+    return {"message": "Menu category deleted successfully"}
+
+# Rute za Item
+@app.get("/items/")
+async def read_items(category_id: int, db: Session = Depends(get_db)):
+    return db.query(Item).filter(Item.menu_category_id == category_id).all()
+
+@app.post("/items/")
+async def create_item(item: ItemCreate, db: Session = Depends(get_db)):
+    new_item = Item(**item.dict())
+    db.add(new_item)
+    db.commit()
+    db.refresh(new_item)
+    return new_item
+
+@app.put("/items/{item_id}")
+async def update_item(item_id: int, item: ItemUpdate, db: Session = Depends(get_db)):
+    db_item = db.query(Item).filter(Item.id == item_id).first()
+    if not db_item:
+        raise HTTPException(status_code=404, detail="Item not found")
+    for key, value in item.dict(exclude_unset=True).items():
+        setattr(db_item, key, value)
+    db.commit()
+    db.refresh(db_item)
+    return db_item
+
+@app.delete("/items/{item_id}")
+async def delete_item(item_id: int, db: Session = Depends(get_db)):
+    db_item = db.query(Item).filter(Item.id == item_id).first()
+    if not db_item:
+        raise HTTPException(status_code=404, detail="Item not found")
+    db.delete(db_item)
+    db.commit()
+    return {"message": "Item deleted successfully"}
+

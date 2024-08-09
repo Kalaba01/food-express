@@ -179,5 +179,25 @@
     "errors": {
       "requestFailed": "Zahtjev nije uspio. Molimo pokušajte ponovo."
     }
+  },
+  "Restaurants": {
+    "title": "Restorani",
+    "create": "Kreiraj Novi Restoran",
+    "edit": "Uredi",
+    "delete": "Obriši",
+    "save": "Sačuvaj",
+    "name": "Ime",
+    "address": "Adresa",
+    "city": "Grad",
+    "category": "Kategorija",
+    "rating": "Ocjena",
+    "contact": "Kontakt",
+    "deliveryZone": "Zona Dostave",
+    "normal": "Normalan",
+    "busy": "Zauzet",
+    "crowded": "Prepun",
+    "editRestaurant": "Uredi Restoran",
+    "createRestaurant": "Kreiraj Restoran",
+    "viewLocation": "Pogledaj Lokaciju"
   }
 }

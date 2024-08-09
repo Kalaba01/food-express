@@ -50,7 +50,8 @@ body.dark-mode .lookup-table th {
 
 .edit-button,
 .map-icon,
-.delete-button {
+.delete-button,
+.create-button {
     background-color: #4A90E2;
     color: white;
     padding: 10px 20px;
@@ -66,42 +67,7 @@ body.dark-mode .lookup-table th {
 
 .edit-button:hover,
 .map-icon:hover,
-.delete-button:hover {
-    background-color: #357ABD;
-    transform: translateY(-2px);
-}
-
-.map-icon {
-    background-color: #28a745;
-}
-
-.map-icon:hover {
-    background-color: #218838;
-}
-
-.delete-button {
-    background-color: #dc3545;
-}
-
-.delete-button:hover {
-    background-color: #c82333;
-}
-
-.create-button {
-    background-color: #4A90E2;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    font-size: 1.2em;
-    cursor: pointer;
-    transition: background-color 0.3s, transform 0.2s;
-    margin-bottom: 20px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-}
-
+.delete-button:hover,
 .create-button:hover {
     background-color: #357ABD;
     transform: translateY(-2px);
@@ -188,7 +154,7 @@ body.dark-mode .lookup-table th {
 
 .select-field,
 .input-field {
-    width: 100%;
+    width: 97%;
     padding: 10px;
     border: 1px solid var(--border-color);
     border-radius: 5px;
@@ -239,5 +205,201 @@ body.dark-mode .lookup-table th {
 
 .filter-button:hover {
     background-color: var(--secondary-color-light);
+    transform: translateY(-2px);
+}
+
+/* Stilovi za Restaurants komponentu */
+.restaurant-row {
+    cursor: pointer;
+    padding: 10px;
+    border-bottom: 1px solid var(--border-color-light);
+    transition: background-color 0.3s ease;
+}
+
+.restaurant-row:hover {
+    background-color: var(--secondary-color-light);
+}
+
+.restaurant-row.active {
+    background-color: var(--secondary-color-dark);
+}
+
+/* Stilovi za modal i kartice */
+.modal-content.category-modal {
+    max-width: 600px;
+    max-height: 80vh;
+    overflow-y: hidden;
+    padding: 20px;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: var(--background-color-light);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Horizontalni scroll stilovi */
+.categories-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    overflow: hidden;
+    position: relative;
+}
+
+.categories-container {
+    display: flex;
+    overflow: hidden;
+    scroll-behavior: smooth;
+    white-space: nowrap;
+    width: 100%;
+    padding: 10px 0;
+}
+
+.scroll-button {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 24px;
+    color: #4A90E2;
+    transition: color 0.3s;
+}
+
+.scroll-button:hover {
+    color: #357ABD;
+}
+
+.category-card {
+    background-color: #4A90E2;
+    color: var(--text-color-dark);
+    padding: 15px 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    transition: transform 0.3s, background-color 0.3s;
+    width: 150px;
+    text-align: center;
+    display: inline-block;
+    margin: 0 5px;
+    position: relative;
+}
+
+.category-card:hover {
+    background-color: #357ABD;
+    transform: translateY(-5px);
+}
+
+.category-card:focus {
+    outline: none;
+}
+
+.items-container {
+    display: flex;
+    overflow-x: auto;
+    padding: 10px 0;
+    width: 100%;
+    white-space: nowrap;
+    scroll-behavior: smooth;
+}
+
+.item-card {
+    background-color: #4A90E2;
+    color: var(--text-color-dark);
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-right: 10px;
+    transition: background-color 0.3s;
+    flex: 0 0 auto;
+}
+
+.item-card:hover {
+    background-color: #357ABD;
+}
+
+/* Popup stilovi za mapu */
+.modal-content.map-popup {
+    max-width: 600px;
+    height: 400px;
+}
+
+.clickable-address {
+    cursor: pointer;
+    color: #4A90E2;
+    text-decoration: underline;
+}
+
+.clickable-address:hover {
+    color: #357ABD;
+}
+
+.custom-renderer td {
+    vertical-align: middle;
+    text-align: center;
+}
+
+.star-icon {
+    color: #FFD700;
+    font-size: 1.2em;
+}
+
+/* Dodatni stilovi za akciona dugmadi */
+.edit-button,
+.map-icon,
+.delete-button {
+    background-color: #4A90E2;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1.1em;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.edit-button:hover,
+.map-icon:hover,
+.delete-button:hover {
+    background-color: #357ABD;
+    transform: translateY(-2px);
+}
+
+.map-icon {
+    background-color: #28a745;
+}
+
+.map-icon:hover {
+    background-color: #218838;
+}
+
+.delete-button {
+    background-color: #dc3545;
+}
+
+.delete-button:hover {
+    background-color: #c82333;
+}
+
+.create-button {
+    background-color: #4A90E2;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1.2em;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+    margin-bottom: 20px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.create-button:hover {
+    background-color: #357ABD;
     transform: translateY(-2px);
 }

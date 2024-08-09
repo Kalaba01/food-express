@@ -63,9 +63,9 @@ class Restaurant(Base):
     city = Column(String, nullable=False)
     latitude = Column(Float, nullable=False)
     longitude = Column(Float, nullable=False)
-    rating = Column(Integer, nullable=False)
+    rating = Column(Float, nullable=False)
     category = Column(String, nullable=False)
-    contact = Column(String, nullable=False)  # Dodata kolona za kontakt broj telefona
+    contact = Column(String, nullable=False)
     owner_id = Column(Integer, ForeignKey("users.id"))
     delivery_zone_id = Column(Integer, ForeignKey("delivery_zones.id"))
     capacity = Column(Enum(RestaurantCapacity), nullable=False, default=RestaurantCapacity.normal)
