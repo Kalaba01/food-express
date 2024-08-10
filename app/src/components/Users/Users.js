@@ -3,6 +3,7 @@ import { Header, NotificationPopup, LookupTable } from '../index';
 import { useTranslation } from 'react-i18next';
 import { FaTrash } from 'react-icons/fa';
 import axios from 'axios';
+import ConfirmDelete from '../ConfirmDelete/ConfirmDelete';
 import '../LookupTable/LookupTable.css';
 
 function Users({ darkMode, toggleDarkMode }) {
@@ -218,18 +219,12 @@ function Users({ darkMode, toggleDarkMode }) {
         </div>
       )}
 
-      {deletePopupOpen && (
-        <div className="modal">
-          <div className="modal-content delete-popup">
-            <h2>{t('Users.confirmDeleteTitle')}</h2>
-            <p>{t('Users.confirmDeleteMessage')}</p>
-            <div className="delete-popup-buttons">
-              <button className="confirm-delete-button" onClick={confirmDelete}>{t('Users.confirm')}</button>
-              <button className="cancel-delete-button" onClick={cancelDelete}>{t('Users.cancel')}</button>
-            </div>
-          </div>
-        </div>
-      )}
+      <ConfirmDelete 
+        isOpen={deletePopupOpen} 
+        message={t('Users.confirmDeleteMessage')} 
+        onConfirm={confirmDelete} 
+        onCancel={cancelDelete} 
+      />
     </div>
   );
 }
