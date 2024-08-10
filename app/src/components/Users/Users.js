@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Header, NotificationPopup, LookupTable } from '../index';
 import { useTranslation } from 'react-i18next';
+import { FaTrash } from 'react-icons/fa';
 import axios from 'axios';
 import '../LookupTable/LookupTable.css';
 
@@ -15,6 +16,8 @@ function Users({ darkMode, toggleDarkMode }) {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [editOption, setEditOption] = useState('');
   const [filterRole, setFilterRole] = useState('all');
+  const [deletePopupOpen, setDeletePopupOpen] = useState(false);
+  const [userToDelete, setUserToDelete] = useState(null);
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -32,6 +35,29 @@ function Users({ darkMode, toggleDarkMode }) {
   const handleEditClick = (user) => {
     setEditUser(user);
     setIsPopupOpen(true);
+  };
+
+  const handleDeleteClick = (user) => {
+    setUserToDelete(user);
+    setDeletePopupOpen(true);
+  };
+
+  const confirmDelete = async () => {
+    try {
+      await axios.delete(`http://localhost:8000/users/${userToDelete.id}`);
+      setUsers(users.filter(u => u.id !== userToDelete.id));
+      showNotification(t('Users.deleteSuccess'), 'success');
+    } catch (error) {
+      showNotification(t('Users.deleteError'), 'error');
+    } finally {
+      setDeletePopupOpen(false);
+      setUserToDelete(null);
+    }
+  };
+
+  const cancelDelete = () => {
+    setDeletePopupOpen(false);
+    setUserToDelete(null);
   };
 
   const handleSaveClick = async (event) => {
@@ -126,6 +152,11 @@ function Users({ darkMode, toggleDarkMode }) {
               label: t('Users.edit'),
               className: 'edit-button',
               handler: handleEditClick,
+            },
+            {
+              label: <FaTrash />,
+              className: 'delete-button',
+              handler: handleDeleteClick,
             }
           ]}
           filterRole={filterRole}
@@ -183,6 +214,19 @@ function Users({ darkMode, toggleDarkMode }) {
                 </>
               )}
             </form>
+          </div>
+        </div>
+      )}
+
+      {deletePopupOpen && (
+        <div className="modal">
+          <div className="modal-content delete-popup">
+            <h2>{t('Users.confirmDeleteTitle')}</h2>
+            <p>{t('Users.confirmDeleteMessage')}</p>
+            <div className="delete-popup-buttons">
+              <button className="confirm-delete-button" onClick={confirmDelete}>{t('Users.confirm')}</button>
+              <button className="cancel-delete-button" onClick={cancelDelete}>{t('Users.cancel')}</button>
+            </div>
           </div>
         </div>
       )}

@@ -20,7 +20,7 @@ from utils.email_utils import send_email
 from utils.email_templates_utils import welcome_email, reset_password_email, request_denied_email, request_reminder_email, account_creation_email
 from utils.scheduled_tasks_utils import deny_requests_and_send_emails, remind_pending_requests
 
-from crud.user_crud import create_user, get_user_by_username, get_user_by_email, create_password_reset_token, verify_password_reset_token, update_user_password, check_user_exists, create_user_from_request
+from crud.user_crud import create_user, get_user_by_username, get_user_by_email, create_password_reset_token, verify_password_reset_token, update_user_password, check_user_exists, create_user_from_request, delete_user
 from crud.request_crud import create_request, get_all_requests, update_request_status
 from crud.delivery_zone_crud import get_all_zones, create_zone, update_zone
 
@@ -184,6 +184,13 @@ async def update_user(user_id: int, user_update: UserUpdate, db: Session = Depen
     db.commit()
     db.refresh(user)
     return user
+
+@app.delete("/users/{user_id}")
+async def user_delete(user_id: int, db: Session = Depends(get_db)):
+    # Poziv funkcije za brisanje korisnika
+    await delete_user(db, user_id)
+
+    return {"message": "User deleted successfully"}
 
 @app.get("/delivery-zones/")
 async def read_delivery_zones(db: Session = Depends(get_db)):

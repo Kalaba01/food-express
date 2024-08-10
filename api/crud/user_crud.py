@@ -1,7 +1,7 @@
 import uuid
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
-from models.models import User, PasswordResetToken
+from models.models import User, PasswordResetToken, Image
 from schemas.schemas import UserCreate
 from utils.password_utils import hash_password, generate_temp_password
 from datetime import datetime, timedelta
@@ -32,6 +32,19 @@ async def create_user(db: Session, user: UserCreate, role: str):
     db.commit()
     db.refresh(new_user)
     return new_user
+
+async def delete_user(db: Session, user_id: int):
+    user = db.query(User).filter(User.id == user_id).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    if user.image_id != 1:
+        image = db.query(Image).filter(Image.id == user.image_id).first()
+        if image:
+            db.delete(image)
+    
+    db.delete(user)
+    db.commit()
 
 async def get_user_by_username(db: Session, username: str):
     return db.query(User).filter(User.username == username).first()
