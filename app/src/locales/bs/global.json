@@ -186,7 +186,10 @@
     },
     "errors": {
       "requestFailed": "Zahtjev nije uspio. Molimo pokušajte ponovo."
-    }
+    },
+    "confirmDeleteMessage": "Jeste li sigurni da želite obrisati ovu zonu dostave?",
+    "confirm": "Potvrdi",
+    "cancel": "Odustani"
   },
   "Restaurants": {
     "title": "Restorani",

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Header, NotificationPopup, LookupTable } from '../index';
+import { Header, NotificationPopup, LookupTable, ConfirmDelete } from '../index';
 import { MapContainer, TileLayer, FeatureGroup, Rectangle } from 'react-leaflet';
 import { useTranslation } from 'react-i18next';
 import { FaMapPin, FaTrash } from 'react-icons/fa';
@@ -21,7 +21,9 @@ function DeliveryZones({ darkMode, toggleDarkMode }) {
     bounds: null
   });
   const [notification, setNotification] = useState({ message: '', type: '' });
-  const editGroupRef = useRef(null); // Dodaj referencu za edit grupu
+  const [deletePopupOpen, setDeletePopupOpen] = useState(false);
+  const [zoneToDelete, setZoneToDelete] = useState(null);
+  const editGroupRef = useRef(null);
 
   useEffect(() => {
     const fetchZones = async () => {
@@ -46,14 +48,27 @@ function DeliveryZones({ darkMode, toggleDarkMode }) {
     setIsMapPopupOpen(true);
   };
 
-  const handleDeleteClick = async (zoneId) => {
+  const handleDeleteClick = (zone) => {
+    setZoneToDelete(zone);
+    setDeletePopupOpen(true);
+  };
+
+  const confirmDelete = async () => {
     try {
-      await axios.delete(`http://localhost:8000/delivery-zones/${zoneId}`);
-      setZones(zones.filter(zone => zone.id !== zoneId));
-      showNotification(t('FormPopup.common.success.delete'), 'success');
+      await axios.delete(`http://localhost:8000/delivery-zones/${zoneToDelete.id}`);
+      setZones(zones.filter(zone => zone.id !== zoneToDelete.id));
+      showNotification(t('DeliveryZones.success.delete'), 'success');
     } catch (error) {
-      showNotification(t('FormPopup.common.errors.requestFailed'), 'error');
+      showNotification(t('FormPopup.errors.requestFailed'), 'error');
+    } finally {
+      setDeletePopupOpen(false);
+      setZoneToDelete(null);
     }
+  };
+
+  const cancelDelete = () => {
+    setDeletePopupOpen(false);
+    setZoneToDelete(null);
   };
 
   const handleSaveClick = async (event) => {
@@ -176,7 +191,7 @@ function DeliveryZones({ darkMode, toggleDarkMode }) {
             {
               label: <FaTrash />,
               className: 'delete-button',
-              handler: (zone) => handleDeleteClick(zone.id),
+              handler: handleDeleteClick,
             }
           ]}
           showActions
@@ -269,6 +284,13 @@ function DeliveryZones({ darkMode, toggleDarkMode }) {
           </div>
         </div>
       )}
+
+      <ConfirmDelete 
+        isOpen={deletePopupOpen} 
+        message={t('DeliveryZones.confirmDeleteMessage')} 
+        onConfirm={confirmDelete} 
+        onCancel={cancelDelete} 
+      />
     </div>
   );
 }

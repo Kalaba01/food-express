@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Header, NotificationPopup, LookupTable } from '../index';
+import { Header, NotificationPopup, LookupTable, ConfirmDelete } from '../index';
 import { useTranslation } from 'react-i18next';
 import { FaTrash } from 'react-icons/fa';
 import axios from 'axios';
-import ConfirmDelete from '../ConfirmDelete/ConfirmDelete';
 import '../LookupTable/LookupTable.css';
 
 function Users({ darkMode, toggleDarkMode }) {

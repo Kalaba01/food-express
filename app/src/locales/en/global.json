@@ -186,7 +186,10 @@
     },
     "errors": {
       "requestFailed": "Request failed. Please try again."
-    }
+    },
+    "confirmDeleteMessage": "Are you sure you want to delete this delivery zone?",
+    "confirm": "Confirm",
+    "cancel": "Cancel"
   },
   "Restaurants": {
     "title": "Restaurants",

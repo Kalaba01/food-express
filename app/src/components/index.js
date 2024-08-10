@@ -23,5 +23,6 @@ import NotFound from "./NotFound/NotFound";
 import LookupTable from "./LookupTable/LookupTable";
 import DeliveryZones from "./DeliveryZones/DeliveryZones";
 import Restaurants from "./Restaurants/Restaurants";
+import ConfirmDelete from "./ConfirmDelete/ConfirmDelete";
 
-export  { Admin, Captcha, Courier, Customer, Footer, FormPopup, GoTop, Header, Language, LoginRegister, NotificationPopup, Owner, Theme, LandingPage, Unauthorized, Logout, ForgotPassword, ResetPassword, HamburgerMenu, Requests, Users, NotFound, LookupTable, DeliveryZones, Restaurants }
+export  { Admin, Captcha, Courier, Customer, Footer, FormPopup, GoTop, Header, Language, LoginRegister, NotificationPopup, Owner, Theme, LandingPage, Unauthorized, Logout, ForgotPassword, ResetPassword, HamburgerMenu, Requests, Users, NotFound, LookupTable, DeliveryZones, Restaurants, ConfirmDelete }
