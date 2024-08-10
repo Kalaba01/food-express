@@ -22,7 +22,10 @@ from utils.scheduled_tasks_utils import deny_requests_and_send_emails, remind_pe
 
 from crud.user_crud import create_user, get_user_by_username, get_user_by_email, create_password_reset_token, verify_password_reset_token, update_user_password, check_user_exists, create_user_from_request, delete_user
 from crud.request_crud import create_request, get_all_requests, update_request_status
-from crud.delivery_zone_crud import get_all_zones, create_zone, update_zone
+from crud.delivery_zone_crud import get_all_zones, create_zone, update_zone, delete_delivery_zone_by_id
+from crud.restaurant_crud import get_all_restaurants, create_new_restaurant, update_existing_restaurant, delete_restaurant_and_related_data
+from crud.menu_crud import get_menu_categories, create_menu_category, update_menu_category, delete_menu_category
+from crud.item_crud import get_items, create_item, update_item, delete_item
 
 def start_application():
     app = FastAPI()
@@ -130,14 +133,14 @@ async def upload_image(item_id: int = None, restaurant_id: int = None, file: Upl
     db.refresh(new_image)
     return {"message": "Image uploaded successfully", "image_id": new_image.id}
 
+@app.get("/requests/")
+async def read_requests(db: Session = Depends(get_db)):
+    return await get_all_requests(db)
+
 @app.post("/requests/")
 async def create_request_endpoint(request: RequestCreate, db: Session = Depends(get_db)):
     new_request = await create_request(db, request)
     return new_request
-
-@app.get("/requests/")
-async def read_requests(db: Session = Depends(get_db)):
-    return await get_all_requests(db)
 
 @app.put("/requests/{request_id}")
 async def update_request_status_endpoint(request_id: int, status_update: RequestStatusUpdate, db: Session = Depends(get_db)):
@@ -187,7 +190,6 @@ async def update_user(user_id: int, user_update: UserUpdate, db: Session = Depen
 
 @app.delete("/users/{user_id}")
 async def user_delete(user_id: int, db: Session = Depends(get_db)):
-    # Poziv funkcije za brisanje korisnika
     await delete_user(db, user_id)
 
     return {"message": "User deleted successfully"}
@@ -209,109 +211,54 @@ async def update_delivery_zone(zone_id: int, zone: DeliveryZoneUpdate, db: Sessi
 
 @app.delete("/delivery-zones/{zone_id}")
 async def delete_delivery_zone(zone_id: int, db: Session = Depends(get_db)):
-    zone = db.query(DeliveryZone).filter(DeliveryZone.id == zone_id).first()
-    if not zone:
-        raise HTTPException(status_code=404, detail="Zone not found")
-    
-    db.delete(zone)
-    db.commit()
-    return {"message": "Zone deleted successfully"}
+    return delete_delivery_zone_by_id(db, zone_id)
 
 @app.get("/restaurants/")
 async def read_restaurants(db: Session = Depends(get_db)):
-    return db.query(Restaurant).all()
+    return get_all_restaurants(db)
 
 @app.post("/restaurants/")
 async def create_restaurant(restaurant: RestaurantCreate, db: Session = Depends(get_db)):
-    new_restaurant = Restaurant(**restaurant.dict())
-    db.add(new_restaurant)
-    db.commit()
-    db.refresh(new_restaurant)
-    return new_restaurant
+    return create_new_restaurant(db, restaurant)
 
 @app.put("/restaurants/{restaurant_id}")
 async def update_restaurant(restaurant_id: int, restaurant: RestaurantUpdate, db: Session = Depends(get_db)):
-    db_restaurant = db.query(Restaurant).filter(Restaurant.id == restaurant_id).first()
-    if not db_restaurant:
-        raise HTTPException(status_code=404, detail="Restaurant not found")
-    for key, value in restaurant.dict(exclude_unset=True).items():
-        setattr(db_restaurant, key, value)
-    db.commit()
-    db.refresh(db_restaurant)
-    return db_restaurant
+    return update_existing_restaurant(db, restaurant_id, restaurant)
 
 @app.delete("/restaurants/{restaurant_id}")
 async def delete_restaurant(restaurant_id: int, db: Session = Depends(get_db)):
-    db_restaurant = db.query(Restaurant).filter(Restaurant.id == restaurant_id).first()
-    if not db_restaurant:
-        raise HTTPException(status_code=404, detail="Restaurant not found")
-    db.delete(db_restaurant)
-    db.commit()
-    return {"message": "Restaurant deleted successfully"}
+    return delete_restaurant_and_related_data(db, restaurant_id)
 
 # Rute za MenuCategory
 @app.get("/menu-categories/")
 async def read_menu_categories(restaurant_id: int, db: Session = Depends(get_db)):
-    return db.query(MenuCategory).filter(MenuCategory.restaurant_id == restaurant_id).all()
+    return get_menu_categories(db, restaurant_id)
 
 @app.post("/menu-categories/")
 async def create_menu_category(menu_category: MenuCategoryCreate, db: Session = Depends(get_db)):
-    new_category = MenuCategory(**menu_category.dict())
-    db.add(new_category)
-    db.commit()
-    db.refresh(new_category)
-    return new_category
+    return create_menu_category(db, menu_category)
 
 @app.put("/menu-categories/{category_id}")
 async def update_menu_category(category_id: int, menu_category: MenuCategoryUpdate, db: Session = Depends(get_db)):
-    db_category = db.query(MenuCategory).filter(MenuCategory.id == category_id).first()
-    if not db_category:
-        raise HTTPException(status_code=404, detail="Menu category not found")
-    for key, value in menu_category.dict(exclude_unset=True).items():
-        setattr(db_category, key, value)
-    db.commit()
-    db.refresh(db_category)
-    return db_category
+    return update_menu_category(db, category_id, menu_category)
 
 @app.delete("/menu-categories/{category_id}")
 async def delete_menu_category(category_id: int, db: Session = Depends(get_db)):
-    db_category = db.query(MenuCategory).filter(MenuCategory.id == category_id).first()
-    if not db_category:
-        raise HTTPException(status_code=404, detail="Menu category not found")
-    db.delete(db_category)
-    db.commit()
-    return {"message": "Menu category deleted successfully"}
+    return delete_menu_category(db, category_id)
 
 # Rute za Item
 @app.get("/items/")
 async def read_items(category_id: int, db: Session = Depends(get_db)):
-    return db.query(Item).filter(Item.menu_category_id == category_id).all()
+    return await get_items(db, category_id)
 
 @app.post("/items/")
 async def create_item(item: ItemCreate, db: Session = Depends(get_db)):
-    new_item = Item(**item.dict())
-    db.add(new_item)
-    db.commit()
-    db.refresh(new_item)
-    return new_item
+    return await create_item(db, item)
 
 @app.put("/items/{item_id}")
 async def update_item(item_id: int, item: ItemUpdate, db: Session = Depends(get_db)):
-    db_item = db.query(Item).filter(Item.id == item_id).first()
-    if not db_item:
-        raise HTTPException(status_code=404, detail="Item not found")
-    for key, value in item.dict(exclude_unset=True).items():
-        setattr(db_item, key, value)
-    db.commit()
-    db.refresh(db_item)
-    return db_item
+    return await update_item(db, item_id, item)
 
 @app.delete("/items/{item_id}")
 async def delete_item(item_id: int, db: Session = Depends(get_db)):
-    db_item = db.query(Item).filter(Item.id == item_id).first()
-    if not db_item:
-        raise HTTPException(status_code=404, detail="Item not found")
-    db.delete(db_item)
-    db.commit()
-    return {"message": "Item deleted successfully"}
-
+    return await delete_item(db, item_id)

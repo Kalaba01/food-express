@@ -209,6 +209,9 @@
     "crowded": "Prepun",
     "editRestaurant": "Uredi Restoran",
     "createRestaurant": "Kreiraj Restoran",
-    "viewLocation": "Pogledaj Lokaciju"
+    "viewLocation": "Pogledaj Lokaciju",
+    "deleteSuccess": "Restoran uspješno obrisan!",
+    "deleteError": "Brisanje restorana nije uspjelo. Molimo pokušajte ponovo.",
+    "confirmDeleteMessage": "Jeste li sigurni da želite obrisati ovaj restoran i sve povezane menije i artikle?"
   }
 }

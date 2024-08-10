@@ -1,7 +1,20 @@
 import React, { useState, useEffect } from "react";
-import { Header, NotificationPopup, LookupTable } from "../index";
+import {
+  Header,
+  NotificationPopup,
+  LookupTable,
+  ConfirmDelete,
+} from "../index";
+import {
+  FaStar,
+  FaStarHalfAlt,
+  FaRegStar,
+  FaMapPin,
+  FaTrash,
+  FaArrowLeft,
+  FaArrowRight,
+} from "react-icons/fa";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
-import { FaStar, FaStarHalfAlt, FaRegStar, FaMapPin, FaTrash, FaArrowLeft, FaArrowRight } from "react-icons/fa";
 import { useTranslation } from "react-i18next";
 import axios from "axios";
 import L from "leaflet";
@@ -20,8 +33,10 @@ function Restaurants({ darkMode, toggleDarkMode }) {
   const [selectedRestaurant, setSelectedRestaurant] = useState(null);
   const [categories, setCategories] = useState({});
   const [items, setItems] = useState({});
-  const [openCategoryId, setOpenCategoryId] = useState(null); // State za otvorenu kategoriju
+  const [openCategoryId, setOpenCategoryId] = useState(null);
   const [notification, setNotification] = useState({ message: "", type: "" });
+  const [deletePopupOpen, setDeletePopupOpen] = useState(false);
+  const [restaurantToDelete, setRestaurantToDelete] = useState(null);
 
   const customMarkerIcon = L.icon({
     iconUrl: markerIcon,
@@ -44,7 +59,9 @@ function Restaurants({ darkMode, toggleDarkMode }) {
 
     const fetchZones = async () => {
       try {
-        const response = await axios.get("http://localhost:8000/delivery-zones/");
+        const response = await axios.get(
+          "http://localhost:8000/delivery-zones/"
+        );
         setZones(response.data);
       } catch (error) {
         console.error("Error fetching delivery zones:", error);
@@ -104,7 +121,7 @@ function Restaurants({ darkMode, toggleDarkMode }) {
     [t("Restaurants.rating")]: (item) => (
       <div className="rating-stars">{renderStars(item.rating)}</div>
     ),
-  };  
+  };
 
   const handleRestaurantClick = async (restaurantId) => {
     setSelectedRestaurant(restaurantId);
@@ -114,10 +131,8 @@ function Restaurants({ darkMode, toggleDarkMode }) {
 
   const handleCategoryClick = async (categoryId) => {
     if (openCategoryId === categoryId) {
-      // Ako je ista kategorija kliknuta opet, zatvori listu itema
       setOpenCategoryId(null);
     } else {
-      // Inače, prikaži novu listu itema
       setOpenCategoryId(categoryId);
       await fetchItems(categoryId);
     }
@@ -126,7 +141,7 @@ function Restaurants({ darkMode, toggleDarkMode }) {
   const resetPopup = () => {
     setIsPopupOpen(false);
     setSelectedRestaurant(null);
-    setOpenCategoryId(null); // Resetuj otvorenu kategoriju
+    setOpenCategoryId(null);
     setEditRestaurant(null);
     setIsMapPopupOpen(false);
   };
@@ -141,16 +156,32 @@ function Restaurants({ darkMode, toggleDarkMode }) {
     setIsMapPopupOpen(true);
   };
 
-  const handleDeleteClick = async (restaurantId) => {
+  const handleDeleteClick = (restaurant) => {
+    console.log("Delete clicked", restaurant);
+    setRestaurantToDelete(restaurant);
+    setDeletePopupOpen(true);
+  };
+
+  const confirmDelete = async () => {
+    console.log("Confirm delete", restaurantToDelete);
     try {
-      await axios.delete(`http://localhost:8000/restaurants/${restaurantId}`);
-      setRestaurants(
-        restaurants.filter((restaurant) => restaurant.id !== restaurantId)
+      await axios.delete(
+        `http://localhost:8000/restaurants/${restaurantToDelete.id}`
       );
-      showNotification(t("FormPopup.common.success.delete"), "success");
+      setRestaurants(restaurants.filter((r) => r.id !== restaurantToDelete.id));
+      showNotification(t("Restaurants.deleteSuccess"), "success");
     } catch (error) {
-      showNotification(t("FormPopup.common.errors.requestFailed"), "error");
+      showNotification(t("Restaurants.deleteError"), "error");
+    } finally {
+      setDeletePopupOpen(false);
+      setRestaurantToDelete(null);
     }
+  };
+
+  const cancelDelete = () => {
+    console.log("Cancel delete");
+    setDeletePopupOpen(false);
+    setRestaurantToDelete(null);
   };
 
   const handleSaveClick = async (event) => {
@@ -218,13 +249,15 @@ function Restaurants({ darkMode, toggleDarkMode }) {
     const restaurantCategories = categories[selectedRestaurant] || [];
     return (
       <div className="categories-wrapper">
-        <button className="scroll-button" onClick={scrollLeft}><FaArrowLeft /></button>
+        <button className="scroll-button" onClick={scrollLeft}>
+          <FaArrowLeft />
+        </button>
         <div className="categories-container">
           {restaurantCategories.map((category) => (
             <div
               key={category.id}
               className={`category-card ${
-                openCategoryId === category.id ? 'open' : ''
+                openCategoryId === category.id ? "open" : ""
               }`}
               onClick={() => handleCategoryClick(category.id)}
             >
@@ -232,7 +265,9 @@ function Restaurants({ darkMode, toggleDarkMode }) {
             </div>
           ))}
         </div>
-        <button className="scroll-button" onClick={scrollRight}><FaArrowRight /></button>
+        <button className="scroll-button" onClick={scrollRight}>
+          <FaArrowRight />
+        </button>
       </div>
     );
   };
@@ -253,13 +288,16 @@ function Restaurants({ darkMode, toggleDarkMode }) {
   };
 
   const scrollLeft = () => {
-    const container = document.querySelector('.categories-container');
-    container.scrollBy({ left: -container.offsetWidth / 2, behavior: 'smooth' });
+    const container = document.querySelector(".categories-container");
+    container.scrollBy({
+      left: -container.offsetWidth / 2,
+      behavior: "smooth",
+    });
   };
 
   const scrollRight = () => {
-    const container = document.querySelector('.categories-container');
-    container.scrollBy({ left: container.offsetWidth / 2, behavior: 'smooth' });
+    const container = document.querySelector(".categories-container");
+    container.scrollBy({ left: container.offsetWidth / 2, behavior: "smooth" });
   };
 
   return (
@@ -313,7 +351,7 @@ function Restaurants({ darkMode, toggleDarkMode }) {
             {
               label: <FaTrash />,
               className: "delete-button",
-              handler: (restaurant) => handleDeleteClick(restaurant.id),
+              handler: (restaurant) => handleDeleteClick(restaurant),
             },
           ]}
           customRenderers={customRenderers}
@@ -374,9 +412,7 @@ function Restaurants({ darkMode, toggleDarkMode }) {
             </h2>
             <form
               onSubmit={
-                editRestaurant.id
-                  ? handleSaveClick
-                  : handleNewRestaurantSave
+                editRestaurant.id ? handleSaveClick : handleNewRestaurantSave
               }
             >
               <input
@@ -509,6 +545,15 @@ function Restaurants({ darkMode, toggleDarkMode }) {
             </form>
           </div>
         </div>
+      )}
+
+      {deletePopupOpen && (
+        <ConfirmDelete
+          isOpen={deletePopupOpen}
+          message={t("Restaurants.confirmDeleteMessage")}
+          onConfirm={confirmDelete}
+          onCancel={cancelDelete}
+        />
       )}
     </div>
   );
