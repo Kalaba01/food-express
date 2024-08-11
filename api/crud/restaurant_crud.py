@@ -3,17 +3,17 @@ from fastapi import HTTPException
 from models.models import Restaurant, MenuCategory, Item
 from schemas.schemas import RestaurantCreate, RestaurantUpdate
 
-def get_all_restaurants(db: Session):
+async def get_all_restaurants(db: Session):
     return db.query(Restaurant).all()
 
-def create_new_restaurant(db: Session, restaurant: RestaurantCreate):
+async def create_new_restaurant(db: Session, restaurant: RestaurantCreate):
     new_restaurant = Restaurant(**restaurant.dict())
     db.add(new_restaurant)
     db.commit()
     db.refresh(new_restaurant)
     return new_restaurant
 
-def update_existing_restaurant(db: Session, restaurant_id: int, restaurant: RestaurantUpdate):
+async def update_existing_restaurant(db: Session, restaurant_id: int, restaurant: RestaurantUpdate):
     db_restaurant = db.query(Restaurant).filter(Restaurant.id == restaurant_id).first()
     if not db_restaurant:
         raise HTTPException(status_code=404, detail="Restaurant not found")
@@ -23,7 +23,7 @@ def update_existing_restaurant(db: Session, restaurant_id: int, restaurant: Rest
     db.refresh(db_restaurant)
     return db_restaurant
 
-def delete_restaurant_and_related_data(db: Session, restaurant_id: int):
+async def delete_restaurant_and_related_data(db: Session, restaurant_id: int):
     db_restaurant = db.query(Restaurant).filter(Restaurant.id == restaurant_id).first()
     if not db_restaurant:
         raise HTTPException(status_code=404, detail="Restaurant not found")

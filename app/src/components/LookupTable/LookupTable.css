@@ -146,6 +146,15 @@ body.dark-mode .lookup-table th {
     transition: color 0.3s ease;
 }
 
+
+body.dark-mode .close-button {
+    color: #4A90E2;
+}
+
+body.dark-mode .close-button:hover {
+    color: #357ABD;
+}
+
 .close-button:hover,
 .close-button:focus {
     color: var(--secondary-color);
@@ -225,8 +234,12 @@ body.dark-mode .lookup-table th {
 .restaurant-row {
     cursor: pointer;
     padding: 10px;
-    border-bottom: 1px solid var(--border-color-light);
+    border-bottom: 1.5px solid #357ABD;
     transition: background-color 0.3s ease;
+}
+
+.body-dark .restaurant-row {
+    border-bottom: 1.5px solid #4A90E2;
 }
 
 .restaurant-row:hover {
@@ -329,6 +342,26 @@ body.dark-mode .lookup-table th {
 
 .item-card:hover {
     background-color: #357ABD;
+}
+
+/* Stilizacija za horizontalni skrol unutar kategorija */
+.items-container::-webkit-scrollbar {
+    height: 8px; /* Visina skrola */
+}
+
+.items-container::-webkit-scrollbar-track {
+    background: #f1f1f1; /* Pozadina trake */
+    border-radius: 10px; /* Zaobljene ivice */
+}
+
+.items-container::-webkit-scrollbar-thumb {
+    background-color: #888; /* Boja klizača */
+    border-radius: 10px; /* Zaobljene ivice klizača */
+    border: 2px solid #f1f1f1; /* Prostor između klizača i trake */
+}
+
+.items-container::-webkit-scrollbar-thumb:hover {
+    background-color: #555; /* Boja klizača kada je pređeno mišem */
 }
 
 /* Popup stilovi za mapu */

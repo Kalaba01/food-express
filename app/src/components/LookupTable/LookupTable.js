@@ -18,6 +18,7 @@ function LookupTable({ columns, data, actions, showActions, customRenderers }) {
       [t('Users.role')]: 'role',
       [t('DeliveryZones.name')]: 'name',
       [t('Restaurants.rating')]: 'rating',
+      [t('Restaurants.category')]: 'category'
     };
     return map[col] || col.toLowerCase().replace(/\s+/g, '');
   };

@@ -182,40 +182,40 @@ async def update_delivery_zone(zone_id: int, zone: DeliveryZoneUpdate, db: Sessi
 
 @app.delete("/delivery-zones/{zone_id}")
 async def delete_delivery_zone(zone_id: int, db: Session = Depends(get_db)):
-    return delete_delivery_zone_by_id(db, zone_id)
+    return await  delete_delivery_zone_by_id(db, zone_id)
 
 @app.get("/restaurants/")
 async def read_restaurants(db: Session = Depends(get_db)):
-    return get_all_restaurants(db)
+    return await  get_all_restaurants(db)
 
 @app.post("/restaurants/")
 async def create_restaurant(restaurant: RestaurantCreate, db: Session = Depends(get_db)):
-    return create_new_restaurant(db, restaurant)
+    return await  create_new_restaurant(db, restaurant)
 
 @app.put("/restaurants/{restaurant_id}")
 async def update_restaurant(restaurant_id: int, restaurant: RestaurantUpdate, db: Session = Depends(get_db)):
-    return update_existing_restaurant(db, restaurant_id, restaurant)
+    return await  update_existing_restaurant(db, restaurant_id, restaurant)
 
 @app.delete("/restaurants/{restaurant_id}")
 async def delete_restaurant(restaurant_id: int, db: Session = Depends(get_db)):
-    return delete_restaurant_and_related_data(db, restaurant_id)
+    return await  delete_restaurant_and_related_data(db, restaurant_id)
 
 # Rute za MenuCategory
 @app.get("/menu-categories/")
 async def read_menu_categories(restaurant_id: int, db: Session = Depends(get_db)):
-    return get_menu_categories(db, restaurant_id)
+    return await get_menu_categories(db, restaurant_id)
 
 @app.post("/menu-categories/")
 async def create_menu_category(menu_category: MenuCategoryCreate, db: Session = Depends(get_db)):
-    return create_menu_category(db, menu_category)
+    return await  create_menu_category(db, menu_category)
 
 @app.put("/menu-categories/{category_id}")
 async def update_menu_category(category_id: int, menu_category: MenuCategoryUpdate, db: Session = Depends(get_db)):
-    return update_menu_category(db, category_id, menu_category)
+    return await  update_menu_category(db, category_id, menu_category)
 
 @app.delete("/menu-categories/{category_id}")
 async def delete_menu_category(category_id: int, db: Session = Depends(get_db)):
-    return delete_menu_category(db, category_id)
+    return await  delete_menu_category(db, category_id)
 
 # Rute za Item
 @app.get("/items/")
