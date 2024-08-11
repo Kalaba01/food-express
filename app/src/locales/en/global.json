@@ -86,7 +86,8 @@
         "usernameTaken": "This username is already taken",
         "registrationFailed": "Registration failed",
         "captcha": "Please complete the CAPTCHA",
-        "requestFailed": "Failed to submit request"
+        "requestFailed": "Failed to submit request",
+        "pendingRequest": "There is already a pending request with this email."
       },
       "success": {
         "registration": "Registration successful",

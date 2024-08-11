@@ -21,7 +21,7 @@ from utils.email_templates_utils import welcome_email, reset_password_email, req
 from utils.scheduled_tasks_utils import deny_requests_and_send_emails, remind_pending_requests
 
 from crud.user_crud import create_user, get_user_by_username, get_user_by_email, create_password_reset_token, verify_password_reset_token, update_user_password, check_user_exists, create_user_from_request, delete_user
-from crud.request_crud import create_request, get_all_requests, update_request_status
+from crud.request_crud import create_request, get_all_requests, update_request_status, check_pending_request_by_email
 from crud.delivery_zone_crud import get_all_zones, create_zone, update_zone, delete_delivery_zone_by_id
 from crud.restaurant_crud import get_all_restaurants, create_new_restaurant, update_existing_restaurant, delete_restaurant_and_related_data
 from crud.menu_crud import get_menu_categories, create_menu_category, update_menu_category, delete_menu_category
@@ -139,6 +139,10 @@ async def read_requests(db: Session = Depends(get_db)):
 
 @app.post("/requests/")
 async def create_request_endpoint(request: RequestCreate, db: Session = Depends(get_db)):
+    existing_request = await check_pending_request_by_email(db, request.email)
+    if existing_request:
+        raise HTTPException(status_code=400, detail="Pending request with this email already exists.")
+    
     new_request = await create_request(db, request)
     return new_request
 

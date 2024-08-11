@@ -3,6 +3,12 @@ from models.models import Request
 from schemas.schemas import RequestCreate, RequestStatusUpdate
 from datetime import datetime
 
+async def get_all_requests(db: Session):
+    return db.query(Request).all()
+
+async def check_pending_request_by_email(db: Session, email: str):
+    return db.query(Request).filter(Request.email == email, Request.status == "pending").first()
+
 async def create_request(db: Session, request: RequestCreate):
     new_request = Request(
         first_name=request.first_name,
@@ -17,9 +23,6 @@ async def create_request(db: Session, request: RequestCreate):
     db.commit()
     db.refresh(new_request)
     return new_request
-
-async def get_all_requests(db: Session):
-    return db.query(Request).all()
 
 async def update_request_status(db: Session, request_id: int, status_update: RequestStatusUpdate):
     request = db.query(Request).filter(Request.id == request_id).first()

@@ -86,7 +86,8 @@
         "usernameTaken": "Korisničko ime je već zauzeto",
         "registrationFailed": "Registracija nije uspjela",
         "captcha": "Molimo vas da završite CAPTCHA",
-        "requestFailed": "Zahtjev nije uspio"
+        "requestFailed": "Zahtjev nije uspio",
+        "pendingRequest": "Već postoji zahtjev na čekanju sa ovim e-mailom."
       },
       "success": {
         "registration": "Registracija uspješna",
