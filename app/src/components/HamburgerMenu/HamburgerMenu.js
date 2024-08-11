@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import { FaBars, FaTimes } from "react-icons/fa";
 import { jwtDecode } from "jwt-decode";
+import { useTranslation } from "react-i18next";
 import "./HamburgerMenu.css";
 
 function HamburgerMenu() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const { t } = useTranslation("global");
 
   const toggleMenu = () => {
     setMenuOpen(!menuOpen);
@@ -33,24 +35,24 @@ function HamburgerMenu() {
       case 'administrator':
         return (
           <>
-            <a href="/admin/requests">Requests</a>
-            <a href="/admin/users">Users</a>
-            <a href="/admin/delivery-zones">Delivery Zones</a>
-            <a href="/admin/restaurants">Restaurants</a>
+            <a href="/admin/requests">{t('HamburgerMenu.admin.requests')}</a>
+            <a href="/admin/users">{t('HamburgerMenu.admin.users')}</a>
+            <a href="/admin/delivery-zones">{t('HamburgerMenu.admin.deliveryZones')}</a>
+            <a href="/admin/restaurants">{t('HamburgerMenu.admin.restaurants')}</a>
           </>
         );
       case 'customer':
         return (
           <>
-            <a href="/customer/route1">Item 1</a>
-            <a href="/customer/route2">Item 2</a>
+            <a href="/courier/route1">Item 1</a>
+            <a href="/courier/route2">Item 2</a>
           </>
         );
       case 'owner':
         return (
           <>
-            <a href="/owner/route1">Item 1</a>
-            <a href="/owner/route2">Item 2</a>
+            <a href="/courier/route1">Item 1</a>
+            <a href="/courier/route2">Item 2</a>
           </>
         );
       case 'courier':

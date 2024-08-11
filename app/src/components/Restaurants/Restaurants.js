@@ -1,19 +1,6 @@
 import React, { useState, useEffect } from "react";
-import {
-  Header,
-  NotificationPopup,
-  LookupTable,
-  ConfirmDelete,
-} from "../index";
-import {
-  FaStar,
-  FaStarHalfAlt,
-  FaRegStar,
-  FaMapPin,
-  FaTrash,
-  FaArrowLeft,
-  FaArrowRight,
-} from "react-icons/fa";
+import { Header, NotificationPopup, LookupTable, ConfirmDelete } from "../index";
+import { FaStar, FaStarHalfAlt, FaRegStar, FaMapPin, FaTrash, FaArrowLeft, FaArrowRight } from "react-icons/fa";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import { useTranslation } from "react-i18next";
 import axios from "axios";

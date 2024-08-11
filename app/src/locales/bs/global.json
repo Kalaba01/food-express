@@ -214,5 +214,18 @@
     "deleteSuccess": "Restoran uspješno obrisan!",
     "deleteError": "Brisanje restorana nije uspjelo. Molimo pokušajte ponovo.",
     "confirmDeleteMessage": "Jeste li sigurni da želite obrisati ovaj restoran i sve povezane menije i artikle?"
+  },
+  "ConfirmDelete": {
+    "title": "Potvrdite Brisanje",
+    "confirmButton": "Potvrdi",
+    "cancelButton": "Otkaži"
+  },
+  "HamburgerMenu": {
+    "admin": {
+      "requests": "Zahtjevi",
+      "users": "Korisnici",
+      "deliveryZones": "Zone Dostave",
+      "restaurants": "Restorani"
+    }
   }
 }

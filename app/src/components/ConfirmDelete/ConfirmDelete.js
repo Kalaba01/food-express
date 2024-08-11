@@ -1,17 +1,20 @@
 import React from 'react';
 import './ConfirmDelete.css';
+import { useTranslation } from 'react-i18next';
 
 function ConfirmDelete({ isOpen, message, onConfirm, onCancel }) {
+  const { t } = useTranslation('global');
+
   if (!isOpen) return null;
 
   return (
     <div className="modal">
       <div className="modal-content delete-popup">
-        <h2>Confirm Deletion</h2>
+        <h2>{t('ConfirmDelete.title')}</h2>
         <p>{message}</p>
         <div className="delete-popup-buttons">
-          <button className="confirm-delete-button" onClick={onConfirm}>Confirm</button>
-          <button className="cancel-delete-button" onClick={onCancel}>Cancel</button>
+          <button className="confirm-delete-button" onClick={onConfirm}>{t('ConfirmDelete.confirmButton')}</button>
+          <button className="cancel-delete-button" onClick={onCancel}>{t('ConfirmDelete.cancelButton')}</button>
         </div>
       </div>
     </div>

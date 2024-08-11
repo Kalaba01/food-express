@@ -1,14 +1,25 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FaGlobe } from 'react-icons/fa';
 import './Language.css';
 
 function Language() {
   const { i18n } = useTranslation();
+  const [language, setLanguage] = useState(i18n.language);
   const [showDropdown, setShowDropdown] = useState(false);
 
-  const changeLanguage = (lng) => {
-    i18n.changeLanguage(lng);
+  useEffect(() => {
+    const storedLanguage = localStorage.getItem('language');
+    if (storedLanguage && storedLanguage !== i18n.language) {
+      i18n.changeLanguage(storedLanguage);
+      setLanguage(storedLanguage);
+    }
+  }, [i18n]);
+
+  const changeLanguage = (language) => {
+    i18n.changeLanguage(language);
+    setLanguage(language);
+    localStorage.setItem('language', language);
     setShowDropdown(false);
   };
 
