@@ -17,11 +17,11 @@ from schemas.schemas import UserCreate, ForgotPasswordRequest, ImageCreate, Requ
 from auth.auth import create_access_token, get_current_user
 from utils.password_utils import hash_password, verify_password, generate_temp_password
 from utils.email_utils import send_email
-from utils.email_templates_utils import welcome_email, reset_password_email, request_denied_email, request_reminder_email, account_creation_email
+from utils.email_templates_utils import welcome_email, reset_password_email, request_denied_email, request_reminder_email
 from utils.scheduled_tasks_utils import deny_requests_and_send_emails, remind_pending_requests
 
-from crud.user_crud import create_user, get_user_by_username, get_user_by_email, create_password_reset_token, verify_password_reset_token, update_user_password, check_user_exists, create_user_from_request, delete_user
-from crud.request_crud import create_request, get_all_requests, update_request_status, check_pending_request_by_email
+from crud.user_crud import create_user, get_user_by_username, get_user_by_email, create_password_reset_token, verify_password_reset_token, update_user_password, check_user_exists, create_user_from_request, delete_user, update_user_details
+from crud.request_crud import create_request, get_all_requests, update_request_status, check_pending_request_by_email, update_request_status_and_process
 from crud.delivery_zone_crud import get_all_zones, create_zone, update_zone, delete_delivery_zone_by_id
 from crud.restaurant_crud import get_all_restaurants, create_new_restaurant, update_existing_restaurant, delete_restaurant_and_related_data
 from crud.menu_crud import get_menu_categories, create_menu_category, update_menu_category, delete_menu_category
@@ -148,23 +148,7 @@ async def create_request_endpoint(request: RequestCreate, db: Session = Depends(
 
 @app.put("/requests/{request_id}")
 async def update_request_status_endpoint(request_id: int, status_update: RequestStatusUpdate, db: Session = Depends(get_db)):
-    request = await update_request_status(db, request_id, status_update)
-    if not request:
-        raise HTTPException(status_code=404, detail="Request not found")
-
-    if status_update.status == 'accepted':
-        try:
-            new_user, reset_token = await create_user_from_request(db, request)
-            reset_link = f"http://localhost:3000/reset-password?token={reset_token.token}"
-            subject = "Welcome to Food Express - Set Your Password"
-            body = account_creation_email(request.first_name, request.last_name, new_user.username, reset_link)
-            await send_email(request.email, subject, body)
-        except HTTPException as e:
-            raise e
-        except Exception as e:
-            raise HTTPException(status_code=500, detail=str(e))
-
-    return request
+    return await update_request_status_and_process(request_id, status_update, db)
 
 @app.get("/users/")
 async def read_users(db: Session = Depends(get_db)):
@@ -173,24 +157,7 @@ async def read_users(db: Session = Depends(get_db)):
 
 @app.put("/users/{user_id}")
 async def update_user(user_id: int, user_update: UserUpdate, db: Session = Depends(get_db)):
-    user = db.query(User).filter(User.id == user_id).first()
-    if not user:
-        raise HTTPException(status_code=404, detail="User not found")
-    
-    if user_update.username:
-        user.username = user_update.username
-    if user_update.email:
-        user.email = user_update.email
-    if user_update.password:
-        if await verify_password(user_update.password, user.hashed_password):
-            raise HTTPException(status_code=400, detail="New password cannot be the same as the old password")
-        user.hashed_password = await hash_password(user_update.password)
-    if user_update.role:
-        user.role = user_update.role
-    
-    db.commit()
-    db.refresh(user)
-    return user
+    return await update_user_details(user_id, user_update, db)
 
 @app.delete("/users/{user_id}")
 async def user_delete(user_id: int, db: Session = Depends(get_db)):

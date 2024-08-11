@@ -2,8 +2,8 @@ import uuid
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
 from models.models import User, PasswordResetToken, Image
-from schemas.schemas import UserCreate
-from utils.password_utils import hash_password, generate_temp_password
+from schemas.schemas import UserCreate, UserUpdate
+from utils.password_utils import hash_password, verify_password, generate_temp_password
 from datetime import datetime, timedelta
 
 async def check_user_exists(db: Session, username: str = None, email: str = None):
@@ -32,6 +32,26 @@ async def create_user(db: Session, user: UserCreate, role: str):
     db.commit()
     db.refresh(new_user)
     return new_user
+
+async def update_user_details(user_id: int, user_update: UserUpdate, db: Session):
+    user = db.query(User).filter(User.id == user_id).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    if user_update.username:
+        user.username = user_update.username
+    if user_update.email:
+        user.email = user_update.email
+    if user_update.password:
+        if await verify_password(user_update.password, user.hashed_password):
+            raise HTTPException(status_code=400, detail="New password cannot be the same as the old password")
+        user.hashed_password = await hash_password(user_update.password)
+    if user_update.role:
+        user.role = user_update.role
+
+    db.commit()
+    db.refresh(user)
+    return user
 
 async def delete_user(db: Session, user_id: int):
     user = db.query(User).filter(User.id == user_id).first()
