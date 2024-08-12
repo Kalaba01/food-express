@@ -93,7 +93,9 @@
       "success": {
         "registration": "Registracija uspješna",
         "login": "Prijava uspješna",
-        "request": "Zahtjev uspješno poslan"
+        "request": "Zahtjev uspješno poslan",
+        "edit": "Uspješno uređeno",
+        "create": "Uspješno kreirano"
       }
     }
   },
@@ -203,8 +205,12 @@
     "address": "Adresa",
     "city": "Grad",
     "category": "Kategorija",
+    "menuCategories": "Kategorije menija",
     "rating": "Ocjena",
+    "noRating": "Nema ocjena",
     "contact": "Kontakt",
+    "searchOwner": "Pretraži vlasnika po korisničkom imenu...",
+    "selectOwner": "Molimo odaberite vlasnika",
     "deliveryZone": "Zona Dostave",
     "normal": "Normalan",
     "busy": "Zauzet",

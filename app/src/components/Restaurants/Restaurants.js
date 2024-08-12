@@ -1,6 +1,19 @@
 import React, { useState, useEffect } from "react";
-import { Header, NotificationPopup, LookupTable, ConfirmDelete } from "../index";
-import { FaStar, FaStarHalfAlt, FaRegStar, FaMapPin, FaTrash, FaArrowLeft, FaArrowRight } from "react-icons/fa";
+import {
+  Header,
+  NotificationPopup,
+  LookupTable,
+  ConfirmDelete,
+} from "../index";
+import {
+  FaStar,
+  FaStarHalfAlt,
+  FaRegStar,
+  FaMapPin,
+  FaTrash,
+  FaArrowLeft,
+  FaArrowRight,
+} from "react-icons/fa";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import { useTranslation } from "react-i18next";
 import axios from "axios";
@@ -24,6 +37,9 @@ function Restaurants({ darkMode, toggleDarkMode }) {
   const [notification, setNotification] = useState({ message: "", type: "" });
   const [deletePopupOpen, setDeletePopupOpen] = useState(false);
   const [restaurantToDelete, setRestaurantToDelete] = useState(null);
+  const [ownerSearch, setOwnerSearch] = useState("");
+  const [ownerResults, setOwnerResults] = useState([]);
+  const [selectedOwner, setSelectedOwner] = useState(null);
 
   const customMarkerIcon = L.icon({
     iconUrl: markerIcon,
@@ -81,6 +97,18 @@ function Restaurants({ darkMode, toggleDarkMode }) {
     }
   };
 
+  const searchOwners = async (username) => {
+    if (username.length < 6) return;
+    try {
+      const response = await axios.get(
+        `http://localhost:8000/search-owners?username=${username}`
+      );
+      setOwnerResults(response.data);
+    } catch (error) {
+      console.error("Error searching owners:", error);
+    }
+  };
+
   const columns = [
     t("Restaurants.name"),
     t("Restaurants.city"),
@@ -131,10 +159,25 @@ function Restaurants({ darkMode, toggleDarkMode }) {
     setOpenCategoryId(null);
     setEditRestaurant(null);
     setIsMapPopupOpen(false);
+    setSelectedOwner(null);
+    setOwnerSearch("");
+    setOwnerResults([]);
   };
 
-  const handleEditClick = (restaurant) => {
+  const handleEditClick = async (restaurant) => {
     setEditRestaurant(restaurant);
+
+    try {
+      const response = await axios.get(
+        `http://localhost:8000/users/${restaurant.owner_id}`
+      );
+      const owner = response.data;
+      setSelectedOwner(owner);
+      setOwnerSearch(owner.username);
+    } catch (error) {
+      console.error("Error fetching owner details:", error);
+    }
+
     setIsPopupOpen(true);
   };
 
@@ -174,12 +217,12 @@ function Restaurants({ darkMode, toggleDarkMode }) {
   const handleSaveClick = async (event) => {
     event.preventDefault();
 
-    if (!editRestaurant) return;
+    if (!editRestaurant || !selectedOwner) return;
 
     try {
       const response = await axios.put(
         `http://localhost:8000/restaurants/${editRestaurant.id}`,
-        editRestaurant
+        { ...editRestaurant, owner_id: selectedOwner.id }
       );
       setRestaurants(
         restaurants.map((restaurant) =>
@@ -196,11 +239,16 @@ function Restaurants({ darkMode, toggleDarkMode }) {
   const handleNewRestaurantSave = async (event) => {
     event.preventDefault();
 
+    if (!selectedOwner) {
+      showNotification(t("Restaurants.selectOwner"), "error");
+      return;
+    }
+
     try {
-      const response = await axios.post(
-        "http://localhost:8000/restaurants/",
-        editRestaurant
-      );
+      const response = await axios.post("http://localhost:8000/restaurants/", {
+        ...editRestaurant,
+        owner_id: selectedOwner.id,
+      });
       setRestaurants([...restaurants, response.data]);
       resetPopup();
       showNotification(t("FormPopup.common.success.create"), "success");
@@ -524,6 +572,35 @@ function Restaurants({ darkMode, toggleDarkMode }) {
                   </option>
                 ))}
               </select>
+              <div className="owner-search-container">
+                <input
+                  type="text"
+                  value={ownerSearch}
+                  onChange={(e) => {
+                    setOwnerSearch(e.target.value);
+                    searchOwners(e.target.value);
+                  }}
+                  placeholder={t("Restaurants.searchOwner")}
+                  className="input-field"
+                  required
+                />
+                {ownerResults.length > 0 && (
+                  <ul className="owner-search-results">
+                    {ownerResults.map((owner) => (
+                      <li
+                        key={owner.id}
+                        onClick={() => {
+                          setSelectedOwner(owner);
+                          setOwnerSearch(owner.username);
+                          setOwnerResults([]);
+                        }}
+                      >
+                        {owner.username}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
               <button type="submit" className="save-button">
                 {editRestaurant.id
                   ? t("Restaurants.save")

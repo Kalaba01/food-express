@@ -59,7 +59,7 @@ class RestaurantCreate(BaseModel):
     owner_id: int
     delivery_zone_id: int
     capacity: RestaurantCapacityEnum = RestaurantCapacityEnum.normal
-    image_ids: Optional[List[int]]  # Lista slika
+    image_ids: Optional[List[int]] = None # Lista slika
 
 class RestaurantUpdate(BaseModel):
     name: Optional[str]
@@ -70,9 +70,10 @@ class RestaurantUpdate(BaseModel):
     rating: Optional[int]
     category: Optional[str]
     contact: Optional[str]
+    owner_id: Optional[int]
     delivery_zone_id: Optional[int]
     capacity: Optional[RestaurantCapacityEnum]
-    image_ids: Optional[List[int]]  # Lista slika
+    image_ids: Optional[List[int]] = None  # Lista slika
 
 # Radno vreme
 class OperatingHoursCreate(BaseModel):

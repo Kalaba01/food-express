@@ -93,7 +93,9 @@
       "success": {
         "registration": "Registration successful",
         "login": "Login Successful",
-        "request": "Request submitted successfully"
+        "request": "Request submitted successfully",
+        "edit": "Successfully edited",
+        "create": "Successfully created"
       }
     }
   },
@@ -203,8 +205,12 @@
     "address": "Address",
     "city": "City",
     "category": "Category",
+    "menuCategories": "Menu categories",
     "rating": "Rating",
+    "noRating": "No ratings",
     "contact": "Contact",
+    "searchOwner": "Search for owner by username...",
+    "selectOwner": "Please select an owner",
     "deliveryZone": "Delivery Zone",
     "normal": "Normal",
     "busy": "Busy",

@@ -1,13 +1,34 @@
 from sqlalchemy.orm import Session
 from fastapi import HTTPException
-from models.models import Restaurant, MenuCategory, Item
+from models.models import Restaurant, MenuCategory, Item, User
 from schemas.schemas import RestaurantCreate, RestaurantUpdate
 
 async def get_all_restaurants(db: Session):
     return db.query(Restaurant).all()
 
+async def search_owners(db: Session, username: str):
+    owners = db.query(User).filter(User.username.ilike(f"%{username}%")).all()
+    return [{"id": owner.id, "username": owner.username} for owner in owners if owner.role == "owner"]
+
 async def create_new_restaurant(db: Session, restaurant: RestaurantCreate):
-    new_restaurant = Restaurant(**restaurant.dict())
+    owner = db.query(User).filter(User.id == restaurant.owner_id).first()
+    if not owner or owner.role != "owner":
+        raise HTTPException(status_code=400, detail="Invalid owner ID")
+
+    new_restaurant = Restaurant(
+        name=restaurant.name,
+        address=restaurant.address,
+        city=restaurant.city,
+        latitude=restaurant.latitude,
+        longitude=restaurant.longitude,
+        rating=restaurant.rating,
+        category=restaurant.category,
+        contact=restaurant.contact,
+        owner_id=restaurant.owner_id,
+        delivery_zone_id=restaurant.delivery_zone_id,
+        capacity=restaurant.capacity
+    )
+
     db.add(new_restaurant)
     db.commit()
     db.refresh(new_restaurant)
@@ -17,8 +38,35 @@ async def update_existing_restaurant(db: Session, restaurant_id: int, restaurant
     db_restaurant = db.query(Restaurant).filter(Restaurant.id == restaurant_id).first()
     if not db_restaurant:
         raise HTTPException(status_code=404, detail="Restaurant not found")
-    for key, value in restaurant.dict(exclude_unset=True).items():
-        setattr(db_restaurant, key, value)
+    
+    if restaurant.owner_id:
+        owner = db.query(User).filter(User.id == restaurant.owner_id).first()
+        if not owner or owner.role != "owner":
+            raise HTTPException(status_code=400, detail="Invalid owner ID")
+
+    if restaurant.name is not None:
+        db_restaurant.name = restaurant.name
+    if restaurant.address is not None:
+        db_restaurant.address = restaurant.address
+    if restaurant.city is not None:
+        db_restaurant.city = restaurant.city
+    if restaurant.latitude is not None:
+        db_restaurant.latitude = restaurant.latitude
+    if restaurant.longitude is not None:
+        db_restaurant.longitude = restaurant.longitude
+    if restaurant.rating is not None:
+        db_restaurant.rating = restaurant.rating
+    if restaurant.category is not None:
+        db_restaurant.category = restaurant.category
+    if restaurant.contact is not None:
+        db_restaurant.contact = restaurant.contact
+    if restaurant.delivery_zone_id is not None:
+        db_restaurant.delivery_zone_id = restaurant.delivery_zone_id
+    if restaurant.capacity is not None:
+        db_restaurant.capacity = restaurant.capacity
+    if restaurant.owner_id is not None:
+        db_restaurant.owner_id = restaurant.owner_id
+
     db.commit()
     db.refresh(db_restaurant)
     return db_restaurant
