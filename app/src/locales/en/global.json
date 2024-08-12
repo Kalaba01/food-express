@@ -75,6 +75,7 @@
       "closeButton": "Close",
       "validationIcons": {
         "usernameTaken": "This username is already taken",
+        "minLength": "Username must be at least 6 characters long.",
         "validEmail": "Please enter a valid email address",
         "emailInUse": "This email is already in use",
         "invalidPassword": "Password must be at least 6 characters long and contain at least one number",

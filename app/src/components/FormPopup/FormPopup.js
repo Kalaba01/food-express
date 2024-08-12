@@ -42,8 +42,8 @@ function FormPopup({ type, closeModal, switchToOtherForm, showNotification, hand
 
     if (type === "register") {
       if (name === "username") {
-        if (!value) {
-          setUsernameValid(null);
+        if (value.length < 6) {
+          setUsernameValid(false);
         } else {
           try {
             const response = await axios.get(
@@ -437,12 +437,13 @@ function FormPopup({ type, closeModal, switchToOtherForm, showNotification, hand
                   </div>
                 )}
                 {field.name === "username" &&
-                  usernameValid !== null &&
-                  formData.username && (
+                  usernameValid !== null && (
                     <span
                       className="validation-icon"
                       title={
-                        usernameValid
+                        usernameValid === false && formData.username.length < 6
+                          ? t("FormPopup.common.validationIcons.minLength")
+                          : usernameValid
                           ? ""
                           : t("FormPopup.common.validationIcons.usernameTaken")
                       }

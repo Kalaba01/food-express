@@ -32,8 +32,8 @@ class ImageUpdate(BaseModel):
 
 # Korisnici
 class UserCreate(BaseModel):
-    username: str
-    email: str
+    username: constr(min_length=6)
+    email: EmailStr
     password: str
 
 class UserLogin(BaseModel):

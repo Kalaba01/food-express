@@ -75,6 +75,7 @@
       "closeButton": "Zatvori",
       "validationIcons": {
         "usernameTaken": "Korisničko ime je već zauzeto",
+        "minLength": "Korisničko ime mora imati najmanje 6 znakova.",
         "validEmail": "Unesite važeću email adresu",
         "emailInUse": "Ovaj email je već u upotrebi",
         "invalidPassword": "Lozinka mora imati najmanje 6 znakova i sadržavati barem jedan broj",
