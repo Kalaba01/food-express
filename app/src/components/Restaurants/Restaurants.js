@@ -134,7 +134,9 @@ function Restaurants({ darkMode, toggleDarkMode }) {
       </span>
     ),
     [t("Restaurants.rating")]: (item) => (
-      <div className="rating-stars">{renderStars(item.rating)}</div>
+      <div className="rating-stars">
+        {item.rating_count > 0 ? renderStars(item.total_rating / item.rating_count) : t("Restaurants.noRating")}
+      </div>
     ),
   };
 
@@ -359,7 +361,6 @@ function Restaurants({ darkMode, toggleDarkMode }) {
               city: "",
               latitude: "",
               longitude: "",
-              rating: "",
               category: "",
               contact: "",
               delivery_zone_id: "",
@@ -512,19 +513,6 @@ function Restaurants({ darkMode, toggleDarkMode }) {
                   })
                 }
                 placeholder={t("Restaurants.longitude")}
-                className="input-field"
-                required
-              />
-              <input
-                type="text"
-                value={editRestaurant.rating}
-                onChange={(e) =>
-                  setEditRestaurant({
-                    ...editRestaurant,
-                    rating: e.target.value,
-                  })
-                }
-                placeholder={t("Restaurants.rating")}
                 className="input-field"
                 required
               />
