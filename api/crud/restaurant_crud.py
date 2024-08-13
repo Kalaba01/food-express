@@ -11,12 +11,10 @@ async def get_restaurant_by_id(db: Session, restaurant_id: int):
     if restaurant is None:
         return None
 
-    # Prikupljanje ID-ova zona dostave vezanih za ovaj restoran
     delivery_zone_ids = [
         zone.delivery_zone_id for zone in restaurant.delivery_zones
     ]
 
-    # Dodavanje delivery_zone_ids u vraćeni odgovor
     restaurant_data = {
         **restaurant.__dict__,
         "delivery_zone_ids": delivery_zone_ids

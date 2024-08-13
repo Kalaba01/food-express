@@ -25,6 +25,22 @@ class RequestStatus(enum.Enum):
     denied = "denied"
     accepted = "accepted"
 
+class OrderStatus(enum.Enum):
+    pending = "pending"
+    confirmed = "confirmed"
+    in_delivery = "in_delivery"
+    delivered = "delivered"
+    cancelled = "cancelled"
+
+class VehicleType(enum.Enum):
+    bike = "bike"
+    car = "car"
+
+class OrderAssignmentStatus(enum.Enum):
+    assigned = "assigned"
+    picked_up = "picked_up"
+    delivered = "delivered"
+
 class Image(Base):
     __tablename__ = "images"
     id = Column(Integer, primary_key=True, index=True)
@@ -132,7 +148,7 @@ class Order(Base):
     customer_id = Column(Integer, ForeignKey("users.id"))
     restaurant_id = Column(Integer, ForeignKey("restaurants.id"))
     total_price = Column(Float, nullable=False)
-    status = Column(String, nullable=False)  # 'pending', 'confirmed', 'in_delivery', 'delivered', 'cancelled'
+    status = Column(Enum(OrderStatus), nullable=False, default=OrderStatus.pending)
     delivery_address = Column(String, nullable=False)
     delivery_latitude = Column(Float, nullable=False)
     delivery_longitude = Column(Float, nullable=False)
@@ -161,7 +177,7 @@ class Courier(Base):
     __tablename__ = "couriers"
     id = Column(Integer, primary_key=True, index=True)
     user_id = Column(Integer, ForeignKey("users.id"))
-    vehicle_type = Column(String, nullable=False)  # 'bike', 'car'
+    vehicle_type = Column(Enum(VehicleType), nullable=False)
     halal_mode = Column(Boolean, default=False)
     wallet_amount = Column(Float, nullable=False)
     wallet_details = Column(Text, nullable=False)  # JSON format to store denominations
@@ -177,7 +193,7 @@ class OrderAssignment(Base):
     order_id = Column(Integer, ForeignKey("orders.id"))
     courier_id = Column(Integer, ForeignKey("couriers.id"))
     assigned_at = Column(DateTime, default=datetime.datetime.utcnow)
-    status = Column(String, nullable=False)  # 'assigned', 'picked_up', 'delivered'
+    status = Column(Enum(OrderAssignmentStatus), nullable=False, default=OrderAssignmentStatus.assigned)
 
     order = relationship("Order", back_populates="order_assignments")
     courier = relationship("Courier", back_populates="order_assignments")

@@ -19,6 +19,27 @@ class RequestTypeEnum(str, Enum):
     deliver = "deliver"
     join = "join"
 
+class RequestStatusEnum(str, Enum):
+    pending = "pending"
+    denied = "denied"
+    accepted = "accepted"
+
+class OrderStatusEnum(str, Enum):
+    pending = "pending"
+    confirmed = "confirmed"
+    in_delivery = "in_delivery"
+    delivered = "delivered"
+    cancelled = "cancelled"
+
+class VehicleTypeEnum(str, Enum):
+    bike = "bike"
+    car = "car"
+
+class OrderAssignmentStatusEnum(str, Enum):
+    assigned = "assigned"
+    picked_up = "picked_up"
+    delivered = "delivered"
+
 # Slike
 class ImageCreate(BaseModel):
     image: bytes
@@ -47,7 +68,6 @@ class UserUpdate(BaseModel):
     role: Optional[constr(min_length=1)] = Field(None)
 
 # Restorani
-# Restorani
 class RestaurantCreate(BaseModel):
     name: str
     address: str
@@ -59,7 +79,7 @@ class RestaurantCreate(BaseModel):
     owner_id: int
     delivery_zone_ids: List[int]  # Lista zona dostave
     capacity: RestaurantCapacityEnum = RestaurantCapacityEnum.normal
-    image_ids: Optional[List[int]] = None  # Lista slika
+    image_ids: Optional[List[int]] = None
 
 class RestaurantUpdate(BaseModel):
     name: Optional[str]
@@ -97,7 +117,7 @@ class ItemCreate(BaseModel):
     restaurant_id: int
     menu_category_id: int
     category: ItemCategoryEnum
-    image_ids: Optional[List[int]]  # Lista slika
+    image_ids: Optional[List[int]] = None
 
 class ItemUpdate(BaseModel):
     name: Optional[str]
@@ -126,7 +146,7 @@ class OrderCreate(BaseModel):
     customer_id: int
     restaurant_id: int
     total_price: float
-    status: str
+    status: OrderStatusEnum = OrderStatusEnum.pending
     delivery_address: str
     delivery_latitude: float
     delivery_longitude: float
@@ -142,7 +162,7 @@ class OrderItemCreate(BaseModel):
 # Kuriri
 class CourierCreate(BaseModel):
     user_id: int
-    vehicle_type: str  # 'bike', 'car'
+    vehicle_type: VehicleTypeEnum
     halal_mode: bool
     wallet_amount: float
     wallet_details: str
@@ -247,7 +267,7 @@ class RequestCreate(BaseModel):
     request_type: RequestTypeEnum
 
 class RequestStatusUpdate(BaseModel):
-    status: str
+    status: RequestStatusEnum
 
 class ForgotPasswordRequest(BaseModel):
     email: str
