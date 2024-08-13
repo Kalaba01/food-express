@@ -6,6 +6,24 @@ from schemas.schemas import RestaurantCreate, RestaurantUpdate
 async def get_all_restaurants(db: Session):
     return db.query(Restaurant).all()
 
+async def get_restaurant_by_id(db: Session, restaurant_id: int):
+    restaurant = db.query(Restaurant).filter(Restaurant.id == restaurant_id).first()
+    if restaurant is None:
+        return None
+
+    # Prikupljanje ID-ova zona dostave vezanih za ovaj restoran
+    delivery_zone_ids = [
+        zone.delivery_zone_id for zone in restaurant.delivery_zones
+    ]
+
+    # Dodavanje delivery_zone_ids u vraćeni odgovor
+    restaurant_data = {
+        **restaurant.__dict__,
+        "delivery_zone_ids": delivery_zone_ids
+    }
+
+    return restaurant_data
+
 async def search_owners(db: Session, username: str):
     owners = db.query(User).filter(User.username.ilike(f"%{username}%")).all()
     return [{"id": owner.id, "username": owner.username} for owner in owners if owner.role == "owner"]
@@ -21,13 +39,17 @@ async def create_new_restaurant(db: Session, restaurant: RestaurantCreate):
         city=restaurant.city,
         latitude=restaurant.latitude,
         longitude=restaurant.longitude,
-        rating=restaurant.rating,
         category=restaurant.category,
         contact=restaurant.contact,
         owner_id=restaurant.owner_id,
-        delivery_zone_id=restaurant.delivery_zone_id,
         capacity=restaurant.capacity
     )
+
+    zones = db.query(DeliveryZone).filter(DeliveryZone.id.in_(restaurant.delivery_zone_ids)).all()
+    if not zones:
+        raise HTTPException(status_code=400, detail="Invalid delivery zone IDs")
+    
+    new_restaurant.delivery_zones.extend(zones)
 
     db.add(new_restaurant)
     db.commit()
@@ -38,7 +60,7 @@ async def update_existing_restaurant(db: Session, restaurant_id: int, restaurant
     db_restaurant = db.query(Restaurant).filter(Restaurant.id == restaurant_id).first()
     if not db_restaurant:
         raise HTTPException(status_code=404, detail="Restaurant not found")
-    
+
     if restaurant.owner_id:
         owner = db.query(User).filter(User.id == restaurant.owner_id).first()
         if not owner or owner.role != "owner":
@@ -54,18 +76,18 @@ async def update_existing_restaurant(db: Session, restaurant_id: int, restaurant
         db_restaurant.latitude = restaurant.latitude
     if restaurant.longitude is not None:
         db_restaurant.longitude = restaurant.longitude
-    if restaurant.rating is not None:
-        db_restaurant.rating = restaurant.rating
     if restaurant.category is not None:
         db_restaurant.category = restaurant.category
     if restaurant.contact is not None:
         db_restaurant.contact = restaurant.contact
-    if restaurant.delivery_zone_id is not None:
-        db_restaurant.delivery_zone_id = restaurant.delivery_zone_id
     if restaurant.capacity is not None:
         db_restaurant.capacity = restaurant.capacity
-    if restaurant.owner_id is not None:
-        db_restaurant.owner_id = restaurant.owner_id
+    
+    if restaurant.delivery_zone_ids is not None:
+        zones = db.query(DeliveryZone).filter(DeliveryZone.id.in_(restaurant.delivery_zone_ids)).all()
+        if not zones:
+            raise HTTPException(status_code=400, detail="Invalid delivery zone IDs")
+        db_restaurant.delivery_zones = zones
 
     db.commit()
     db.refresh(db_restaurant)

@@ -205,6 +205,7 @@
     "address": "Address",
     "city": "City",
     "category": "Category",
+    "selectZones": "Delivery Zones",
     "menuCategories": "Menu categories",
     "rating": "Rating",
     "noRating": "No ratings",

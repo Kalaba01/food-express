@@ -47,31 +47,30 @@ class UserUpdate(BaseModel):
     role: Optional[constr(min_length=1)] = Field(None)
 
 # Restorani
+# Restorani
 class RestaurantCreate(BaseModel):
     name: str
     address: str
     city: str
     latitude: float
     longitude: float
-    rating: int
     category: str
     contact: str
     owner_id: int
-    delivery_zone_id: int
+    delivery_zone_ids: List[int]  # Lista zona dostave
     capacity: RestaurantCapacityEnum = RestaurantCapacityEnum.normal
-    image_ids: Optional[List[int]] = None # Lista slika
+    image_ids: Optional[List[int]] = None  # Lista slika
 
 class RestaurantUpdate(BaseModel):
     name: Optional[str]
     address: Optional[str]
-    city: Optional[str]
+    city: Optional[float]
     latitude: Optional[float]
     longitude: Optional[float]
-    rating: Optional[int]
     category: Optional[str]
     contact: Optional[str]
     owner_id: Optional[int]
-    delivery_zone_id: Optional[int]
+    delivery_zone_ids: Optional[List[int]]  # Lista zona dostave
     capacity: Optional[RestaurantCapacityEnum]
     image_ids: Optional[List[int]] = None  # Lista slika
 

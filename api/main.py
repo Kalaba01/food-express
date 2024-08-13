@@ -23,7 +23,7 @@ from utils.scheduled_tasks_utils import deny_requests_and_send_emails, remind_pe
 from crud.user_crud import create_user, get_user_by_username, get_user_by_email, create_password_reset_token, verify_password_reset_token, update_user_password, check_user_exists, create_user_from_request, delete_user, update_user_details
 from crud.request_crud import create_request, get_all_requests, update_request_status, check_pending_request_by_email, update_request_status_and_process
 from crud.delivery_zone_crud import get_all_zones, create_zone, update_zone, delete_delivery_zone_by_id
-from crud.restaurant_crud import get_all_restaurants, create_new_restaurant, update_existing_restaurant, delete_restaurant_and_related_data, search_owners
+from crud.restaurant_crud import get_all_restaurants, create_new_restaurant, update_existing_restaurant, delete_restaurant_and_related_data, search_owners, get_restaurant_by_id
 from crud.menu_crud import get_menu_categories, create_menu_category, update_menu_category, delete_menu_category
 from crud.item_crud import get_items, create_item, update_item, delete_item
 
@@ -194,6 +194,13 @@ async def delete_delivery_zone(zone_id: int, db: Session = Depends(get_db)):
 @app.get("/restaurants/")
 async def read_restaurants(db: Session = Depends(get_db)):
     return await  get_all_restaurants(db)
+
+@app.get("/restaurants/{restaurant_id}")
+async def read_restaurant(restaurant_id: int, db: Session = Depends(get_db)):
+    restaurant = await get_restaurant_by_id(db, restaurant_id)
+    if not restaurant:
+        raise HTTPException(status_code=404, detail="Restaurant not found")
+    return restaurant
 
 @app.get("/search-owners/")
 async def owners_search(username: str, db: Session = Depends(get_db)):

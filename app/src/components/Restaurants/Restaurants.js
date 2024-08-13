@@ -13,6 +13,8 @@ import {
   FaTrash,
   FaArrowLeft,
   FaArrowRight,
+  FaCaretDown,
+  FaCaretUp,
 } from "react-icons/fa";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import { useTranslation } from "react-i18next";
@@ -40,6 +42,8 @@ function Restaurants({ darkMode, toggleDarkMode }) {
   const [ownerSearch, setOwnerSearch] = useState("");
   const [ownerResults, setOwnerResults] = useState([]);
   const [selectedOwner, setSelectedOwner] = useState(null);
+  const [selectedZones, setSelectedZones] = useState([]);
+  const [zonesDropdownOpen, setZonesDropdownOpen] = useState(false);
 
   const customMarkerIcon = L.icon({
     iconUrl: markerIcon,
@@ -135,7 +139,9 @@ function Restaurants({ darkMode, toggleDarkMode }) {
     ),
     [t("Restaurants.rating")]: (item) => (
       <div className="rating-stars">
-        {item.rating_count > 0 ? renderStars(item.total_rating / item.rating_count) : t("Restaurants.noRating")}
+        {item.rating_count > 0
+          ? renderStars(item.total_rating / item.rating_count)
+          : t("Restaurants.noRating")}
       </div>
     ),
   };
@@ -164,23 +170,50 @@ function Restaurants({ darkMode, toggleDarkMode }) {
     setSelectedOwner(null);
     setOwnerSearch("");
     setOwnerResults([]);
+    setSelectedZones([]);
+    setZonesDropdownOpen(false);
   };
 
   const handleEditClick = async (restaurant) => {
-    setEditRestaurant(restaurant);
-
     try {
       const response = await axios.get(
-        `http://localhost:8000/users/${restaurant.owner_id}`
+        `http://localhost:8000/restaurants/${restaurant.id}`
       );
-      const owner = response.data;
+      const fetchedRestaurant = response.data;
+
+      if (fetchedRestaurant.delivery_zone_ids) {
+        setSelectedZones(fetchedRestaurant.delivery_zone_ids);
+      } else {
+        setSelectedZones([]);
+      }
+
+      setEditRestaurant(fetchedRestaurant);
+
+      const ownerResponse = await axios.get(
+        `http://localhost:8000/users/${fetchedRestaurant.owner_id}`
+      );
+      const owner = ownerResponse.data;
       setSelectedOwner(owner);
       setOwnerSearch(owner.username);
-    } catch (error) {
-      console.error("Error fetching owner details:", error);
-    }
 
-    setIsPopupOpen(true);
+      setIsPopupOpen(true);
+    } catch (error) {
+      console.error("Error fetching restaurant details:", error);
+    }
+  };
+
+  const renderZoneCheckbox = (zone) => {
+    return (
+      <div key={zone.id} className="zone-dropdown-item">
+        <input
+          type="checkbox"
+          value={zone.id}
+          checked={selectedZones.includes(zone.id)}
+          onChange={() => handleZoneSelect(zone.id)}
+        />
+        <label>{zone.name}</label>
+      </div>
+    );
   };
 
   const handleMapClick = (restaurant) => {
@@ -189,13 +222,11 @@ function Restaurants({ darkMode, toggleDarkMode }) {
   };
 
   const handleDeleteClick = (restaurant) => {
-    console.log("Delete clicked", restaurant);
     setRestaurantToDelete(restaurant);
     setDeletePopupOpen(true);
   };
 
   const confirmDelete = async () => {
-    console.log("Confirm delete", restaurantToDelete);
     try {
       await axios.delete(
         `http://localhost:8000/restaurants/${restaurantToDelete.id}`
@@ -211,7 +242,6 @@ function Restaurants({ darkMode, toggleDarkMode }) {
   };
 
   const cancelDelete = () => {
-    console.log("Cancel delete");
     setDeletePopupOpen(false);
     setRestaurantToDelete(null);
   };
@@ -224,7 +254,11 @@ function Restaurants({ darkMode, toggleDarkMode }) {
     try {
       const response = await axios.put(
         `http://localhost:8000/restaurants/${editRestaurant.id}`,
-        { ...editRestaurant, owner_id: selectedOwner.id }
+        {
+          ...editRestaurant,
+          owner_id: selectedOwner.id,
+          delivery_zone_ids: selectedZones,
+        }
       );
       setRestaurants(
         restaurants.map((restaurant) =>
@@ -241,8 +275,8 @@ function Restaurants({ darkMode, toggleDarkMode }) {
   const handleNewRestaurantSave = async (event) => {
     event.preventDefault();
 
-    if (!selectedOwner) {
-      showNotification(t("Restaurants.selectOwner"), "error");
+    if (!selectedOwner || selectedZones.length === 0) {
+      showNotification(t("Restaurants.selectOwnerOrZones"), "error");
       return;
     }
 
@@ -250,6 +284,7 @@ function Restaurants({ darkMode, toggleDarkMode }) {
       const response = await axios.post("http://localhost:8000/restaurants/", {
         ...editRestaurant,
         owner_id: selectedOwner.id,
+        delivery_zone_ids: selectedZones,
       });
       setRestaurants([...restaurants, response.data]);
       resetPopup();
@@ -280,6 +315,14 @@ function Restaurants({ darkMode, toggleDarkMode }) {
       }
     }
     return stars.length > 0 ? stars : <span>{t("Restaurants.noRating")}</span>;
+  };
+
+  const handleZoneSelect = (zoneId) => {
+    setSelectedZones((prevSelectedZones) =>
+      prevSelectedZones.includes(zoneId)
+        ? prevSelectedZones.filter((id) => id !== zoneId)
+        : [...prevSelectedZones, zoneId]
+    );
   };
 
   const renderCategories = () => {
@@ -363,8 +406,10 @@ function Restaurants({ darkMode, toggleDarkMode }) {
               longitude: "",
               category: "",
               contact: "",
-              delivery_zone_id: "",
+              delivery_zone_ids: [],
             });
+            setSelectedZones([]);
+            setZonesDropdownOpen(false);
             setIsPopupOpen(true);
           }}
         >
@@ -542,24 +587,22 @@ function Restaurants({ darkMode, toggleDarkMode }) {
                 className="input-field"
                 required
               />
-              <select
-                value={editRestaurant.delivery_zone_id || ""}
-                onChange={(e) =>
-                  setEditRestaurant({
-                    ...editRestaurant,
-                    delivery_zone_id: parseInt(e.target.value),
-                  })
-                }
-                className="input-field"
-                required
-              >
-                <option value="">{t("Restaurants.selectZone")}</option>
-                {zones.map((zone) => (
-                  <option key={zone.id} value={zone.id}>
-                    {zone.name}
-                  </option>
-                ))}
-              </select>
+              <div className="zone-selection">
+                <div className="zone-dropdown">
+                  <div
+                    className="zone-dropdown-header"
+                    onClick={() => setZonesDropdownOpen(!zonesDropdownOpen)}
+                  >
+                    <span>{t("Restaurants.selectZones")}</span>
+                    {zonesDropdownOpen ? <FaCaretUp /> : <FaCaretDown />}
+                  </div>
+                  {zonesDropdownOpen && (
+                    <div className="zone-dropdown-content">
+                      {zones.map(renderZoneCheckbox)}
+                    </div>
+                  )}
+                </div>
+              </div>
               <div className="owner-search-container">
                 <input
                   type="text"

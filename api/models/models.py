@@ -66,7 +66,6 @@ class Restaurant(Base):
     category = Column(String, nullable=False)
     contact = Column(String, nullable=False)
     owner_id = Column(Integer, ForeignKey("users.id"))
-    delivery_zone_id = Column(Integer, ForeignKey("delivery_zones.id"))
     capacity = Column(Enum(RestaurantCapacity), nullable=False, default=RestaurantCapacity.normal)
     total_rating = Column(Float, default=0)
     rating_count = Column(Integer, default=0)
@@ -76,10 +75,19 @@ class Restaurant(Base):
     menu_categories = relationship("MenuCategory", back_populates="restaurant")
     orders = relationship("Order", back_populates="restaurant")
     couriers = relationship("Courier", back_populates="restaurant")
-    delivery_zone = relationship("DeliveryZone", back_populates="restaurants")
+    delivery_zones = relationship("RestaurantDeliveryZone", back_populates="restaurant")
     images = relationship("Image", back_populates="restaurant")
     operating_hours = relationship("OperatingHours", back_populates="restaurant")
     ratings = relationship("Rating", back_populates="restaurant")
+
+class RestaurantDeliveryZone(Base):
+    __tablename__ = "restaurant_delivery_zones"
+    id = Column(Integer, primary_key=True, index=True)
+    restaurant_id = Column(Integer, ForeignKey("restaurants.id"), nullable=False)
+    delivery_zone_id = Column(Integer, ForeignKey("delivery_zones.id"), nullable=False)
+
+    restaurant = relationship("Restaurant", back_populates="delivery_zones")
+    delivery_zone = relationship("DeliveryZone", back_populates="restaurants")
 
 class OperatingHours(Base):
     __tablename__ = "operating_hours"
@@ -238,7 +246,7 @@ class DeliveryZone(Base):
     point4_latitude = Column(Float, nullable=False)
     point4_longitude = Column(Float, nullable=False)
 
-    restaurants = relationship("Restaurant", back_populates="delivery_zone")
+    restaurants = relationship("RestaurantDeliveryZone", back_populates="delivery_zone")
 
 class Bank(Base):
     __tablename__ = "banks"
