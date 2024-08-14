@@ -152,6 +152,17 @@ class OrderCreate(BaseModel):
     delivery_longitude: float
     cutlery_included: bool
 
+class OrderUpdate(BaseModel):
+    customer_id: Optional[int]
+    restaurant_id: Optional[int]
+    total_price: Optional[float]
+    status: Optional[OrderStatusEnum]
+    delivery_address: Optional[str]
+    delivery_latitude: Optional[float]
+    delivery_longitude: Optional[float]
+    cutlery_included: Optional[bool]
+    updated_at: Optional[datetime.datetime] = Field(default_factory=datetime.datetime.utcnow)
+
 # Stavke narudžbi
 class OrderItemCreate(BaseModel):
     order_id: int
@@ -180,7 +191,7 @@ class CourierUpdate(BaseModel):
 class OrderAssignmentCreate(BaseModel):
     order_id: int
     courier_id: int
-    status: str  # 'assigned', 'picked_up', 'delivered'
+    status: OrderAssignmentStatusEnum = OrderAssignmentStatusEnum.assigned
 
 class OrderAssignmentUpdate(BaseModel):
     order_id: Optional[int]

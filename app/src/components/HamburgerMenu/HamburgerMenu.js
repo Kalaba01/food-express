@@ -39,6 +39,7 @@ function HamburgerMenu() {
             <a href="/admin/users">{t('HamburgerMenu.admin.users')}</a>
             <a href="/admin/delivery-zones">{t('HamburgerMenu.admin.deliveryZones')}</a>
             <a href="/admin/restaurants">{t('HamburgerMenu.admin.restaurants')}</a>
+            <a href="/admin/orders">{t('HamburgerMenu.admin.orders')}</a>
           </>
         );
       case 'customer':

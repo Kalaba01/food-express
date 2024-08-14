@@ -526,3 +526,61 @@ body.dark-mode .close-button:hover {
 .owner-search-results li:hover {
     background-color: #f1f1f1;
 }
+
+.orders-container {
+    padding: 20px;
+}
+
+.order-details-modal {
+    max-width: 600px;
+    max-height: 70vh;
+    overflow-y: auto;
+    padding: 20px;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: var(--background-color-light);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s, color 0.3s;
+}
+
+body.dark-mode .order-details-modal {
+    background-color: var(--background-color-dark);
+}
+
+.order-details-modal ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.order-details-modal ul li {
+    margin: 10px 0;
+    font-size: 1.1em;
+    color: var(--text-color);
+}
+
+.order-details-modal p {
+    font-weight: bold;
+    font-size: 1.2em;
+    color: var(--text-color);
+}
+
+.order-row {
+    cursor: pointer;
+    color: #333;
+}
+
+body.dark-mode .order-row {
+    color: #fff;
+}
+
+.order-row.active {
+    font-weight: bold;
+}
+
+.order-row:hover {
+    text-decoration: underline;
+    text-decoration-color: #00bfff;
+    text-decoration-thickness: 1.5px;
+}

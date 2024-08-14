@@ -233,7 +233,33 @@
       "requests": "Zahtjevi",
       "users": "Korisnici",
       "deliveryZones": "Zone Dostave",
-      "restaurants": "Restorani"
+      "restaurants": "Restorani",
+      "orders": "Narudžbe"
     }
+  },
+  "Orders": {
+    "title": "Narudžbe",
+    "orderDetails": "Detalji Narudžbe",
+    "totalPrice": "Ukupna Cijena",
+    "yes": "Da",
+    "no": "Ne",
+    "pending": "Na čekanju",
+    "restaurant": "Restoran",
+    "restaurantAddress": "Adresa Restorana",
+    "customer": "Kupac",
+    "customerAddress": "Adresa Kupca",
+    "courier": "Kurir",
+    "price": "Cijena",
+    "cutlery": "Pribor",
+    "created": "Kreirano",
+    "assigned": "Dodijeljeno",
+    "status": "Status",
+    "status_pending": "Na čekanju",
+    "status_confirmed": "Potvrđeno",
+    "status_in_delivery": "U Dostavi",
+    "status_delivered": "Dostavljeno",
+    "status_cancelled": "Otkazano",
+    "noItems": "Nema artikala u ovoj narudžbi",
+    "all": "Sve"
   }
 }

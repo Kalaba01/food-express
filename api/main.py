@@ -12,7 +12,7 @@ from apscheduler.triggers.cron import CronTrigger
 
 from database.database import SessionLocal, engine, get_db
 from models.models import Base, User, PasswordResetToken, Image, Request, DeliveryZone, Restaurant, MenuCategory, Item
-from schemas.schemas import UserCreate, ForgotPasswordRequest, ImageCreate, RequestCreate, RequestStatusUpdate, UserUpdate, DeliveryZoneCreate, DeliveryZoneUpdate, RestaurantCreate, RestaurantUpdate, MenuCategoryCreate, MenuCategoryUpdate, ItemCreate, ItemUpdate
+from schemas.schemas import UserCreate, ForgotPasswordRequest, ImageCreate, RequestCreate, RequestStatusUpdate, UserUpdate, DeliveryZoneCreate, DeliveryZoneUpdate, RestaurantCreate, RestaurantUpdate, MenuCategoryCreate, MenuCategoryUpdate, ItemCreate, ItemUpdate, OrderCreate, OrderUpdate
 
 from auth.auth import create_access_token, get_current_user
 from utils.password_utils import hash_password, verify_password, generate_temp_password
@@ -26,6 +26,7 @@ from crud.delivery_zone_crud import get_all_zones, create_zone, update_zone, del
 from crud.restaurant_crud import get_all_restaurants, create_new_restaurant, update_existing_restaurant, delete_restaurant_and_related_data, search_owners, get_restaurant_by_id
 from crud.menu_crud import get_menu_categories, create_menu_category, update_menu_category, delete_menu_category
 from crud.item_crud import get_items, create_item, update_item, delete_item
+from crud.orders_crud import get_all_orders, get_order_by_id, create_new_order, update_order, delete_order
 
 def start_application():
     app = FastAPI()
@@ -251,3 +252,34 @@ async def update_item(item_id: int, item: ItemUpdate, db: Session = Depends(get_
 @app.delete("/items/{item_id}")
 async def delete_item(item_id: int, db: Session = Depends(get_db)):
     return await delete_item(db, item_id)
+
+# Ruta za dohvatanje svih narudžbi
+@app.get("/orders/")
+async def read_orders(db: Session = Depends(get_db)):
+    return await get_all_orders(db)
+
+# Ruta za dohvatanje detalja pojedinačne narudžbe
+@app.get("/orders/{order_id}")
+async def read_order(order_id: int, db: Session = Depends(get_db)):
+    order = await get_order_by_id(db, order_id)
+    if not order:
+        raise HTTPException(status_code=404, detail="Order not found")
+    return order
+
+# Ruta za kreiranje nove narudžbe
+@app.post("/orders/")
+async def create_order(order: OrderCreate, db: Session = Depends(get_db)):
+    return await create_new_order(db, order)
+
+# Ruta za ažuriranje narudžbe
+@app.put("/orders/{order_id}")
+async def update_order(order_id: int, order: OrderUpdate, db: Session = Depends(get_db)):
+    updated_order = await update_order(db, order_id, order)
+    if not updated_order:
+        raise HTTPException(status_code=404, detail="Order not found")
+    return updated_order
+
+# Ruta za brisanje narudžbe
+@app.delete("/orders/{order_id}")
+async def delete_order(order_id: int, db: Session = Depends(get_db)):
+    return await delete_order(db, order_id)

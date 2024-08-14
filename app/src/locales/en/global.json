@@ -233,7 +233,33 @@
       "requests": "Requests",
       "users": "Users",
       "deliveryZones": "Delivery Zones",
-      "restaurants": "Restaurants"
+      "restaurants": "Restaurants",
+      "orders": "Orders"
     }
+  },
+  "Orders": {
+    "title": "Orders",
+    "orderDetails": "Order Details",
+    "totalPrice": "Total Price",
+    "yes": "Yes",
+    "no": "No",
+    "pending": "Pending",
+    "restaurant": "Restaurant",
+    "restaurantAddress": "Restaurant Address",
+    "customer": "Customer",
+    "customerAddress": "Customer Address",
+    "courier": "Courier",
+    "price": "Price",
+    "cutlery": "Cutlery",
+    "created": "Created",
+    "assigned": "Assigned",
+    "status": "Status",
+    "status_pending": "Pending",
+    "status_confirmed": "Confirmed",
+    "status_in_delivery": "In Delivery",
+    "status_delivered": "Delivered",
+    "status_cancelled": "Cancelled",
+    "noItems": "No items in this order",
+    "all": "All"
   }
 }
