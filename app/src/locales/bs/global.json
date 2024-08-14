@@ -25,10 +25,12 @@
     },
     "faq": {
       "header": "Česta pitanja",
-      "question1": "Pitanje 1",
-      "question2": "Pitanje 2",
-      "question3": "Pitanje 3",
-      "answer": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam."
+      "question1": "Kako da izvršim narudžbu?",
+      "question2": "Koje metode plaćanja su prihvaćene?",
+      "question3": "Kako mogu pratiti svoju dostavu?",
+      "answer1": "Da biste izvršili narudžbu, jednostavno pregledajte restorane na našoj platformi, odaberite željene artikle i nastavite na naplatu. Možete se prijaviti na svoj račun ili narudžbu izvršiti kao gost.",
+      "answer2": "Prihvatamo razne metode plaćanja, uključujući kreditne/debitne kartice, PayPal i gotovinu prilikom dostave. Možete odabrati željenu metodu plaćanja tokom procesa naplate.",
+      "answer3": "Nakon što izvršite narudžbu, možete pratiti njen status u stvarnom vremenu putem naše platforme. Dobit ćete obavijesti kada je narudžba potvrđena, kada je kurir preuzme i kada je na putu do vaše lokacije."
     }
   },
   "FormPopup": {

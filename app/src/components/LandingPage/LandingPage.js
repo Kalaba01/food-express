@@ -62,7 +62,7 @@ function LandingPage({ openPopupModal, darkMode, toggleDarkMode }) {
         <section className="who-are-we">
           <h2>{t('LandingPage.whoAreWe.header')}</h2>
           <div className="content-row">
-            <img src="https://placehold.co/600x600" alt="About Us" className="content-img" />
+            <img src="/images/who_are_we.jpg" alt="About Us" className="content-img" />
             <p>{t('LandingPage.whoAreWe.content')}</p>
           </div>
         </section>
@@ -71,7 +71,7 @@ function LandingPage({ openPopupModal, darkMode, toggleDarkMode }) {
           <h2>{t('LandingPage.cities.header')}</h2>
           <div className="content-row normal">
             <p>{t('LandingPage.cities.content')}</p>
-            <img src="https://placehold.co/600x600" alt="Cities" className="content-img" />
+            <img src="/images/cities.png" alt="Cities" className="content-img" />
           </div>
         </section>
 
@@ -109,7 +109,7 @@ function LandingPage({ openPopupModal, darkMode, toggleDarkMode }) {
             <div key={index} className={`faq-item ${faqOpen === index ? 'active' : ''}`} onClick={() => toggleFaq(index)}>
               <h3>{t(`LandingPage.faq.question${index + 1}`)}</h3>
               <div className={`faq-answer ${faqOpen === index ? 'open' : ''}`}>
-                <p>{t('LandingPage.faq.answer')}</p>
+                <p>{t(`LandingPage.faq.answer${index+1}`)}</p>
               </div>
             </div>
           ))}
