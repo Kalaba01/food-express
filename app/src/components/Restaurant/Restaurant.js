@@ -1,5 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { Header, LookupTable, ConfirmDelete } from "../index";
+import {
+  Header,
+  LookupTable,
+  ConfirmDelete,
+  NotificationPopup,
+} from "../index";
 import {
   FaStar,
   FaStarHalfAlt,
@@ -34,7 +39,10 @@ function Restaurant({ darkMode, toggleDarkMode }) {
   const [isAddCategoryOpen, setIsAddCategoryOpen] = useState(false);
   const [isEditItemOpen, setIsEditItemOpen] = useState(false);
   const [isAddItemOpen, setIsAddItemOpen] = useState(false);
-  const [currentCategory, setCurrentCategory] = useState(null);
+  const [currentCategory, setCurrentCategory] = useState({
+    name: "",
+    description: "",
+  });
   const [currentItem, setCurrentItem] = useState(null);
   const [deletePopupOpen, setDeletePopupOpen] = useState(false);
   const [itemToDelete, setItemToDelete] = useState(null);
@@ -45,6 +53,18 @@ function Restaurant({ darkMode, toggleDarkMode }) {
   const [currentGalleryItem, setCurrentGalleryItem] = useState(null);
   const [currentGalleryImageIndex, setCurrentGalleryImageIndex] = useState(0);
   const [deleteType, setDeleteType] = useState(null);
+  const [notification, setNotification] = useState({
+    message: "",
+    type: "",
+    visible: false,
+  });
+
+  const showNotification = (message, type = "info") => {
+    setNotification({ message, type, visible: true });
+    setTimeout(() => {
+      setNotification((prev) => ({ ...prev, visible: false }));
+    }, 3000); // Notification disappears after 3 seconds
+  };
 
   const fetchRestaurant = async () => {
     const token = localStorage.getItem("token");
@@ -150,7 +170,7 @@ function Restaurant({ darkMode, toggleDarkMode }) {
 
   const openEditItemPopup = (item) => {
     setCurrentItem(item);
-    setCurrentGalleryImageIndex(0); // Resetuj indeks kada otvaraš popup
+    setCurrentGalleryImageIndex(0);
     setIsEditItemOpen(true);
   };
 
@@ -205,7 +225,7 @@ function Restaurant({ darkMode, toggleDarkMode }) {
 
     try {
       const imageUploads = restaurantData.images
-        .filter((image) => image.file) // Filtriramo samo slike koje su datoteke
+        .filter((image) => image.file)
         .map(async (image) => {
           const formData = new FormData();
           formData.append("file", image.file);
@@ -229,7 +249,7 @@ function Restaurant({ darkMode, toggleDarkMode }) {
       setRestaurantData((prevData) => ({
         ...prevData,
         images: [
-          ...prevData.images.filter((image) => !image.file), // Zadržavamo već postojeće slike
+          ...prevData.images.filter((image) => !image.file),
           ...uploadedImages,
         ],
       }));
@@ -239,8 +259,8 @@ function Restaurant({ darkMode, toggleDarkMode }) {
         {
           ...restaurantData,
           images: [
-            ...restaurantData.images.filter((image) => !image.file), // Čuvamo stare slike
-            ...uploadedImages.map((img) => img.id), // Koristimo ID-jeve novih slika
+            ...restaurantData.images.filter((image) => !image.file),
+            ...uploadedImages.map((img) => img.id),
           ],
         },
         {
@@ -294,40 +314,6 @@ function Restaurant({ darkMode, toggleDarkMode }) {
     }));
   };
 
-  const handleDeleteRestaurantImage = (imageIndex) => {
-    setImageToDelete(imageIndex);
-    setDeleteType("restaurantImage");
-    setDeletePopupOpen(true);
-  };
-
-  const handleDeleteCategory = async () => {
-    const token = localStorage.getItem("token");
-    try {
-      if (categoryToDelete) {
-        await axios.delete(
-          `http://localhost:8000/restaurants/${id}/categories/${categoryToDelete.id}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        setCategories(
-          categories.filter((cat) => cat.id !== categoryToDelete.id)
-        );
-      }
-      closeDeletePopup();
-    } catch (error) {
-      console.error("Error deleting category:", error);
-    }
-  };
-
-  const handleDeleteCategoryPopup = (category) => {
-    setCategoryToDelete(category);
-    setDeleteType("category");
-    setDeletePopupOpen(true);
-  };
-
   const handleConfirmDeleteRestaurantImage = async () => {
     const token = localStorage.getItem("token");
 
@@ -344,7 +330,6 @@ function Restaurant({ darkMode, toggleDarkMode }) {
           }
         );
 
-        // Ažuriranje stanja za slike i currentImageIndex
         const updatedImages = restaurantData.images.filter(
           (_, index) => index !== imageToDelete
         );
@@ -360,16 +345,18 @@ function Restaurant({ darkMode, toggleDarkMode }) {
         }));
         setCurrentImageIndex(newIndex);
 
-        // Zatvori popup nakon uspješnog brisanja
+        await fetchRestaurant();
+
         closeDeletePopup();
 
-        // Osvježi podatke restorana
-        await fetchRestaurant();
+        showNotification(t("Restaurant.imageDeleted"), "success");
       } catch (error) {
         console.error("Error deleting image:", error);
+        showNotification(t("Restaurant.errorDeletingImage"), "error");
       }
     } else {
       console.error("Image ID is undefined or invalid, cannot delete.");
+      showNotification(t("Restaurant.invalidImageId"), "error");
     }
   };
 
@@ -379,10 +366,13 @@ function Restaurant({ darkMode, toggleDarkMode }) {
 
     try {
       if (currentCategory && currentCategory.id) {
-        // Edit existing category
+        // Update existing category
         await axios.put(
           `http://localhost:8000/restaurants/${id}/categories/${currentCategory.id}`,
-          { name: currentCategory.name },
+          {
+            name: currentCategory.name,
+            description: currentCategory.description,
+          },
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -392,15 +382,24 @@ function Restaurant({ darkMode, toggleDarkMode }) {
         setCategories(
           categories.map((cat) =>
             cat.id === currentCategory.id
-              ? { ...cat, name: currentCategory.name }
+              ? {
+                  ...cat,
+                  name: currentCategory.name,
+                  description: currentCategory.description,
+                }
               : cat
           )
         );
+        showNotification(t("Restaurant.categoryUpdated"), "success");
       } else {
         // Add new category
         const response = await axios.post(
           `http://localhost:8000/restaurants/${id}/categories`,
-          { name: currentCategory.name },
+          {
+            name: currentCategory.name,
+            description: currentCategory.description,
+            restaurant_id: id, // Dodaj restaurant_id u zahtev
+          },
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -408,11 +407,12 @@ function Restaurant({ darkMode, toggleDarkMode }) {
           }
         );
         setCategories([...categories, response.data]);
+        showNotification(t("Restaurant.categoryAdded"), "success");
       }
-      closeEditCategoryPopup();
       closeAddCategoryPopup();
     } catch (error) {
       console.error("Error saving category:", error);
+       showNotification(t("Restaurant.errorSavingCategory"), "error");
     }
   };
 
@@ -423,7 +423,6 @@ function Restaurant({ darkMode, toggleDarkMode }) {
     try {
       let itemId = currentItem?.id;
 
-      // Ako item još nije kreiran, prvo ga kreirajte bez slika
       if (!itemId) {
         const response = await axios.post(
           `http://localhost:8000/restaurants/${id}/items`,
@@ -449,9 +448,8 @@ function Restaurant({ darkMode, toggleDarkMode }) {
         setItems([...items, response.data]);
       }
 
-      // Sada uploadajte slike koristeći `itemId`
       const imageUploads = currentItem.images
-        .filter((image) => image.file) // Filtrirajte samo slike koje nisu još uploadane
+        .filter((image) => image.file)
         .map(async (image) => {
           const formData = new FormData();
           formData.append("file", image.file);
@@ -472,13 +470,15 @@ function Restaurant({ darkMode, toggleDarkMode }) {
 
       await Promise.all(imageUploads);
 
-      // Osveži stavke nakon dodavanja nove stavke
       await fetchItems();
 
       closeEditItemPopup();
       closeAddItemPopup();
+
+      showNotification(t("Restaurant.itemAdded"), "success");
     } catch (error) {
       console.error("Error saving item:", error);
+      showNotification(t("Restaurant.errorSavingItem"), "error");
     }
   };
 
@@ -512,6 +512,7 @@ function Restaurant({ darkMode, toggleDarkMode }) {
           }
         );
         setItems(items.filter((item) => item.id !== itemToDelete.id));
+        showNotification(t("Restaurant.itemDeleted"), "success");
       } else if (deleteType === "category" && categoryToDelete) {
         await axios.delete(
           `http://localhost:8000/restaurants/${id}/categories/${categoryToDelete.id}`,
@@ -524,6 +525,7 @@ function Restaurant({ darkMode, toggleDarkMode }) {
         setCategories(
           categories.filter((cat) => cat.id !== categoryToDelete.id)
         );
+        showNotification(t("Restaurant.categoryDeleted"), "success");
       } else if (deleteType === "restaurantImage" && imageToDelete !== null) {
         await handleConfirmDeleteRestaurantImage();
       } else if (deleteType === "itemImage" && imageToDelete !== null) {
@@ -532,6 +534,7 @@ function Restaurant({ darkMode, toggleDarkMode }) {
       closeDeletePopup();
     } catch (error) {
       console.error("Error deleting item, category or image:", error);
+      showNotification(t("Restaurant.errorDeletingItem"), "error");
     }
   };
 
@@ -587,7 +590,6 @@ function Restaurant({ darkMode, toggleDarkMode }) {
           }
         );
 
-        // Ažuriranje stanja za slike i currentGalleryImageIndex
         const updatedImages = currentItem.images.filter(
           (_, index) => index !== imageToDelete
         );
@@ -603,13 +605,15 @@ function Restaurant({ darkMode, toggleDarkMode }) {
         }));
         setCurrentGalleryImageIndex(newIndex);
 
-        // Zatvori popup nakon uspješnog brisanja
         closeDeletePopup();
+        showNotification(t("Restaurant.itemImageDeleted"), "success");
       } catch (error) {
         console.error("Error deleting image:", error);
+        showNotification(t("Restaurant.errorDeletingItemImage"), "error");
       }
     } else {
       console.error("Image ID is undefined or invalid, cannot delete.");
+      showNotification(t("Restaurant.invalidImageId"), "error");
     }
   };
 
@@ -934,7 +938,24 @@ function Restaurant({ darkMode, toggleDarkMode }) {
                     type="text"
                     value={currentCategory ? currentCategory.name : ""}
                     onChange={(e) =>
-                      setCurrentCategory({ name: e.target.value })
+                      setCurrentCategory({
+                        ...currentCategory,
+                        name: e.target.value,
+                      })
+                    }
+                    required
+                  />
+                </label>
+                <label>
+                  {t("Restaurant.categoryDescription")}
+                  <input
+                    type="text"
+                    value={currentCategory ? currentCategory.description : ""}
+                    onChange={(e) =>
+                      setCurrentCategory({
+                        ...currentCategory,
+                        description: e.target.value,
+                      })
                     }
                     required
                   />
@@ -1278,6 +1299,12 @@ function Restaurant({ darkMode, toggleDarkMode }) {
           }
           onConfirm={handleDelete}
           onCancel={closeDeletePopup}
+        />
+
+        <NotificationPopup
+          message={notification.message}
+          type={notification.type}
+          visible={notification.visible}
         />
       </div>
     </div>
