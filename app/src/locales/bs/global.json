@@ -228,7 +228,9 @@
   "ConfirmDelete": {
     "title": "Potvrdite Brisanje",
     "confirmButton": "Potvrdi",
-    "cancelButton": "Otkaži"
+    "cancelButton": "Otkaži",
+    "imageMessage": "Jeste li sigurni da želite izbrisati ovu sliku?",
+    "confirmMessage": "Jeste li sigurni da želite izbrisati ovo?"
   },
   "HamburgerMenu": {
     "admin": {
@@ -284,17 +286,38 @@
     "category": "Kategorija",
     "categories": "Kategorije",
     "addCategory": "Dodaj kategoriju",
+    "editCategory": "Uredi kategoriju",
     "categoryName": "Naziv kategorije",
+    "categoryDescription": "Opis kategorije",
+    "categoryUpdated": "Kategorija uspješno ažurirana",
+    "categoryAdded": "Kategorija uspješno dodana",
+    "categoryDeleted": "Kategorija uspješno izbrisana",
+    "errorSavingCategory": "Greška pri spremanju kategorije",
+    "errorDeletingCategory": "Greška pri brisanju kategorije",
     "items": "Artikli",
     "addItem": "Dodaj artikal",
+    "editItem": "Uredi artikal",
     "itemName": "Naziv artikla",
     "itemDescription": "Opis artikla",
     "itemPrice": "Cijena",
     "itemWeight": "Težina",
     "itemPrepTime": "Vrijeme pripreme",
+    "menuCategory": "Kategorija menija",
+    "itemAdded": "Artikal uspješno dodan",
+    "itemUpdated": "Artikal uspješno ažuriran",
+    "itemDeleted": "Artikal uspješno izbrisan",
+    "errorSavingItem": "Greška pri spremanju artikla",
+    "errorDeletingItem": "Greška pri brisanju artikla",
+    "errorDeletingItemImage": "Greška pri brisanju slike artikla",
+    "itemImageDeleted": "Slika artikla uspješno izbrisana",
+    "errorDeletingImage": "Greška pri brisanju slike",
+    "imageDeleted": "Slika uspješno izbrisana",
+    "invalidImageId": "Nevažeći ID slike",
     "actions": "Akcije",
     "noRestaurants": "Nema dostupnih restorana",
     "noImages": "Nema slika",
-    "noRating": "Nema ocjena"
+    "noRating": "Nema ocjena",
+    "uploadImages": "Učitaj slike",
+    "selectCategory": "Odaberite kategoriju"
   }
 }
