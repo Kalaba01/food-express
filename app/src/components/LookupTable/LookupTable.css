@@ -146,7 +146,6 @@ body.dark-mode .lookup-table th {
     transition: color 0.3s ease;
 }
 
-
 body.dark-mode .close-button {
     color: #4A90E2;
 }
@@ -159,6 +158,7 @@ body.dark-mode .close-button:hover {
 .close-button:focus {
     color: var(--secondary-color);
     text-decoration: none;
+    cursor: pointer;
 }
 
 .select-field,
@@ -629,7 +629,7 @@ body.dark-mode .order-row {
     overflow: hidden;
     max-width: 100%;
     height: 180px;
-    margin-bottom: 20px;
+    margin-bottom: 15px;
 }
 
 .gallery-arrow {
@@ -688,23 +688,6 @@ body.dark-mode .order-row {
     font-style: italic;
 }
 
-.close-button {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    font-size: 28px;
-    font-weight: bold;
-    color: #aaa;
-    cursor: pointer;
-}
-
-.close-button:hover,
-.close-button:focus {
-    color: #000;
-    text-decoration: none;
-    cursor: pointer;
-}
-
 .restaurant-edit-form,
 .modal form {
     display: flex;
@@ -726,11 +709,6 @@ body.dark-mode .order-row {
     width: 100%;
 }
 
-.restaurant-images-gallery {
-    display: flex;
-    overflow-x: auto;
-    margin-bottom: 5px;
-}
 
 .image-item {
     position: relative;
@@ -845,8 +823,6 @@ option {
     font-size: 15px;
 }
 
-/* Osnovni stilovi za modal */
-/* Osnovni stilovi za modal */
 .item-modal {
     position: fixed;
     z-index: 1000;
@@ -864,10 +840,8 @@ option {
 .item-modal-content {
     background-color: #fff;
     padding: 15px;
-    /* Smanjen padding */
     border-radius: 8px;
     width: 90%;
-    /* Povećana širina */
     max-width: 800px;
     position: relative;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
@@ -890,18 +864,15 @@ option {
     cursor: pointer;
 }
 
-/* Stilovi za formu unutar modalnog prozora */
 .form-row {
     display: flex;
     justify-content: space-between;
     margin-bottom: 10px;
-    /* Smanjen margin */
 }
 
 .form-row label {
     flex: 1;
     margin-right: 10px;
-    /* Razmak između input polja */
 }
 
 .form-row label:last-child {
@@ -912,15 +883,12 @@ label input,
 label select {
     width: 100%;
     padding: 8px;
-    /* Smanjen padding */
     margin-top: 5px;
     box-sizing: border-box;
 }
 
-/* Stilovi za upload slika */
 .image-upload-container {
     margin-top: 10px;
-    /* Smanjen margin */
 }
 
 .image-upload-input {
@@ -928,7 +896,6 @@ label select {
     padding: 8px;
 }
 
-/* Horizontalna galerija za uređivanje slika */
 .horizontal-gallery {
     display: flex;
     align-items: center;
