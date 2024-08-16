@@ -82,16 +82,16 @@ class RestaurantCreate(BaseModel):
     image_ids: Optional[List[int]] = None
 
 class RestaurantUpdate(BaseModel):
-    name: Optional[str]
-    address: Optional[str]
-    city: Optional[float]
-    latitude: Optional[float]
-    longitude: Optional[float]
-    category: Optional[str]
-    contact: Optional[str]
-    owner_id: Optional[int]
-    delivery_zone_ids: Optional[List[int]]  # Lista zona dostave
-    capacity: Optional[RestaurantCapacityEnum]
+    name: Optional[str] = None
+    address: Optional[str] = None  # Postavljeno kao opcionalno polje
+    city: Optional[str] = None
+    latitude: Optional[float] = None
+    longitude: Optional[float] = None
+    category: Optional[str] = None
+    contact: Optional[str] = None
+    owner_id: Optional[int] = None
+    delivery_zone_ids: Optional[List[int]] = None  # Lista zona dostave
+    capacity: Optional[RestaurantCapacityEnum] = None
     image_ids: Optional[List[int]] = None  # Lista slika
 
 # Radno vreme
@@ -133,7 +133,7 @@ class ItemUpdate(BaseModel):
 # Kategorije menija
 class MenuCategoryCreate(BaseModel):
     name: str
-    description: Optional[str]
+    description: Optional[str] = None
     restaurant_id: int
 
 class MenuCategoryUpdate(BaseModel):

@@ -237,6 +237,10 @@
       "deliveryZones": "Delivery Zones",
       "restaurants": "Restaurants",
       "orders": "Orders"
+    },
+    "owner": {
+      "restaurants": "Restaurants",
+      "noRestaurants": "No Restaurants"
     }
   },
   "Orders": {
@@ -263,5 +267,34 @@
     "status_cancelled": "Cancelled",
     "noItems": "No items in this order",
     "all": "All"
+  },
+  "Restaurant": {
+    "loading": "Loading...",
+    "edit": "Edit",
+    "editRestaurant":"Edit Restaurant",
+    "cancel": "Cancel",
+    "save": "Save",
+    "name": "Name",
+    "contact": "Contact",
+    "capacity": "Capacity",
+    "normal": "Normal",
+    "busy": "Busy",
+    "crowded": "Crowded",
+    "images": "Images",
+    "category": "Category",
+    "categories": "Categories",
+    "addCategory": "Add Category",
+    "categoryName": "Category Name",
+    "items": "Items",
+    "addItem": "Add Item",
+    "itemName": "Item Name",
+    "itemDescription": "Item Description",
+    "itemPrice": "Price",
+    "itemWeight": "Weight",
+    "itemPrepTime": "Prep Time",
+    "actions": "Actions",
+    "noRestaurants": "No restaurants available",
+    "noImages": "No Images",
+    "noRating": "No ratings"
   }
 }

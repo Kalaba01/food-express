@@ -1,19 +1,26 @@
-import React, { useState } from "react";
-import { FaBars, FaTimes } from "react-icons/fa";
+import React, { useState, useEffect } from "react";
+import { FaBars, FaTimes, FaChevronDown, FaChevronUp } from "react-icons/fa";
 import { jwtDecode } from "jwt-decode";
 import { useTranslation } from "react-i18next";
+import axios from "axios";
 import "./HamburgerMenu.css";
 
 function HamburgerMenu() {
-  const [menuOpen, setMenuOpen] = useState(false);
   const { t } = useTranslation("global");
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [restaurantsOpen, setRestaurantsOpen] = useState(false);
+  const [restaurants, setRestaurants] = useState([]);
 
   const toggleMenu = () => {
     setMenuOpen(!menuOpen);
   };
 
-  const token = localStorage.getItem('token');
-  let userRole = '';
+  const toggleRestaurants = () => {
+    setRestaurantsOpen(!restaurantsOpen);
+  };
+
+  const token = localStorage.getItem("token");
+  let userRole = "";
 
   if (token) {
     try {
@@ -22,41 +29,87 @@ function HamburgerMenu() {
       if (decodedToken.exp > currentTime) {
         userRole = decodedToken.role;
       } else {
-        localStorage.removeItem('token');
+        localStorage.removeItem("token");
       }
     } catch (error) {
       console.error("Invalid token", error);
-      localStorage.removeItem('token');
+      localStorage.removeItem("token");
     }
   }
 
+  useEffect(() => {
+    if (userRole === "owner") {
+      const fetchRestaurants = async () => {
+        try {
+          const response = await axios.get(
+            "http://localhost:8000/owner/restaurants",
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+          setRestaurants(response.data);
+        } catch (error) {
+          console.error("Error fetching restaurants:", error);
+        }
+      };
+
+      fetchRestaurants();
+    }
+  }, [userRole, token]);
+
   const menuItems = () => {
     switch (userRole) {
-      case 'administrator':
+      case "administrator":
         return (
           <>
-            <a href="/admin/requests">{t('HamburgerMenu.admin.requests')}</a>
-            <a href="/admin/users">{t('HamburgerMenu.admin.users')}</a>
-            <a href="/admin/delivery-zones">{t('HamburgerMenu.admin.deliveryZones')}</a>
-            <a href="/admin/restaurants">{t('HamburgerMenu.admin.restaurants')}</a>
-            <a href="/admin/orders">{t('HamburgerMenu.admin.orders')}</a>
+            <a href="/admin/requests">{t("HamburgerMenu.admin.requests")}</a>
+            <a href="/admin/users">{t("HamburgerMenu.admin.users")}</a>
+            <a href="/admin/delivery-zones">
+              {t("HamburgerMenu.admin.deliveryZones")}
+            </a>
+            <a href="/admin/restaurants">
+              {t("HamburgerMenu.admin.restaurants")}
+            </a>
+            <a href="/admin/orders">{t("HamburgerMenu.admin.orders")}</a>
           </>
         );
-      case 'customer':
-        return (
-          <>
-            <a href="/courier/route1">Item 1</a>
-            <a href="/courier/route2">Item 2</a>
-          </>
-        );
-      case 'owner':
+      case "customer":
         return (
           <>
             <a href="/courier/route1">Item 1</a>
             <a href="/courier/route2">Item 2</a>
           </>
         );
-      case 'courier':
+      case "owner":
+        return (
+          <>
+            <div className="hamburger-restaurants-dropdown">
+              <button className="hamburger-restaurants-button" onClick={toggleRestaurants}>
+                {t("HamburgerMenu.owner.restaurants")}
+                {restaurantsOpen ? <FaChevronUp className="arrow-icon" /> : <FaChevronDown className="arrow-icon" />}
+              </button>
+              <div className={`hamburger-restaurants-content ${restaurantsOpen ? "open" : ""}`}>
+                {restaurants.length > 0 ? (
+                  restaurants.map((restaurant) => (
+                    <a
+                      key={restaurant.id}
+                      href={`/owner/restaurant/${restaurant.id}`}
+                    >
+                      {restaurant.name}
+                    </a>
+                  ))
+                ) : (
+                  <span className="hamburger-no-restaurants">
+                    {t("HamburgerMenu.owner.noRestaurants")}
+                  </span>
+                )}
+              </div>
+            </div>
+          </>
+        );
+      case "courier":
         return (
           <>
             <a href="/courier/route1">Item 1</a>
@@ -73,9 +126,7 @@ function HamburgerMenu() {
       <div className="hamburger-menu" onClick={toggleMenu}>
         {menuOpen ? <FaTimes /> : <FaBars />}
       </div>
-      <div className={`sidebar ${menuOpen ? "open" : ""}`}>
-        {menuItems()}
-      </div>
+      <div className={`sidebar ${menuOpen ? "open" : ""}`}>{menuItems()}</div>
     </>
   );
 }

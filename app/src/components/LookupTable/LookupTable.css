@@ -181,7 +181,6 @@ body.dark-mode .close-button:hover {
     border-radius: 5px;
     width: 100%;
     transition: background-color 0.3s, transform 0.2s;
-    margin-top: 10px;
 }
 
 .save-button:hover {
@@ -340,7 +339,7 @@ body.dark-mode .close-button:hover {
     align-items: center;
 }
 
-.zone-dropdown-item input[type="checkbox"]:checked + label {
+.zone-dropdown-item input[type="checkbox"]:checked+label {
     background-color: #d3d3d3;
     border-radius: 3px;
 }
@@ -583,4 +582,426 @@ body.dark-mode .order-row {
     text-decoration: underline;
     text-decoration-color: #00bfff;
     text-decoration-thickness: 1.5px;
+}
+
+.restaurant-container {
+    padding: 20px;
+    font-family: Arial, sans-serif;
+}
+
+.restaurant-name {
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.restaurant-rating {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 10px;
+    font-size: 1.5rem;
+    color: #FFD700;
+}
+
+.star-rating {
+    display: flex;
+    gap: 2px;
+}
+
+.restaurant-location,
+.restaurant-capacity,
+.restaurant-category {
+    font-size: 1.2rem;
+    margin-bottom: 5px;
+    color: #555;
+}
+
+.restaurant-images {
+    margin: 20px 0;
+}
+
+.restaurant-images-gallery {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    max-width: 100%;
+    height: 180px;
+    margin-bottom: 20px;
+}
+
+.gallery-arrow {
+    margin: 0 10px;
+    transform: translateY(-50%);
+    font-size: 2rem;
+    color: #4A90E2;
+    cursor: pointer;
+    z-index: 1;
+    transition: color 0.3s ease;
+}
+
+.gallery-arrow.left {
+    left: 10px;
+}
+
+.gallery-arrow.right {
+    right: 10px;
+}
+
+.gallery-arrow:hover {
+    color: #357ABD;
+}
+
+.gallery-image {
+    max-height: 100%;
+    max-width: 100%;
+    border-radius: 8px;
+    transition: transform 0.5s ease;
+}
+
+.delete-image-icon {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 1.5rem;
+    color: red;
+    cursor: pointer;
+    z-index: 2;
+    transition: color 0.3s ease;
+}
+
+.delete-image-icon:hover {
+    color: darkred;
+}
+
+.restaurant-images-gallery img {
+    max-height: 150px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.no-images {
+    font-size: 1.2rem;
+    color: #888;
+    font-style: italic;
+}
+
+.close-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 28px;
+    font-weight: bold;
+    color: #aaa;
+    cursor: pointer;
+}
+
+.close-button:hover,
+.close-button:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.restaurant-edit-form,
+.modal form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.modal label {
+    font-weight: bold;
+}
+
+.modal input[type="text"],
+.modal input[type="file"],
+.modal input[type="number"] {
+    padding: 8px;
+    font-size: 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 100%;
+}
+
+.restaurant-images-gallery {
+    display: flex;
+    overflow-x: auto;
+    margin-bottom: 5px;
+}
+
+.image-item {
+    position: relative;
+}
+
+.image-item img {
+    max-width: 80px;
+    max-height: 80px;
+    border-radius: 8px;
+}
+
+.delete-image-button {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background-color: #ff4c4c;
+    border: none;
+    border-radius: 50%;
+    color: white;
+    font-size: 10px;
+    cursor: pointer;
+    width: 15px;
+    height: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.delete-image-button:hover {
+    background-color: #e60000;
+}
+
+body.dark-mode .restaurant-name,
+body.dark-mode .restaurant-contact,
+body.dark-mode .restaurant-capacity {
+    color: #ccc;
+}
+
+body.dark-mode .restaurant-images-gallery img {
+    border: 1px solid #666;
+}
+
+body.dark-mode .modal-content {
+    background-color: #333;
+    color: #fff;
+    border: 1px solid #444;
+}
+
+body.dark-mode .modal input[type="text"],
+body.dark-mode .modal input[type="file"],
+body.dark-mode .modal input[type="number"] {
+    background-color: #555;
+    color: #fff;
+    border: 1px solid #666;
+}
+
+.image-upload-label {
+    display: flex;
+    align-items: center;
+    background-color: #f1f1f1;
+    border: 2px dashed #4A90E2;
+    border-radius: 8px;
+    padding: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.image-upload-label:hover {
+    background-color: #e6f7ff;
+    border-color: #357ABD;
+}
+
+.image-upload-input {
+    display: none;
+}
+
+.image-upload-label::before {
+    content: "📂 ";
+    font-size: 1.3rem;
+    margin-right: 10px;
+}
+
+label {
+    display: block;
+    font-weight: bold;
+}
+
+select {
+    width: 100%;
+    padding: 5px 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #fff;
+    font-size: 16px;
+    color: #333;
+    cursor: pointer;
+    appearance: none;
+}
+
+select::-ms-expand {
+    display: none;
+}
+
+select:focus {
+    border-color: #007bff;
+    outline: none;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+option {
+    padding: 10px;
+    font-size: 15px;
+}
+
+/* Osnovni stilovi za modal */
+/* Osnovni stilovi za modal */
+.item-modal {
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.item-modal-content {
+    background-color: #fff;
+    padding: 15px;
+    /* Smanjen padding */
+    border-radius: 8px;
+    width: 90%;
+    /* Povećana širina */
+    max-width: 800px;
+    position: relative;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.item-close-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 28px;
+    font-weight: bold;
+    color: #aaa;
+    cursor: pointer;
+}
+
+.item-close-button:hover,
+.item-close-button:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* Stilovi za formu unutar modalnog prozora */
+.form-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    /* Smanjen margin */
+}
+
+.form-row label {
+    flex: 1;
+    margin-right: 10px;
+    /* Razmak između input polja */
+}
+
+.form-row label:last-child {
+    margin-right: 0;
+}
+
+label input,
+label select {
+    width: 100%;
+    padding: 8px;
+    /* Smanjen padding */
+    margin-top: 5px;
+    box-sizing: border-box;
+}
+
+/* Stilovi za upload slika */
+.image-upload-container {
+    margin-top: 10px;
+    /* Smanjen margin */
+}
+
+.image-upload-input {
+    width: 100%;
+    padding: 8px;
+}
+
+/* Horizontalna galerija za uređivanje slika */
+.horizontal-gallery {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.horizontal-gallery img {
+    max-height: 150px;
+    max-width: 100px;
+    border-radius: 8px;
+    transition: transform 0.3s ease;
+    cursor: pointer;
+}
+
+.horizontal-gallery-arrow {
+    font-size: 2rem;
+    color: #4A90E2;
+    cursor: pointer;
+    z-index: 2;
+    transition: color 0.3s ease;
+}
+
+.horizontal-gallery-arrow:hover {
+    color: #357ABD;
+}
+
+.item-gallery {
+    position: relative;
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.item-gallery-image {
+    width: 100%;
+    height: 510px;
+    display: block;
+    border-radius: 8px;
+    transition: transform 0.3s ease-in-out;
+}
+
+.item-gallery-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(0, 0, 0, 0.5);
+    color: #fff;
+    border-radius: 50%;
+    padding: 8px;
+    cursor: pointer;
+    z-index: 1;
+    transition: background-color 0.3s ease;
+}
+
+.item-gallery-arrow.left {
+    left: 10px;
+}
+
+.item-gallery-arrow.right {
+    right: 10px;
+}
+
+.item-gallery-arrow:hover {
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+.item-gallery:hover .item-gallery-image {
+    transform: scale(1.05);
 }

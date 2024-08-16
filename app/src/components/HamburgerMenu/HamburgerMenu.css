@@ -9,10 +9,6 @@
     color: var(--primary-color);
 }
 
-.hamburger-menu:hover {
-    transform: scale(1.1);
-}
-
 .sidebar {
     position: fixed;
     top: 0;
@@ -39,7 +35,7 @@
     padding: 10px 20px;
     text-align: center;
     width: 100%;
-    transition: background-color 0.3s ease;
+    transition: color 0.3s ease;
 }
 
 .sidebar a:hover {
@@ -48,6 +44,88 @@
     text-decoration-thickness: 1.5px;
 }
 
+.hamburger-restaurants-dropdown {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+    text-align: center;
+}
+
+.hamburger-restaurants-button {
+    background-color: var(--header-background);
+    color: var(--primary-color);
+    padding: 10px;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: color 0.3s ease;
+}
+
+.hamburger-restaurants-button:hover {
+    text-decoration-color: var(--secondary-color);
+}
+
+.hamburger-restaurants-button .arrow-icon {
+    transition: transform 0.3s ease;
+}
+
+.hamburger-restaurants-content {
+    display: none;
+    position: absolute;
+    background-color: var(--header-background);
+    min-width: 160px;
+    z-index: 1;
+    top: 100%;
+    left: 0;
+    transition: max-height 0.3s ease-in-out;
+    overflow: hidden;
+    max-height: 0;
+}
+
+.hamburger-restaurants-content.open {
+    display: block;
+    max-height: 500px;
+}
+
+.hamburger-restaurants-content a {
+    color: var(--primary-color);
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    text-align: left;
+    transition: color 0.3s ease;
+}
+
+.hamburger-restaurants-content a:hover {
+    text-decoration: underline;
+    text-decoration-color: var(--secondary-color);
+    text-decoration-thickness: 1.5px;
+}
+
+.hamburger-no-restaurants {
+    color: var(--primary-color);
+    padding: 12px 16px;
+    display: block;
+    text-align: left;
+}
+
 body.dark-mode .sidebar {
     background-color: #444;
+}
+
+body.dark-mode .hamburger-restaurants-content {
+    background-color: #444;
+}
+
+body.dark-mode .hamburger-restaurants-button {
+    background-color: #444;
+    color: var(--primary-color);
+}
+
+body.dark-mode .hamburger-no-restaurants {
+    color: #ddd;
 }

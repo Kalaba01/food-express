@@ -25,5 +25,6 @@ import DeliveryZones from "./DeliveryZones/DeliveryZones";
 import Restaurants from "./Restaurants/Restaurants";
 import ConfirmDelete from "./ConfirmDelete/ConfirmDelete";
 import Orders from "./Orders/Orders";
+import Restaurant from "./Restaurant/Restaurant";
 
-export  { Admin, Captcha, Courier, Customer, Footer, FormPopup, GoTop, Header, Language, LoginRegister, NotificationPopup, Owner, Theme, LandingPage, Unauthorized, Logout, ForgotPassword, ResetPassword, HamburgerMenu, Requests, Users, NotFound, LookupTable, DeliveryZones, Restaurants, ConfirmDelete, Orders }
+export  { Admin, Captcha, Courier, Customer, Footer, FormPopup, GoTop, Header, Language, LoginRegister, NotificationPopup, Owner, Theme, LandingPage, Unauthorized, Logout, ForgotPassword, ResetPassword, HamburgerMenu, Requests, Users, NotFound, LookupTable, DeliveryZones, Restaurants, ConfirmDelete, Orders, Restaurant }

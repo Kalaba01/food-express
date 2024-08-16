@@ -84,7 +84,7 @@ section {
 }
 
 button {
-    background-color: #000;
+    background-color: #4A90E2;
     color: #fff;
     border: none;
     padding: 10px 20px;
@@ -96,7 +96,7 @@ button {
 }
 
 button:hover {
-    background-color: var(--secondary-color);
+    background-color: #357ABD;
     transform: translateY(-3px);
 }
 

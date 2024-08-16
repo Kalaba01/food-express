@@ -1,7 +1,8 @@
+import base64
 from sqlalchemy.orm import Session
 from fastapi import HTTPException
 from models.models import Restaurant, MenuCategory, Item, User
-from schemas.schemas import RestaurantCreate, RestaurantUpdate
+from schemas.schemas import RestaurantCreate, RestaurantUpdate, MenuCategoryCreate, MenuCategoryUpdate, ItemCreate, ItemUpdate
 
 async def get_all_restaurants(db: Session):
     return db.query(Restaurant).all()
@@ -15,9 +16,16 @@ async def get_restaurant_by_id(db: Session, restaurant_id: int):
         zone.delivery_zone_id for zone in restaurant.delivery_zones
     ]
 
+    # Modifikacija dijela za slike
+    images = [
+        {"id": image.id, "image": base64.b64encode(image.image).decode('utf-8')}
+        for image in restaurant.images
+    ]
+
     restaurant_data = {
         **restaurant.__dict__,
-        "delivery_zone_ids": delivery_zone_ids
+        "delivery_zone_ids": delivery_zone_ids,
+        "images": images,
     }
 
     return restaurant_data
@@ -66,7 +74,7 @@ async def update_existing_restaurant(db: Session, restaurant_id: int, restaurant
 
     if restaurant.name is not None:
         db_restaurant.name = restaurant.name
-    if restaurant.address is not None:
+    if restaurant.address is not None:  # Provjeri da li je address poslan
         db_restaurant.address = restaurant.address
     if restaurant.city is not None:
         db_restaurant.city = restaurant.city
@@ -106,3 +114,74 @@ async def delete_restaurant_and_related_data(db: Session, restaurant_id: int):
     db.commit()
     
     return {"message": "Restaurant and all associated menus and items deleted successfully"}
+
+# Dohvatanje svih kategorija za dati restoran
+async def get_categories(db: Session, restaurant_id: int):
+    return db.query(MenuCategory).filter_by(restaurant_id=restaurant_id).all()
+
+# Kreiranje nove kategorije
+async def create_category(db: Session, restaurant_id: int, category: MenuCategoryCreate):
+    new_category = MenuCategory(
+        name=category.name,
+        description=category.description,
+        restaurant_id=restaurant_id
+    )
+    db.add(new_category)
+    db.commit()
+    db.refresh(new_category)
+    return new_category
+
+# Uređivanje postojeće kategorije
+async def update_category(db: Session, restaurant_id: int, category_id: int, category: MenuCategoryUpdate):
+    db_category = db.query(MenuCategory).filter_by(id=category_id, restaurant_id=restaurant_id).first()
+    if not db_category:
+        raise HTTPException(status_code=404, detail="Category not found")
+    
+    for key, value in category.dict(exclude_unset=True).items():
+        setattr(db_category, key, value)
+    
+    db.commit()
+    return db_category
+
+async def get_items(db: Session, restaurant_id: int):
+    items = db.query(Item).filter_by(restaurant_id=restaurant_id).all()
+
+    items_data = []
+    for item in items:
+        item_data = {
+            **item.__dict__,
+            "images": [image.image for image in item.images],
+            "category_name": item.menu_category.name if item.menu_category else None,
+        }
+        items_data.append(item_data)
+
+    return items_data
+
+# Kreiranje novog artikla
+async def create_item(db: Session, restaurant_id: int, item: ItemCreate):
+    new_item = Item(
+        name=item.name,
+        description=item.description,
+        price=item.price,
+        weight=item.weight,
+        preparation_time=item.preparation_time,
+        restaurant_id=restaurant_id,
+        menu_category_id=item.menu_category_id,
+        category=item.category
+    )
+    db.add(new_item)
+    db.commit()
+    db.refresh(new_item)
+    return new_item
+
+# Uređivanje postojećeg artikla
+async def update_item(db: Session, restaurant_id: int, item_id: int, item: ItemUpdate):
+    db_item = db.query(Item).filter_by(id=item_id, restaurant_id=restaurant_id).first()
+    if not db_item:
+        raise HTTPException(status_code=404, detail="Item not found")
+
+    for key, value in item.dict(exclude_unset=True).items():
+        setattr(db_item, key, value)
+    
+    db.commit()
+    return db_item

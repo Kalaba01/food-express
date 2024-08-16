@@ -237,6 +237,10 @@
       "deliveryZones": "Zone Dostave",
       "restaurants": "Restorani",
       "orders": "Narudžbe"
+    },
+    "owner": {
+      "restaurants": "Restorani",
+      "noRestaurants": "Nema Restorana"
     }
   },
   "Orders": {
@@ -263,5 +267,34 @@
     "status_cancelled": "Otkazano",
     "noItems": "Nema artikala u ovoj narudžbi",
     "all": "Sve"
+  },
+  "Restaurant": {
+    "loading": "Učitavanje...",
+    "edit": "Uredi",
+    "editRestaurant": "Uredi Restoran",
+    "cancel": "Otkaži",
+    "save": "Spremi",
+    "name": "Naziv",
+    "contact": "Kontakt",
+    "capacity": "Kapacitet",
+    "normal": "Normalan",
+    "busy": "Zauzet",
+    "crowded": "Prepun",
+    "images": "Slike",
+    "category": "Kategorija",
+    "categories": "Kategorije",
+    "addCategory": "Dodaj kategoriju",
+    "categoryName": "Naziv kategorije",
+    "items": "Artikli",
+    "addItem": "Dodaj artikal",
+    "itemName": "Naziv artikla",
+    "itemDescription": "Opis artikla",
+    "itemPrice": "Cijena",
+    "itemWeight": "Težina",
+    "itemPrepTime": "Vrijeme pripreme",
+    "actions": "Akcije",
+    "noRestaurants": "Nema dostupnih restorana",
+    "noImages": "Nema slika",
+    "noRating": "Nema ocjena"
   }
 }
