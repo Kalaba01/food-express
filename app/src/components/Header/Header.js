@@ -2,6 +2,7 @@ import React from 'react';
 import { LoginRegister, Theme, Language, Logout, HamburgerMenu } from "../index";
 import { jwtDecode } from "jwt-decode";
 import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
 import './Header.css';
 
 function Header({ darkMode, toggleDarkMode, openPopupModal, userType, showIcons = true, hideHamburgerMenu = false }) {
@@ -28,7 +29,9 @@ function Header({ darkMode, toggleDarkMode, openPopupModal, userType, showIcons 
     <header className="top-bar">
       {isLoggedIn && !hideHamburgerMenu && <HamburgerMenu />}
       <div className={`logo-container ${!isLoggedIn ? 'login' : 'notlogin'}`}>
-        <img src="/images/logo.png" alt="Food Express Logo" className="logo" />
+        <Link to="/" className="logo-link">
+          <img src="/images/logo.png" alt="Food Express Logo" className="logo" />
+        </Link>
         <span className="logo-text">{t('Header.logoText')}</span>
       </div>
       <div className="top-bar-icons">
