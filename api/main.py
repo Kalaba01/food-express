@@ -110,7 +110,6 @@ from crud.orders_crud import (
     delete_order,
 )
 
-
 def start_application():
     app = FastAPI()
     origins = ["*"]
@@ -144,7 +143,7 @@ if __name__ == "__main__":
 
     uvicorn.run(app, host="0.0.0.0", port=8000)
 
-
+#Registracija
 @app.post("/register")
 async def register_user(user: UserCreate, db: Session = Depends(get_db)):
     await check_user_exists(db, user.username, user.email)
@@ -157,11 +156,9 @@ async def register_user(user: UserCreate, db: Session = Depends(get_db)):
 
     return new_user
 
-
+#Autentifikacija
 @app.post("/token")
-async def login_user(
-    form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)
-):
+async def login_user(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
     db_user = await get_user_by_username(db, form_data.username)
     if not db_user:
         raise HTTPException(status_code=400, detail="Invalid username or password")
@@ -177,23 +174,21 @@ async def login_user(
     access_token = create_access_token(data=user_data)
     return {"access_token": access_token, "token_type": "bearer"}
 
-
+#Provjera usernama
 @app.get("/check-username/{username}")
 async def check_username(username: str, db: Session = Depends(get_db)):
     user = await get_user_by_username(db, username)
     return {"exists": bool(user)}
 
-
+#Provjera e-maila
 @app.get("/check-email/{email}")
 async def check_email(email: str, db: Session = Depends(get_db)):
     user = await get_user_by_email(db, email)
     return {"exists": bool(user)}
 
-
+#Forgot Password
 @app.post("/forgot-password")
-async def forgot_password(
-    request: ForgotPasswordRequest, db: Session = Depends(get_db)
-):
+async def forgot_password(request: ForgotPasswordRequest, db: Session = Depends(get_db)):
     email = request.email
     user = await get_user_by_email(db, email)
     if not user:
@@ -207,7 +202,7 @@ async def forgot_password(
 
     return {"message": "If the email exists, a reset link has been sent."}
 
-
+#Reset Password
 @app.post("/reset-password")
 async def reset_password(token: str, new_password: str, db: Session = Depends(get_db)):
     reset_token = await verify_password_reset_token(db, token)
@@ -227,54 +222,13 @@ async def reset_password(token: str, new_password: str, db: Session = Depends(ge
     await update_user_password(db, user.id, new_password)
     return {"message": "Password reset successful"}
 
-
-@app.post("/upload-image/")
-async def upload_image(
-    item_id: int = None,
-    restaurant_id: int = None,
-    file: UploadFile = File(...),
-    db: Session = Depends(get_db),
-):
-    image_data = await file.read()
-    new_image = Image(image=image_data, item_id=item_id, restaurant_id=restaurant_id)
-    db.add(new_image)
-    db.commit()
-    db.refresh(new_image)
-    return {"message": "Image uploaded successfully", "image_id": new_image.id}
-
-
-@app.get("/requests/")
-async def read_requests(db: Session = Depends(get_db)):
-    return await get_all_requests(db)
-
-
-@app.post("/requests/")
-async def create_request_endpoint(
-    request: RequestCreate, db: Session = Depends(get_db)
-):
-    existing_request = await check_pending_request_by_email(db, request.email)
-    if existing_request:
-        raise HTTPException(
-            status_code=400, detail="Pending request with this email already exists."
-        )
-
-    new_request = await create_request(db, request)
-    return new_request
-
-
-@app.put("/requests/{request_id}")
-async def update_request_status_endpoint(
-    request_id: int, status_update: RequestStatusUpdate, db: Session = Depends(get_db)
-):
-    return await update_request_status_and_process(request_id, status_update, db)
-
-
+#Svi korisnici
 @app.get("/users/")
 async def read_users(db: Session = Depends(get_db)):
     users = db.query(User).all()
     return users
 
-
+#Korisnik na osnovu ID-a
 @app.get("/users/{user_id}")
 async def get_user(user_id: int, db: Session = Depends(get_db)):
     user = db.query(User).filter(User.id == user_id).first()
@@ -282,51 +236,25 @@ async def get_user(user_id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="User not found")
     return user
 
-
+#Azuriranje korisnika
 @app.put("/users/{user_id}")
 async def update_user(
     user_id: int, user_update: UserUpdate, db: Session = Depends(get_db)
 ):
     return await update_user_details(user_id, user_update, db)
 
-
+#Brisanje korisnika
 @app.delete("/users/{user_id}")
 async def user_delete(user_id: int, db: Session = Depends(get_db)):
     await delete_user(db, user_id)
-
     return {"message": "User deleted successfully"}
 
-
-@app.get("/delivery-zones/")
-async def read_delivery_zones(db: Session = Depends(get_db)):
-    return await get_all_zones(db)
-
-
-@app.post("/delivery-zones/")
-async def create_delivery_zone(zone: DeliveryZoneCreate, db: Session = Depends(get_db)):
-    return await create_zone(db, zone)
-
-
-@app.put("/delivery-zones/{zone_id}")
-async def update_delivery_zone(
-    zone_id: int, zone: DeliveryZoneUpdate, db: Session = Depends(get_db)
-):
-    updated_zone = await update_zone(db, zone_id, zone)
-    if not updated_zone:
-        raise HTTPException(status_code=404, detail="Zone not found")
-    return updated_zone
-
-
-@app.delete("/delivery-zones/{zone_id}")
-async def delete_delivery_zone(zone_id: int, db: Session = Depends(get_db)):
-    return await delete_delivery_zone_by_id(db, zone_id)
-
-
+#Svi restorani
 @app.get("/restaurants/")
 async def read_restaurants(db: Session = Depends(get_db)):
     return await get_all_restaurants(db)
 
-
+#Restoran na osnovu ID-a
 @app.get("/restaurants/{restaurant_id}")
 async def read_restaurant(restaurant_id: int, db: Session = Depends(get_db)):
     restaurant = await get_restaurant_by_id(db, restaurant_id)
@@ -334,173 +262,82 @@ async def read_restaurant(restaurant_id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Restaurant not found")
     return restaurant
 
-
-@app.get("/search-owners/")
-async def owners_search(username: str, db: Session = Depends(get_db)):
-    return await search_owners(db, username)
-
-
+#Kreiranje restorana
 @app.post("/restaurants/")
 async def create_restaurant(
     restaurant: RestaurantCreate, db: Session = Depends(get_db)
 ):
     return await create_new_restaurant(db, restaurant)
 
-
+#Azuriranje restorana
 @app.put("/restaurants/{restaurant_id}")
 async def update_restaurant(
     restaurant_id: int, restaurant: RestaurantUpdate, db: Session = Depends(get_db)
 ):
     return await update_existing_restaurant(db, restaurant_id, restaurant)
 
-
+#Brisanje restorana
 @app.delete("/restaurants/{restaurant_id}")
 async def delete_restaurant(restaurant_id: int, db: Session = Depends(get_db)):
     return await delete_restaurant_and_related_data(db, restaurant_id)
 
-
-# Rute za MenuCategory
-@app.get("/menu-categories/")
-async def read_menu_categories(restaurant_id: int, db: Session = Depends(get_db)):
-    return await get_menu_categories(db, restaurant_id)
-
-
-@app.post("/menu-categories/")
-async def create_menu_category(
-    menu_category: MenuCategoryCreate, db: Session = Depends(get_db)
-):
-    return await create_menu_category(db, menu_category)
-
-
-@app.put("/menu-categories/{category_id}")
-async def update_menu_category(
-    category_id: int, menu_category: MenuCategoryUpdate, db: Session = Depends(get_db)
-):
-    return await update_menu_category(db, category_id, menu_category)
-
-
-@app.delete("/menu-categories/{category_id}")
-async def delete_menu_category(category_id: int, db: Session = Depends(get_db)):
-    return await delete_menu_category(db, category_id)
-
-
-# Rute za Item
-@app.get("/items/")
-async def read_items(category_id: int, db: Session = Depends(get_db)):
-    return await get_items(db, category_id)
-
-
-# @app.post("/items/")
-# async def create_item(item: ItemCreate, db: Session = Depends(get_db)):
-#     return await create_item(db, item)
-
-
-@app.put("/items/{item_id}")
-async def update_item(item_id: int, item: ItemUpdate, db: Session = Depends(get_db)):
-    return await update_item(db, item_id, item)
-
-
-@app.delete("/items/{item_id}")
-async def delete_item(item_id: int, db: Session = Depends(get_db)):
-    return await delete_item(db, item_id)
-
-
-# Ruta za dohvatanje svih narudžbi
-@app.get("/orders/")
-async def read_orders(db: Session = Depends(get_db)):
-    return await get_all_orders(db)
-
-
-# Ruta za dohvatanje detalja pojedinačne narudžbe
-@app.get("/orders/{order_id}")
-async def read_order(order_id: int, db: Session = Depends(get_db)):
-    order = await get_order_by_id(db, order_id)
-    if not order:
-        raise HTTPException(status_code=404, detail="Order not found")
-    return order
-
-
-# Ruta za kreiranje nove narudžbe
-@app.post("/orders/")
-async def create_order(order: OrderCreate, db: Session = Depends(get_db)):
-    return await create_new_order(db, order)
-
-
-# Ruta za ažuriranje narudžbe
-@app.put("/orders/{order_id}")
-async def update_order(
-    order_id: int, order: OrderUpdate, db: Session = Depends(get_db)
-):
-    updated_order = await update_order(db, order_id, order)
-    if not updated_order:
-        raise HTTPException(status_code=404, detail="Order not found")
-    return updated_order
-
-
-# Ruta za brisanje narudžbe
-@app.delete("/orders/{order_id}")
-async def delete_order(order_id: int, db: Session = Depends(get_db)):
-    return await delete_order(db, order_id)
-
-
+#Restorani odredjenog vlasnika
 @app.get("/owner/restaurants")
-async def get_owner_restaurants(
-    current_user: User = Depends(get_current_user), db: Session = Depends(get_db)
-):
+async def get_owner_restaurants(current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
     if current_user.role != "owner":
         raise HTTPException(status_code=403, detail="Not authorized")
-
     restaurants = (
         db.query(Restaurant).filter(Restaurant.owner_id == current_user.id).all()
     )
     return restaurants
 
-
+#Kategorije restorana
 @app.get("/restaurants/{restaurant_id}/categories")
 async def get_restaurant_categories(restaurant_id: int, db: Session = Depends(get_db)):
     categories = await get_categories(db, restaurant_id)
     return categories
 
-
+#Dodavanje kategorija za restoran
 @app.post("/restaurants/{restaurant_id}/categories")
-async def add_category(
-    restaurant_id: int, category: MenuCategoryCreate, db: Session = Depends(get_db)
-):
+async def add_category(restaurant_id: int, category: MenuCategoryCreate, db: Session = Depends(get_db)):
     new_category = await create_category(db, restaurant_id, category)
     return new_category
 
-
+#Azuriranje kategorije restorana
 @app.put("/restaurants/{restaurant_id}/categories/{category_id}")
-async def edit_category(
-    restaurant_id: int,
-    category_id: int,
-    category: MenuCategoryUpdate,
-    db: Session = Depends(get_db),
-):
+async def edit_category(restaurant_id: int, category_id: int, category: MenuCategoryUpdate, db: Session = Depends(get_db),):
     updated_category = await update_category(db, restaurant_id, category_id, category)
     return updated_category
 
+#Brisanje kategorije restorana
+@app.delete("/restaurants/{restaurant_id}/categories/{category_id}")
+async def delete_category(restaurant_id: int, category_id: int, db: Session = Depends(get_db)):
+    category = db.query(MenuCategory).filter_by(id=category_id, restaurant_id=restaurant_id).first()
+    if not category:
+        raise HTTPException(status_code=404, detail="Category not found")
+    db.delete(category)
+    db.commit()
+    return {"message": "Category deleted successfully"}
 
+#Artikli restorana
 @app.get("/restaurants/{restaurant_id}/items")
 async def get_restaurant_items(restaurant_id: int, db: Session = Depends(get_db)):
     items = await get_items(db, restaurant_id)
     return items
 
-
+#Dodavanje artikala za restoran
 @app.post("/restaurants/{restaurant_id}/items")
 async def add_item(restaurant_id: int, item: ItemCreate, db: Session = Depends(get_db)):
     new_item = await create_item(db, restaurant_id, item)
     return new_item
 
-
+#Azuriranje artikala za restoran
 @app.put("/restaurants/{restaurant_id}/items/{item_id}")
-async def edit_item(
-    restaurant_id: int, item_id: int, item: ItemUpdate, db: Session = Depends(get_db)
-):
+async def edit_item(restaurant_id: int, item_id: int, item: ItemUpdate, db: Session = Depends(get_db)):
     updated_item = await update_item(db, restaurant_id, item_id, item)
     return updated_item
 
-
+#Brisanje artikala za restoran
 @app.delete("/restaurants/{restaurant_id}/items/{item_id}")
 async def delete_item(restaurant_id: int, item_id: int, db: Session = Depends(get_db)):
     item = (
@@ -514,35 +351,24 @@ async def delete_item(restaurant_id: int, item_id: int, db: Session = Depends(ge
     db.commit()
     return {"message": "Item deleted successfully"}
 
-
+#Dodavanje slika za restoran
 @app.post("/restaurants/{restaurant_id}/images")
-async def upload_image(
-    restaurant_id: int, file: UploadFile = File(...), db: Session = Depends(get_db)
-):
-    # Provjera da li restoran postoji
+async def upload_image(restaurant_id: int, file: UploadFile = File(...), db: Session = Depends(get_db)):
     restaurant = db.query(Restaurant).filter(Restaurant.id == restaurant_id).first()
     if not restaurant:
         raise HTTPException(status_code=404, detail="Restaurant not found")
-
-    # Čitanje sadržaja fajla
     content = await file.read()
     new_image = Image(image=content, restaurant_id=restaurant_id)
-
-    # Spremanje slike u bazu
     db.add(new_image)
     db.commit()
     db.refresh(new_image)
-
     return {
         "image": new_image.id
-    }  # Vraćamo ID slike kako bismo ga koristili na frontend-u
+    }
 
-
+#Brisanje slike za restoran
 @app.delete("/restaurants/{restaurant_id}/images/{image_id}")
-async def delete_image(
-    restaurant_id: int, image_id: int, db: Session = Depends(get_db)
-):
-    # Provjera da li slika postoji
+async def delete_image(restaurant_id: int, image_id: int, db: Session = Depends(get_db)):
     image = (
         db.query(Image)
         .filter(Image.id == image_id, Image.restaurant_id == restaurant_id)
@@ -550,38 +376,105 @@ async def delete_image(
     )
     if not image:
         raise HTTPException(status_code=404, detail="Image not found")
-
-    # Brisanje slike iz baze
     db.delete(image)
     db.commit()
-
     return {"message": "Image deleted successfully"}
 
+#Dodavnje slike za artikal
+@app.post("/items/{item_id}/images")
+async def upload_item_image(item_id: int, file: UploadFile = File(...), db: Session = Depends(get_db)):
+    try:
+        image = await add_image_to_item(db, item_id, file)
+        return image
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+#Brisanje slike za artikal
 @app.delete("/items/{item_id}/images/{image_id}")
 async def delete_item_image(item_id: int, image_id: int, db: Session = Depends(get_db)):
     image = db.query(Image).filter(Image.id == image_id, Image.item_id == item_id).first()
     if not image:
         raise HTTPException(status_code=404, detail="Image not found")
-
     db.delete(image)
     db.commit()
     return {"detail": "Image deleted successfully"}
 
-@app.delete("/restaurants/{restaurant_id}/categories/{category_id}")
-async def delete_category(restaurant_id: int, category_id: int, db: Session = Depends(get_db)):
-    category = db.query(MenuCategory).filter_by(id=category_id, restaurant_id=restaurant_id).first()
-    if not category:
-        raise HTTPException(status_code=404, detail="Category not found")
-    
-    db.delete(category)
-    db.commit()
-    return {"message": "Category deleted successfully"}
+#Svi zahtjevi
+@app.get("/requests/")
+async def read_requests(db: Session = Depends(get_db)):
+    return await get_all_requests(db)
 
-@app.post("/items/{item_id}/images")
-async def upload_item_image(item_id: int, file: UploadFile = File(...), db: Session = Depends(get_db)):
-    try:
-        # Poziva se funkcija koja će obraditi učitavanje slike
-        image = await add_image_to_item(db, item_id, file)
-        return image
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+#Dodavanje zahtjeva
+@app.post("/requests/")
+async def create_request_endpoint(request: RequestCreate, db: Session = Depends(get_db)):
+    existing_request = await check_pending_request_by_email(db, request.email)
+    if existing_request:
+        raise HTTPException(
+            status_code=400, detail="Pending request with this email already exists."
+        )
+    new_request = await create_request(db, request)
+    return new_request
+
+#Azuriranje zahtjeva
+@app.put("/requests/{request_id}")
+async def update_request_status_endpoint(request_id: int, status_update: RequestStatusUpdate, db: Session = Depends(get_db)):
+    return await update_request_status_and_process(request_id, status_update, db)
+
+#Sve zone dostave
+@app.get("/delivery-zones/")
+async def read_delivery_zones(db: Session = Depends(get_db)):
+    return await get_all_zones(db)
+
+#Dodavanje zone dostave
+@app.post("/delivery-zones/")
+async def create_delivery_zone(zone: DeliveryZoneCreate, db: Session = Depends(get_db)):
+    return await create_zone(db, zone)
+
+#Azuriranje zone dostave
+@app.put("/delivery-zones/{zone_id}")
+async def update_delivery_zone(zone_id: int, zone: DeliveryZoneUpdate, db: Session = Depends(get_db)):
+    updated_zone = await update_zone(db, zone_id, zone)
+    if not updated_zone:
+        raise HTTPException(status_code=404, detail="Zone not found")
+    return updated_zone
+
+#Brisanje zone dostave
+@app.delete("/delivery-zones/{zone_id}")
+async def delete_delivery_zone(zone_id: int, db: Session = Depends(get_db)):
+    return await delete_delivery_zone_by_id(db, zone_id)
+
+#Sve narudzbe
+@app.get("/orders/")
+async def read_orders(db: Session = Depends(get_db)):
+    return await get_all_orders(db)
+
+#Narudzba na osnovu ID-a
+@app.get("/orders/{order_id}")
+async def read_order(order_id: int, db: Session = Depends(get_db)):
+    order = await get_order_by_id(db, order_id)
+    if not order:
+        raise HTTPException(status_code=404, detail="Order not found")
+    return order
+
+#Kreiranje narudzbe
+@app.post("/orders/")
+async def create_order(order: OrderCreate, db: Session = Depends(get_db)):
+    return await create_new_order(db, order)
+
+#Azuriranje narudzbe
+@app.put("/orders/{order_id}")
+async def update_order(order_id: int, order: OrderUpdate, db: Session = Depends(get_db)):
+    updated_order = await update_order(db, order_id, order)
+    if not updated_order:
+        raise HTTPException(status_code=404, detail="Order not found")
+    return updated_order
+
+#Brisanje narudzbe
+@app.delete("/orders/{order_id}")
+async def delete_order(order_id: int, db: Session = Depends(get_db)):
+    return await delete_order(db, order_id)
+
+#Pretraga vlasnika
+@app.get("/search-owners/")
+async def owners_search(username: str, db: Session = Depends(get_db)):
+    return await search_owners(db, username)
