@@ -3,6 +3,7 @@ from typing import List, Optional
 from enum import Enum
 import datetime
 
+# Enums for categorization, status, and types
 class ItemCategoryEnum(str, Enum):
     food = "food"
     drink = "drink"
@@ -40,18 +41,18 @@ class OrderAssignmentStatusEnum(str, Enum):
     picked_up = "picked_up"
     delivered = "delivered"
 
-# Slike
+# Image schemas for handling image uploads and updates
 class ImageCreate(BaseModel):
     image: bytes
     item_id: Optional[int]
     restaurant_id: Optional[int]
 
 class ImageUpdate(BaseModel):
-    image: Optional[bytes]
-    item_id: Optional[int]
-    restaurant_id: Optional[int]
+    image: Optional[bytes] = None
+    item_id: Optional[int] = None
+    restaurant_id: Optional[int] = None
 
-# Korisnici
+# User schemas for handling user-related operations
 class UserCreate(BaseModel):
     username: constr(min_length=6)
     email: EmailStr
@@ -67,7 +68,7 @@ class UserUpdate(BaseModel):
     password: Optional[constr(min_length=6)] = Field(None)
     role: Optional[constr(min_length=1)] = Field(None)
 
-# Restorani
+# Restaurant schemas for handling restaurant-related operations
 class RestaurantCreate(BaseModel):
     name: str
     address: str
@@ -83,7 +84,7 @@ class RestaurantCreate(BaseModel):
 
 class RestaurantUpdate(BaseModel):
     name: Optional[str] = None
-    address: Optional[str] = None  # Postavljeno kao opcionalno polje
+    address: Optional[str] = None
     city: Optional[str] = None
     latitude: Optional[float] = None
     longitude: Optional[float] = None
@@ -94,7 +95,7 @@ class RestaurantUpdate(BaseModel):
     capacity: Optional[RestaurantCapacityEnum] = None
     image_ids: Optional[List[int]] = None  # Lista slika
 
-# Radno vreme
+# Operating Hours schemas for managing restaurant operating hours
 class OperatingHoursCreate(BaseModel):
     restaurant_id: int
     day_of_week: str
@@ -102,12 +103,12 @@ class OperatingHoursCreate(BaseModel):
     closing_time: datetime.time
 
 class OperatingHoursUpdate(BaseModel):
-    restaurant_id: Optional[int]
-    day_of_week: Optional[str]
-    opening_time: Optional[datetime.time]
-    closing_time: Optional[datetime.time]
+    restaurant_id: Optional[int] = None
+    day_of_week: Optional[str] = None
+    opening_time: Optional[datetime.time] = None
+    closing_time: Optional[datetime.time] = None
 
-# Artikli
+# Item schemas for handling restaurant items (menu items)
 class ItemCreate(BaseModel):
     name: str
     description: Optional[str]
@@ -120,28 +121,28 @@ class ItemCreate(BaseModel):
     image_ids: Optional[List[int]] = None
 
 class ItemUpdate(BaseModel):
-    name: Optional[str]
-    description: Optional[str]
-    price: Optional[float]
-    weight: Optional[float]
-    preparation_time: Optional[int]
-    restaurant_id: Optional[int]
-    menu_category_id: Optional[int]
-    category: Optional[ItemCategoryEnum]
-    image_ids: Optional[List[int]]  # Lista slika
+    name: Optional[str] = None
+    description: Optional[str] = None
+    price: Optional[float] = None
+    weight: Optional[float] = None
+    preparation_time: Optional[int] = None
+    restaurant_id: Optional[int] = None
+    menu_category_id: Optional[int] = None
+    category: Optional[ItemCategoryEnum] = None
+    image_ids: Optional[List[int]] = None  # Lista slika
 
-# Kategorije menija
+# Menu Category schemas for handling restaurant menu categories
 class MenuCategoryCreate(BaseModel):
     name: str
     description: Optional[str] = None
     restaurant_id: int
 
 class MenuCategoryUpdate(BaseModel):
-    name: Optional[str]
-    description: Optional[str]
-    restaurant_id: Optional[int]
+    name: Optional[str] = None
+    description: Optional[str] = None
+    restaurant_id: Optional[int] = None
 
-# Narudžbe
+# Order schemas for managing orders placed by customers
 class OrderCreate(BaseModel):
     customer_id: int
     restaurant_id: int
@@ -153,24 +154,24 @@ class OrderCreate(BaseModel):
     cutlery_included: bool
 
 class OrderUpdate(BaseModel):
-    customer_id: Optional[int]
-    restaurant_id: Optional[int]
-    total_price: Optional[float]
-    status: Optional[OrderStatusEnum]
-    delivery_address: Optional[str]
-    delivery_latitude: Optional[float]
-    delivery_longitude: Optional[float]
-    cutlery_included: Optional[bool]
+    customer_id: Optional[int] = None
+    restaurant_id: Optional[int] = None
+    total_price: Optional[float] = None
+    status: Optional[OrderStatusEnum] = None
+    delivery_address: Optional[str] = None
+    delivery_latitude: Optional[float] = None
+    delivery_longitude: Optional[float] = None
+    cutlery_included: Optional[bool] = None
     updated_at: Optional[datetime.datetime] = Field(default_factory=datetime.datetime.utcnow)
 
-# Stavke narudžbi
+# Order Item schemas for managing items within an order
 class OrderItemCreate(BaseModel):
     order_id: int
     item_id: int
     quantity: int
     price: float
 
-# Kuriri
+# Courier schemas for managing courier-related operations
 class CourierCreate(BaseModel):
     user_id: int
     vehicle_type: VehicleTypeEnum
@@ -180,64 +181,64 @@ class CourierCreate(BaseModel):
     restaurant_id: int
 
 class CourierUpdate(BaseModel):
-    user_id: Optional[int]
-    vehicle_type: Optional[str]
-    halal_mode: Optional[bool]
-    wallet_amount: Optional[float]
-    wallet_details: Optional[str]
-    restaurant_id: Optional[int]
+    user_id: Optional[int] = None
+    vehicle_type: Optional[str] = None
+    halal_mode: Optional[bool] = None
+    wallet_amount: Optional[float] = None
+    wallet_details: Optional[str] = None
+    restaurant_id: Optional[int] = None
 
-# Dodjele narudžbi
+# Order Assignment schemas for managing the assignment of orders to couriers
 class OrderAssignmentCreate(BaseModel):
     order_id: int
     courier_id: int
     status: OrderAssignmentStatusEnum = OrderAssignmentStatusEnum.assigned
 
 class OrderAssignmentUpdate(BaseModel):
-    order_id: Optional[int]
-    courier_id: Optional[int]
-    status: Optional[str]
+    order_id: Optional[int] = None
+    courier_id: Optional[int] = None
+    status: Optional[str] = None
 
-# Ocjene
+# Rating schemas for managing ratings of orders and couriers
 class RatingCreate(BaseModel):
     order_id: int
     restaurant_rating: int
     courier_rating: int
     comments: Optional[str]
 
-# Notifikacije
+# Notification schemas for managing notifications sent to users
 class NotificationCreate(BaseModel):
     user_id: int
     message: str
     read: bool
 
 class NotificationUpdate(BaseModel):
-    user_id: Optional[int]
-    message: Optional[str]
-    read: Optional[bool]
+    user_id: Optional[int] = None
+    message: Optional[str] = None
+    read: Optional[bool] = None
 
-# Chat
+# Chat schemas for managing chat messages between users
 class ChatCreate(BaseModel):
     sender_id: int
     receiver_id: int
     message: str
 
-# Email Izvještaji
+# Email Report schemas for managing email reports sent to users
 class EmailReportCreate(BaseModel):
     user_id: int
     report_type: str
     report_content: str
 
-# Queue narudžbi
+# Order Queue schemas for managing the queue of orders
 class OrderQueueCreate(BaseModel):
     order_id: int
     status: str
 
 class OrderQueueUpdate(BaseModel):
-    order_id: Optional[int]
-    status: Optional[str]
+    order_id: Optional[int] = None
+    status: Optional[str] = None
 
-# Delivery zone
+# Delivery Zone schemas for managing restaurant delivery zones
 class DeliveryZoneCreate(BaseModel):
     name: str
     point1_latitude: float
@@ -250,26 +251,26 @@ class DeliveryZoneCreate(BaseModel):
     point4_longitude: float
 
 class DeliveryZoneUpdate(BaseModel):
-    name: Optional[str]
-    point1_latitude: Optional[float]
-    point1_longitude: Optional[float]
-    point2_latitude: Optional[float]
-    point2_longitude: Optional[float]
-    point3_latitude: Optional[float]
-    point3_longitude: Optional[float]
-    point4_latitude: Optional[float]
-    point4_longitude: Optional[float]
+    name: Optional[str] = None
+    point1_latitude: Optional[float] = None
+    point1_longitude: Optional[float] = None
+    point2_latitude: Optional[float] = None
+    point2_longitude: Optional[float] = None
+    point3_latitude: Optional[float] = None
+    point3_longitude: Optional[float] = None
+    point4_latitude: Optional[float] = None
+    point4_longitude: Optional[float] = None
 
-# Bank
+# Bank schemas for managing bank accounts associated with users
 class BankCreate(BaseModel):
     user_id: int
     balance: float
 
 class BankUpdate(BaseModel):
-    user_id: Optional[int]
-    balance: Optional[float]
+    user_id: Optional[int] = None
+    balance: Optional[float] = None
 
-# Zahtevi
+# Request schemas for managing different types of requests (partnership, delivery, etc.)
 class RequestCreate(BaseModel):
     first_name: str
     last_name: str
@@ -280,5 +281,6 @@ class RequestCreate(BaseModel):
 class RequestStatusUpdate(BaseModel):
     status: RequestStatusEnum
 
+# Forgot Password schema for handling password reset requests
 class ForgotPasswordRequest(BaseModel):
     email: str
