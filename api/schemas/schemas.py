@@ -70,6 +70,20 @@ class UserUpdate(BaseModel):
     role: Optional[constr(min_length=1)] = Field(None)
     profilePicture: Optional[UploadFile] = None
 
+# Operating Hours schemas for managing restaurant operating hours
+class OperatingHoursCreate(BaseModel):
+    restaurant_id: int
+    day_of_week: str
+    opening_time: datetime.time
+    closing_time: datetime.time
+
+class OperatingHoursUpdate(BaseModel):
+    id: Optional[int] = None
+    restaurant_id: Optional[int] = None
+    day_of_week: Optional[str] = None
+    opening_time: Optional[datetime.time] = None
+    closing_time: Optional[datetime.time] = None
+
 # Restaurant schemas for handling restaurant-related operations
 class RestaurantCreate(BaseModel):
     name: str
@@ -96,19 +110,7 @@ class RestaurantUpdate(BaseModel):
     delivery_zone_ids: Optional[List[int]] = None  # Lista zona dostave
     capacity: Optional[RestaurantCapacityEnum] = None
     image_ids: Optional[List[int]] = None  # Lista slika
-
-# Operating Hours schemas for managing restaurant operating hours
-class OperatingHoursCreate(BaseModel):
-    restaurant_id: int
-    day_of_week: str
-    opening_time: datetime.time
-    closing_time: datetime.time
-
-class OperatingHoursUpdate(BaseModel):
-    restaurant_id: Optional[int] = None
-    day_of_week: Optional[str] = None
-    opening_time: Optional[datetime.time] = None
-    closing_time: Optional[datetime.time] = None
+    operating_hours: Optional[List[OperatingHoursUpdate]] = None
 
 # Item schemas for handling restaurant items (menu items)
 class ItemCreate(BaseModel):

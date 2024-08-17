@@ -321,7 +321,20 @@
     "noImages": "No Images",
     "noRating": "No ratings",
     "uploadImages": "Upload Images",
-    "selectCategory": "Select a category"
+    "selectCategory": "Select a category",
+    "operatingHours": "Operating Hours",
+    "noOperatingHours": "No operating hours set.",
+    "openingTime": "Opening Time",
+    "closingTime": "Closing Time",
+    "days": {
+        "Monday": "Monday",
+        "Tuesday": "Tuesday",
+        "Wednesday": "Wednesday",
+        "Thursday": "Thursday",
+        "Friday": "Friday",
+        "Saturday": "Saturday",
+        "Sunday": "Sunday"
+    }
   },
   "Couriers": {
     "title": "Couriers",

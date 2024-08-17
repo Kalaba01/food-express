@@ -70,7 +70,6 @@ body.dark-mode .profile-container {
 .modal-content {
     background-color: #ffffff;
     color: #333333;
-    padding: 20px;
     border-radius: 10px;
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
     transition: background-color 0.3s ease, color 0.3s ease;
@@ -84,14 +83,7 @@ body.dark-mode .modal-content {
 .modal-content form {
     display: flex;
     flex-direction: column;
-    gap: 15px;
-}
-
-.modal-content label {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    font-size: 1.1em;
+    gap: 5px;
 }
 
 .modal-content input[type="text"],
@@ -126,19 +118,6 @@ body.dark-mode .modal-content input[type="password"]:focus {
     border-color: #009fdd;
 }
 
-.image-upload-label {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 20px;
-    border: 2px dashed #cccccc;
-    border-radius: 8px;
-    cursor: pointer;
-    background-color: #f9f9f9;
-    color: #333333;
-    transition: border-color 0.3s ease, background-color 0.3s ease;
-}
-
 .image-upload-label:hover {
     border-color: #00bfff;
     background-color: #e9f6ff;
@@ -157,24 +136,4 @@ body.dark-mode .image-upload-label:hover {
 
 .image-upload-label input[type="file"] {
     display: none;
-}
-
-.image-upload-label::after {
-    content: "Click or drag image here to upload";
-    font-size: 1.1em;
-    color: inherit;
-    margin-top: 10px;
-}
-
-.close-button {
-    font-size: 1.5em;
-    position: absolute;
-    top: 10px;
-    right: 15px;
-    cursor: pointer;
-    color: inherit;
-}
-
-.close-button:hover {
-    color: #00bfff;
 }

@@ -15,7 +15,6 @@
 .modal-content {
     background-color: var(--background-color);
     color: var(--text-color);
-    padding: 20px;
     border: 1px solid var(--border-color);
     border-radius: 10px;
     width: 90%;

@@ -24,6 +24,7 @@ function Restaurant({ darkMode, toggleDarkMode }) {
   const { id } = useParams();
   const [restaurant, setRestaurant] = useState({
     images: [],
+    operating_hours: [],
   });
   const [categories, setCategories] = useState([]);
   const [items, setItems] = useState([]);
@@ -34,6 +35,7 @@ function Restaurant({ darkMode, toggleDarkMode }) {
     capacity: "",
     images: [],
     totalRating: null,
+    operating_hours: [],
   });
   const [isEditCategoryOpen, setIsEditCategoryOpen] = useState(false);
   const [isAddCategoryOpen, setIsAddCategoryOpen] = useState(false);
@@ -63,7 +65,7 @@ function Restaurant({ darkMode, toggleDarkMode }) {
     setNotification({ message, type, visible: true });
     setTimeout(() => {
       setNotification((prev) => ({ ...prev, visible: false }));
-    }, 3000); // Notification disappears after 3 seconds
+    }, 3000);
   };
 
   const fetchRestaurant = async () => {
@@ -87,9 +89,47 @@ function Restaurant({ darkMode, toggleDarkMode }) {
           response.data.rating_count > 0
             ? response.data.total_rating / response.data.rating_count
             : null,
+        operating_hours: response.data.operating_hours || [],
+        category: response.data.category || ""
       });
     } catch (error) {
       console.error("Error fetching restaurant:", error);
+    }
+  };
+
+  const fetchCategories = async () => {
+    const token = localStorage.getItem("token");
+    try {
+      const categoriesResponse = await axios.get(
+        `http://localhost:8000/restaurants/${id}/categories`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      setCategories(categoriesResponse.data || []);
+    } catch (error) {
+      console.error("Error fetching categories:", error);
+      showNotification(t("Restaurant.errorFetchingCategories"), "error");
+    }
+  };
+
+  const fetchItems = async () => {
+    const token = localStorage.getItem("token");
+    try {
+      const itemsResponse = await axios.get(
+        `http://localhost:8000/restaurants/${id}/items`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      setItems(itemsResponse.data || []);
+    } catch (error) {
+      console.error("Error fetching items:", error);
+      showNotification(t("Restaurant.errorFetchingItems"), "error");
     }
   };
 
@@ -98,26 +138,11 @@ function Restaurant({ darkMode, toggleDarkMode }) {
   }, [id]);
 
   useEffect(() => {
-    const fetchCategoriesAndItems = async () => {
-      const token = localStorage.getItem("token");
-      try {
-        const categoriesResponse = await axios.get(
-          `http://localhost:8000/restaurants/${id}/categories`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        setCategories(categoriesResponse.data || []);
+    fetchCategories();
+  }, [id]);
 
-        fetchItems();
-      } catch (error) {
-        console.error("Error fetching categories or items:", error);
-      }
-    };
-
-    fetchCategoriesAndItems();
+  useEffect(() => {
+    fetchItems();
   }, [id]);
 
   const openImageGalleryPopup = (item) => {
@@ -262,6 +287,7 @@ function Restaurant({ darkMode, toggleDarkMode }) {
             ...restaurantData.images.filter((image) => !image.file),
             ...uploadedImages.map((img) => img.id),
           ],
+          operating_hours: restaurantData.operating_hours,
         },
         {
           headers: {
@@ -366,7 +392,6 @@ function Restaurant({ darkMode, toggleDarkMode }) {
 
     try {
       if (currentCategory && currentCategory.id) {
-        // Update existing category
         await axios.put(
           `http://localhost:8000/restaurants/${id}/categories/${currentCategory.id}`,
           {
@@ -412,7 +437,7 @@ function Restaurant({ darkMode, toggleDarkMode }) {
       closeAddCategoryPopup();
     } catch (error) {
       console.error("Error saving category:", error);
-       showNotification(t("Restaurant.errorSavingCategory"), "error");
+      showNotification(t("Restaurant.errorSavingCategory"), "error");
     }
   };
 
@@ -479,23 +504,6 @@ function Restaurant({ darkMode, toggleDarkMode }) {
     } catch (error) {
       console.error("Error saving item:", error);
       showNotification(t("Restaurant.errorSavingItem"), "error");
-    }
-  };
-
-  const fetchItems = async () => {
-    const token = localStorage.getItem("token");
-    try {
-      const itemsResponse = await axios.get(
-        `http://localhost:8000/restaurants/${id}/items`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      setItems(itemsResponse.data || []);
-    } catch (error) {
-      console.error("Error fetching items:", error);
     }
   };
 
@@ -630,6 +638,17 @@ function Restaurant({ darkMode, toggleDarkMode }) {
       />
       <div className="restaurant-container">
         <h1 className="restaurant-name">{restaurant.name}</h1>
+        <div className="restaurant-operating-hours">
+          <h3>{t("Restaurant.operatingHours")}</h3>
+          <ul>
+            {restaurant.operating_hours.map((hours, index) => (
+              <li key={index}>
+                {t(`Restaurant.days.${hours.day_of_week}`)}: {hours.opening_time} -{" "}
+                {hours.closing_time}
+              </li>
+            ))}
+          </ul>
+        </div>
         <div className="restaurant-rating">
           {restaurantData.totalRating ? (
             renderStars(restaurantData.totalRating)
@@ -682,40 +701,145 @@ function Restaurant({ darkMode, toggleDarkMode }) {
               </span>
               <h2>{t("Restaurant.editRestaurant")}</h2>
               <form onSubmit={handleSaveRestaurant}>
-                <label>
-                  {t("Restaurant.name")}
-                  <input
-                    type="text"
-                    name="name"
-                    value={restaurantData.name}
-                    onChange={handleRestaurantChange}
-                    required
-                  />
-                </label>
-                <label>
-                  {t("Restaurant.contact")}
-                  <input
-                    type="text"
-                    name="contact"
-                    value={restaurantData.contact}
-                    onChange={handleRestaurantChange}
-                    required
-                  />
-                </label>
-                <label>
-                  {t("Restaurant.capacity")}
-                  <select
-                    name="capacity"
-                    value={restaurantData.capacity}
-                    onChange={handleRestaurantChange}
-                    required
-                  >
-                    <option value="normal">{t("Restaurant.normal")}</option>
-                    <option value="busy">{t("Restaurant.busy")}</option>
-                    <option value="crowded">{t("Restaurant.crowded")}</option>
-                  </select>
-                </label>
+                <div className="form-row">
+                  <label>
+                    {t("Restaurant.name")}
+                    <input
+                      type="text"
+                      name="name"
+                      value={restaurantData.name}
+                      onChange={handleRestaurantChange}
+                      required
+                    />
+                  </label>
+                  <label>
+                    {t("Restaurant.contact")}
+                    <input
+                      type="text"
+                      name="contact"
+                      value={restaurantData.contact}
+                      onChange={handleRestaurantChange}
+                      required
+                    />
+                  </label>
+                </div>
 
+                <div className="form-row">
+                  <label>
+                    {t("Restaurant.capacity")}
+                    <select
+                      name="capacity"
+                      value={restaurantData.capacity}
+                      onChange={handleRestaurantChange}
+                      required
+                    >
+                      <option value="normal">{t("Restaurant.normal")}</option>
+                      <option value="busy">{t("Restaurant.busy")}</option>
+                      <option value="crowded">{t("Restaurant.crowded")}</option>
+                    </select>
+                  </label>
+                  <label>
+                    {t("Restaurant.category")}
+                    <input
+                      type="text"
+                      name="category"
+                      value={restaurantData.category || ""}
+                      onChange={handleRestaurantChange}
+                      required
+                    />
+                  </label>
+                </div>
+
+                <div className="operating-hours-section">
+                  <h3>{t("Restaurant.operatingHours")}</h3>
+                  {restaurantData.operating_hours.length > 0 ? (
+                    <>
+                      {restaurantData.operating_hours
+                        .slice(0, 6)
+                        .map((hours, index) => (
+                          <div
+                            key={index}
+                            className="form-row operating-hours-input"
+                          >
+                            <label>{t(`Restaurant.days.${hours.day_of_week}`)}</label>
+                            <input
+                              type="time"
+                              value={hours.opening_time}
+                              onChange={(e) =>
+                                setRestaurantData((prevData) => {
+                                  const newHours = [
+                                    ...prevData.operating_hours,
+                                  ];
+                                  newHours[index].opening_time = e.target.value;
+                                  return {
+                                    ...prevData,
+                                    operating_hours: newHours,
+                                  };
+                                })
+                              }
+                            />
+                            <span> - </span>
+                            <input
+                              type="time"
+                              value={hours.closing_time}
+                              onChange={(e) =>
+                                setRestaurantData((prevData) => {
+                                  const newHours = [
+                                    ...prevData.operating_hours,
+                                  ];
+                                  newHours[index].closing_time = e.target.value;
+                                  return {
+                                    ...prevData,
+                                    operating_hours: newHours,
+                                  };
+                                })
+                              }
+                            />
+                          </div>
+                        ))}
+                      <div className="form-row operating-hours-input">
+                        <label>
+                          {t(
+                            `Days.${restaurantData.operating_hours[6].day_of_week}`
+                          )}
+                        </label>
+                        <input
+                          type="time"
+                          value={restaurantData.operating_hours[6].opening_time}
+                          onChange={(e) =>
+                            setRestaurantData((prevData) => {
+                              const newHours = [...prevData.operating_hours];
+                              newHours[6].opening_time = e.target.value;
+                              return {
+                                ...prevData,
+                                operating_hours: newHours,
+                              };
+                            })
+                          }
+                        />
+                        <span> - </span>
+                        <input
+                          type="time"
+                          value={restaurantData.operating_hours[6].closing_time}
+                          onChange={(e) =>
+                            setRestaurantData((prevData) => {
+                              const newHours = [...prevData.operating_hours];
+                              newHours[6].closing_time = e.target.value;
+                              return {
+                                ...prevData,
+                                operating_hours: newHours,
+                              };
+                            })
+                          }
+                        />
+                      </div>
+                    </>
+                  ) : (
+                    <p>{t("Restaurant.noOperatingHours")}</p>
+                  )}
+                </div>
+
+                {/* Galerija slika */}
                 <div className="restaurant-images-gallery">
                   {restaurantData.images.length > 0 && (
                     <>
@@ -751,6 +875,7 @@ function Restaurant({ darkMode, toggleDarkMode }) {
                   )}
                 </div>
 
+                {/* Upload slika */}
                 <div className="image-upload-container">
                   <label className="image-upload-label">
                     {t("Restaurant.images")}
