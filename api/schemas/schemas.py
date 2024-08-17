@@ -1,5 +1,6 @@
 from pydantic import BaseModel, EmailStr, Field, constr
 from typing import List, Optional
+from fastapi import UploadFile
 from enum import Enum
 import datetime
 
@@ -67,6 +68,7 @@ class UserUpdate(BaseModel):
     email: Optional[EmailStr] = Field(None)
     password: Optional[constr(min_length=6)] = Field(None)
     role: Optional[constr(min_length=1)] = Field(None)
+    profilePicture: Optional[UploadFile] = None
 
 # Restaurant schemas for handling restaurant-related operations
 class RestaurantCreate(BaseModel):
@@ -284,3 +286,7 @@ class RequestStatusUpdate(BaseModel):
 # Forgot Password schema for handling password reset requests
 class ForgotPasswordRequest(BaseModel):
     email: str
+
+class PasswordChangeRequest(BaseModel):
+    oldPassword: str
+    newPassword: str

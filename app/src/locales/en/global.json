@@ -340,5 +340,23 @@
     "loading": "Loading...",
     "noData": "No couriers available.",
     "confirmDeleteMessage": "Are you sure you want to delete this courier?"
+  },
+  "Profile": {
+    "loading": "Loading...",
+    "errorFetchingProfile": "Error fetching user profile",
+    "errorSavingProfile": "Error saving user profile",
+    "errorChangingPassword": "Error changing password",
+    "passwordsDontMatch": "New password and confirmation do not match",
+    "passwordChangedSuccessfully": "Password changed successfully",
+    "profilePicture": "Profile Picture",
+    "editProfile": "Edit Profile",
+    "changePassword": "Change Password",
+    "username": "Username",
+    "email": "Email",
+    "save": "Save",
+    "oldPassword": "Old Password",
+    "newPassword": "New Password",
+    "confirmNewPassword": "Confirm New Password",
+    "close": "Close"
   }
 }

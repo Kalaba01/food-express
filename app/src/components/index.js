@@ -27,5 +27,6 @@ import ConfirmDelete from "./ConfirmDelete/ConfirmDelete";
 import Orders from "./Orders/Orders";
 import Restaurant from "./Restaurant/Restaurant";
 import Couriers from "./Couriers/Couriers";
+import Profile from "./Profile/Profile";
 
-export  { Admin, Captcha, Courier, Customer, Footer, FormPopup, GoTop, Header, Language, LoginRegister, NotificationPopup, Owner, Theme, LandingPage, Unauthorized, Logout, ForgotPassword, ResetPassword, HamburgerMenu, Requests, Users, NotFound, LookupTable, DeliveryZones, Restaurants, ConfirmDelete, Orders, Restaurant, Couriers }
+export  { Admin, Captcha, Courier, Customer, Footer, FormPopup, GoTop, Header, Language, LoginRegister, NotificationPopup, Owner, Theme, LandingPage, Unauthorized, Logout, ForgotPassword, ResetPassword, HamburgerMenu, Requests, Users, NotFound, LookupTable, DeliveryZones, Restaurants, ConfirmDelete, Orders, Restaurant, Couriers, Profile }

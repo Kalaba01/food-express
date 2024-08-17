@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Routes, Route } from 'react-router-dom';
-import { FormPopup, NotificationPopup, Customer, Owner, Courier, Admin, LandingPage, Unauthorized, ForgotPassword, ResetPassword, Requests, Users, NotFound, Footer, GoTop, DeliveryZones, Restaurants, Orders, Restaurant, Couriers } from './components/index';
+import { FormPopup, NotificationPopup, Customer, Owner, Courier, Admin, LandingPage, Unauthorized, ForgotPassword, ResetPassword, Requests, Users, NotFound, Footer, GoTop, DeliveryZones, Restaurants, Orders, Restaurant, Couriers, Profile } from './components/index';
 import { jwtDecode } from 'jwt-decode';
 import ProtectedRoute from './components/ProtectedRoute';
 import i18n from './i18n';
@@ -115,6 +115,7 @@ function App() {
           } />
           <Route path="/forgot" element={<ForgotPassword darkMode={darkMode} toggleDarkMode={toggleDarkMode} />} />
           <Route path="/reset-password" element={<ResetPassword darkMode={darkMode} toggleDarkMode={toggleDarkMode} />} />
+          <Route path="/profile" element={<ProtectedRoute allowedRoles={['customer', 'owner', 'courier', 'administrator']}><Profile darkMode={darkMode} toggleDarkMode={toggleDarkMode} /></ProtectedRoute>} />
           <Route path="/customer" element={<ProtectedRoute allowedRoles={['customer']}><Customer darkMode={darkMode} toggleDarkMode={toggleDarkMode} /></ProtectedRoute>} />
           <Route path="/owner" element={<ProtectedRoute allowedRoles={['owner']}><Owner darkMode={darkMode} toggleDarkMode={toggleDarkMode} /></ProtectedRoute>} />
           <Route path="/owner/restaurant/:id" element={<ProtectedRoute allowedRoles={['owner']}><Restaurant darkMode={darkMode} toggleDarkMode={toggleDarkMode} /></ProtectedRoute>} />

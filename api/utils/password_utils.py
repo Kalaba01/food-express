@@ -13,3 +13,6 @@ async def generate_temp_password():
     now = datetime.utcnow()
     temp_password = ''.join([chr(int(digit) + 97) for digit in now.strftime("%Y%m%d%H%M%S")])
     return temp_password
+
+def get_password_hash(password):
+    return pwd_context.hash(password)

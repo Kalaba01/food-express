@@ -35,6 +35,7 @@ body.dark-mode .top-bar {
 .top-bar-icons {
     display: flex;
     align-items: center;
+    justify-content: space-between;
 }
 
 .top-bar-icons .icon {
@@ -64,4 +65,16 @@ body.dark-mode .top-bar {
 
 .logo-container.login {
     margin-left: 41.5%;
+}
+
+.profile-icon {
+    color: white;
+    transition: color 0.2s ease-in-out;
+    margin: 5px 10px 0px 0px;
+}
+
+.profile-icon:hover {
+    color: var(--secondary-color);
+    transform: scale(1.1);
+    cursor: pointer;
 }

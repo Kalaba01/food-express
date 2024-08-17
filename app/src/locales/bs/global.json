@@ -340,5 +340,23 @@
     "loading": "Učitavanje...",
     "noData": "Nema dostupnih dostavljača.",
     "confirmDeleteMessage": "Jeste li sigurni da želite obrisati ovog dostavljača?"
+  },
+  "Profile": {
+    "loading": "Učitavanje...",
+    "errorFetchingProfile": "Greška prilikom preuzimanja korisničkog profila",
+    "errorSavingProfile": "Greška prilikom spremanja korisničkog profila",
+    "errorChangingPassword": "Greška prilikom promjene lozinke",
+    "passwordsDontMatch": "Nova lozinka i potvrda se ne podudaraju",
+    "passwordChangedSuccessfully": "Lozinka je uspješno promijenjena",
+    "profilePicture": "Profilna Slika",
+    "editProfile": "Uredi Profil",
+    "changePassword": "Promijeni Lozinku",
+    "username": "Korisničko Ime",
+    "email": "Email",
+    "save": "Spremi",
+    "oldPassword": "Stara Lozinka",
+    "newPassword": "Nova Lozinka",
+    "confirmNewPassword": "Potvrdi Novu Lozinku",
+    "close": "Zatvori"
   }
 }

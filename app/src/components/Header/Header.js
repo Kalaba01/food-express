@@ -2,6 +2,7 @@ import React from 'react';
 import { LoginRegister, Theme, Language, Logout, HamburgerMenu } from "../index";
 import { jwtDecode } from "jwt-decode";
 import { useTranslation } from 'react-i18next';
+import { FaUser } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import './Header.css';
 
@@ -38,6 +39,9 @@ function Header({ darkMode, toggleDarkMode, openPopupModal, userType, showIcons 
         {showIcons ? (
           isLoggedIn ? (
             <>
+              <Link to="/profile" className="profile-icon">
+                <FaUser size={24} />
+              </Link>
               <Theme darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
               <Language className="language-icon" />
               {userType !== "forgot" && <Logout />}
