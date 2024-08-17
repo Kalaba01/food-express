@@ -496,84 +496,93 @@ function Restaurants({ darkMode, toggleDarkMode }) {
                 editRestaurant.id ? handleSaveClick : handleNewRestaurantSave
               }
             >
-              <input
-                type="text"
-                value={editRestaurant.name}
-                onChange={(e) =>
-                  setEditRestaurant({
-                    ...editRestaurant,
-                    name: e.target.value,
-                  })
-                }
-                placeholder={t("Restaurants.name")}
-                className="input-field"
-                required
-              />
-              <input
-                type="text"
-                value={editRestaurant.address}
-                onChange={(e) =>
-                  setEditRestaurant({
-                    ...editRestaurant,
-                    address: e.target.value,
-                  })
-                }
-                placeholder={t("Restaurants.address")}
-                className="input-field"
-                required
-              />
-              <input
-                type="text"
-                value={editRestaurant.city}
-                onChange={(e) =>
-                  setEditRestaurant({
-                    ...editRestaurant,
-                    city: e.target.value,
-                  })
-                }
-                placeholder={t("Restaurants.city")}
-                className="input-field"
-                required
-              />
-              <input
-                type="text"
-                value={editRestaurant.latitude}
-                onChange={(e) =>
-                  setEditRestaurant({
-                    ...editRestaurant,
-                    latitude: e.target.value,
-                  })
-                }
-                placeholder={t("Restaurants.latitude")}
-                className="input-field"
-                required
-              />
-              <input
-                type="text"
-                value={editRestaurant.longitude}
-                onChange={(e) =>
-                  setEditRestaurant({
-                    ...editRestaurant,
-                    longitude: e.target.value,
-                  })
-                }
-                placeholder={t("Restaurants.longitude")}
-                className="input-field"
-                required
-              />
-              <input
-                type="text"
-                value={editRestaurant.category}
-                onChange={(e) =>
-                  setEditRestaurant({
-                    ...editRestaurant,
-                    category: e.target.value,
-                  })
-                }
-                placeholder={t("Restaurants.category")}
-                className="input-field"
-                required
-              />
+              <div className="input-group">
+                <input
+                  type="text"
+                  value={editRestaurant.name}
+                  onChange={(e) =>
+                    setEditRestaurant({
+                      ...editRestaurant,
+                      name: e.target.value,
+                    })
+                  }
+                  placeholder={t("Restaurants.name")}
+                  className="input-field"
+                  required
+                />
+                <input
+                  type="text"
+                  value={editRestaurant.city}
+                  onChange={(e) =>
+                    setEditRestaurant({
+                      ...editRestaurant,
+                      city: e.target.value,
+                    })
+                  }
+                  placeholder={t("Restaurants.city")}
+                  className="input-field"
+                  required
+                />
+              </div>
+
+              <div className="input-group">
+                <input
+                  type="text"
+                  value={editRestaurant.address}
+                  onChange={(e) =>
+                    setEditRestaurant({
+                      ...editRestaurant,
+                      address: e.target.value,
+                    })
+                  }
+                  placeholder={t("Restaurants.address")}
+                  className="input-field"
+                  required
+                />
+                <input
+                  type="text"
+                  value={editRestaurant.category}
+                  onChange={(e) =>
+                    setEditRestaurant({
+                      ...editRestaurant,
+                      category: e.target.value,
+                    })
+                  }
+                  placeholder={t("Restaurants.category")}
+                  className="input-field"
+                  required
+                />
+              </div>
+
+              <div className="input-group">
+                <input
+                  type="text"
+                  value={editRestaurant.latitude}
+                  onChange={(e) =>
+                    setEditRestaurant({
+                      ...editRestaurant,
+                      latitude: e.target.value,
+                    })
+                  }
+                  placeholder={t("Restaurants.latitude")}
+                  className="input-field"
+                  required
+                />
+                <input
+                  type="text"
+                  value={editRestaurant.longitude}
+                  onChange={(e) =>
+                    setEditRestaurant({
+                      ...editRestaurant,
+                      longitude: e.target.value,
+                    })
+                  }
+                  placeholder={t("Restaurants.longitude")}
+                  className="input-field"
+                  required
+                />
+              </div>
+
               <input
                 type="text"
                 value={editRestaurant.contact}
@@ -587,6 +596,7 @@ function Restaurants({ darkMode, toggleDarkMode }) {
                 className="input-field"
                 required
               />
+
               <div className="zone-selection">
                 <div className="zone-dropdown">
                   <div
@@ -603,6 +613,7 @@ function Restaurants({ darkMode, toggleDarkMode }) {
                   )}
                 </div>
               </div>
+
               <div className="owner-search-container">
                 <input
                   type="text"
@@ -632,6 +643,7 @@ function Restaurants({ darkMode, toggleDarkMode }) {
                   </ul>
                 )}
               </div>
+
               <button type="submit" className="save-button">
                 {editRestaurant.id
                   ? t("Restaurants.save")

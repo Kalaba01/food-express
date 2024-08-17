@@ -207,6 +207,8 @@
     "address": "Address",
     "city": "City",
     "category": "Category",
+    "latitude": "Latitude",
+    "longitude": "Longitude",
     "selectZones": "Delivery Zones",
     "menuCategories": "Menu categories",
     "rating": "Rating",
@@ -238,7 +240,8 @@
       "users": "Users",
       "deliveryZones": "Delivery Zones",
       "restaurants": "Restaurants",
-      "orders": "Orders"
+      "orders": "Orders",
+      "couriers": "Couriers"
     },
     "owner": {
       "restaurants": "Restaurants",
@@ -319,5 +322,23 @@
     "noRating": "No ratings",
     "uploadImages": "Upload Images",
     "selectCategory": "Select a category"
+  },
+  "Couriers": {
+    "title": "Couriers",
+    "name": "Name",
+    "restaurant": "Restaurant",
+    "vehicle": "Vehicle",
+    "wallet": "Wallet",
+    "halal": "Halal",
+    "yes": "Yes",
+    "no": "No",
+    "create": "Create Courier",
+    "save": "Save",
+    "editCourier": "Edit Courier",
+    "createCourier": "Create Courier",
+    "selectField": "Select Field",
+    "loading": "Loading...",
+    "noData": "No couriers available.",
+    "confirmDeleteMessage": "Are you sure you want to delete this courier?"
   }
 }

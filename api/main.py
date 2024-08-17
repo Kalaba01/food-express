@@ -41,6 +41,8 @@ from schemas.schemas import (
     OrderUpdate,
     ImageCreate,
     ImageUpdate,
+    CourierCreate,
+    CourierUpdate
 )
 
 from auth.auth import create_access_token, get_current_user
@@ -108,6 +110,14 @@ from crud.orders_crud import (
     create_new_order,
     update_order,
     delete_order,
+)
+from crud.couriers_crud import (
+    get_all_couriers,
+    create_courier,
+    update_courier,
+    delete_courier,
+    search_restaurants,
+    search_users
 )
 
 def start_application():
@@ -508,3 +518,33 @@ async def delete_order(order_id: int, db: Session = Depends(get_db)):
 @app.get("/search-owners/")
 async def owners_search(username: str, db: Session = Depends(get_db)):
     return await search_owners(db, username)
+
+# Ruta za dohvatanje svih kurira
+@app.get("/couriers/")
+async def read_couriers(db: Session = Depends(get_db)):
+    return await get_all_couriers(db)
+
+# Ruta za kreiranje novog kurira
+@app.post("/couriers/")
+async def create_new_courier(courier: CourierCreate, db: Session = Depends(get_db)):
+    return await create_courier(db, courier)
+
+# Ruta za ažuriranje postojećeg kurira
+@app.put("/couriers/{courier_id}")
+async def update_existing_courier(
+    courier_id: int, courier: CourierUpdate, db: Session = Depends(get_db)
+):
+    return await update_courier(db, courier_id, courier)
+
+# Ruta za brisanje kurira
+@app.delete("/couriers/{courier_id}")
+async def delete_existing_courier(courier_id: int, db: Session = Depends(get_db)):
+    return await delete_courier(db, courier_id)
+
+@app.get("/search-users/")
+async def users_search(username: str, db: Session = Depends(get_db)):
+    return await search_users(db, username)
+
+@app.get("/search-restaurants/")
+async def restaurants_search(name: str, db: Session = Depends(get_db)):
+    return await search_restaurants(db, name)

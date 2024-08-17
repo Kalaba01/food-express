@@ -1,7 +1,7 @@
 import base64
 from sqlalchemy.orm import Session
 from fastapi import HTTPException
-from models.models import Restaurant, MenuCategory, Item, User
+from models.models import Restaurant, MenuCategory, Item, User, DeliveryZone, RestaurantDeliveryZone
 from schemas.schemas import RestaurantCreate, RestaurantUpdate, MenuCategoryCreate, MenuCategoryUpdate, ItemCreate, ItemUpdate
 
 async def get_all_restaurants(db: Session):
@@ -31,8 +31,11 @@ async def get_restaurant_by_id(db: Session, restaurant_id: int):
     return restaurant_data
 
 async def search_owners(db: Session, username: str):
-    owners = db.query(User).filter(User.username.ilike(f"%{username}%")).all()
-    return [{"id": owner.id, "username": owner.username} for owner in owners if owner.role == "owner"]
+    owners = db.query(User).filter(
+        User.username.ilike(f"%{username.strip()}%"),
+        User.role == "owner"
+    ).all()
+    return [{"id": owner.id, "username": owner.username} for owner in owners]
 
 async def create_new_restaurant(db: Session, restaurant: RestaurantCreate):
     owner = db.query(User).filter(User.id == restaurant.owner_id).first()
@@ -51,13 +54,21 @@ async def create_new_restaurant(db: Session, restaurant: RestaurantCreate):
         capacity=restaurant.capacity
     )
 
+    db.add(new_restaurant)
+    db.commit()
+    db.refresh(new_restaurant)
+
     zones = db.query(DeliveryZone).filter(DeliveryZone.id.in_(restaurant.delivery_zone_ids)).all()
     if not zones:
         raise HTTPException(status_code=400, detail="Invalid delivery zone IDs")
-    
-    new_restaurant.delivery_zones.extend(zones)
 
-    db.add(new_restaurant)
+    for zone in zones:
+        restaurant_delivery_zone = RestaurantDeliveryZone(
+            restaurant_id=new_restaurant.id,
+            delivery_zone_id=zone.id
+        )
+        db.add(restaurant_delivery_zone)
+
     db.commit()
     db.refresh(new_restaurant)
     return new_restaurant
@@ -74,7 +85,7 @@ async def update_existing_restaurant(db: Session, restaurant_id: int, restaurant
 
     if restaurant.name is not None:
         db_restaurant.name = restaurant.name
-    if restaurant.address is not None:  # Provjeri da li je address poslan
+    if restaurant.address is not None:
         db_restaurant.address = restaurant.address
     if restaurant.city is not None:
         db_restaurant.city = restaurant.city
@@ -90,10 +101,16 @@ async def update_existing_restaurant(db: Session, restaurant_id: int, restaurant
         db_restaurant.capacity = restaurant.capacity
     
     if restaurant.delivery_zone_ids is not None:
-        zones = db.query(DeliveryZone).filter(DeliveryZone.id.in_(restaurant.delivery_zone_ids)).all()
-        if not zones:
-            raise HTTPException(status_code=400, detail="Invalid delivery zone IDs")
-        db_restaurant.delivery_zones = zones
+        # Prvo obrišite postojeće zapise u međupoveznoj tabeli
+        db.query(RestaurantDeliveryZone).filter(RestaurantDeliveryZone.restaurant_id == restaurant_id).delete()
+
+        # Zatim dodajte nove zapise
+        for zone_id in restaurant.delivery_zone_ids:
+            restaurant_delivery_zone = RestaurantDeliveryZone(
+                restaurant_id=db_restaurant.id,
+                delivery_zone_id=zone_id
+            )
+            db.add(restaurant_delivery_zone)
 
     db.commit()
     db.refresh(db_restaurant)

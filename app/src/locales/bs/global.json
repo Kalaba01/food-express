@@ -207,6 +207,8 @@
     "address": "Adresa",
     "city": "Grad",
     "category": "Kategorija",
+    "latitude": "Latitude",
+    "longitude": "Longitude",
     "selectZones": "Zone Dostave",
     "menuCategories": "Kategorije menija",
     "rating": "Ocjena",
@@ -238,7 +240,8 @@
       "users": "Korisnici",
       "deliveryZones": "Zone Dostave",
       "restaurants": "Restorani",
-      "orders": "Narudžbe"
+      "orders": "Narudžbe",
+      "couriers": "Kuriri"
     },
     "owner": {
       "restaurants": "Restorani",
@@ -319,5 +322,23 @@
     "noRating": "Nema ocjena",
     "uploadImages": "Učitaj slike",
     "selectCategory": "Odaberite kategoriju"
+  },
+  "Couriers": {
+    "title": "Dostavljači",
+    "name": "Ime",
+    "restaurant": "Restoran",
+    "vehicle": "Vozilo",
+    "wallet": "Novčanik",
+    "halal": "Halal",
+    "yes": "Da",
+    "no": "Ne",
+    "create": "Dodaj Dostavljača",
+    "save": "Sačuvaj",
+    "editCourier": "Uredi Dostavljača",
+    "createCourier": "Kreiraj Dostavljača",
+    "selectField": "Odaberite Polje",
+    "loading": "Učitavanje...",
+    "noData": "Nema dostupnih dostavljača.",
+    "confirmDeleteMessage": "Jeste li sigurni da želite obrisati ovog dostavljača?"
   }
 }
