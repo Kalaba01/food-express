@@ -58,11 +58,47 @@ async def delete_user(db: Session, user_id: int):
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
     
-    if user.image_id != 1:
+    # Brisanje slike povezane sa korisnikom
+    if user.image_id:
         image = db.query(Image).filter(Image.id == user.image_id).first()
         if image:
             db.delete(image)
-    
+
+    # Brisanje restorana koje korisnik posjeduje
+    for restaurant in user.owned_restaurants:
+        db.delete(restaurant)
+
+    # Brisanje narudžbi koje je korisnik napravio
+    for order in user.orders:
+        # Brisanje stavki narudžbe
+        db.query(OrderItem).filter(OrderItem.order_id == order.id).delete()
+        # Brisanje dodjela narudžbi dostavljačima
+        db.query(OrderAssignment).filter(OrderAssignment.order_id == order.id).delete()
+        db.delete(order)
+
+    # Brisanje kurira povezanih sa korisnikom
+    db.query(Courier).filter(Courier.user_id == user_id).delete()
+
+    # Brisanje poruka (chats)
+    db.query(Chat).filter((Chat.sender_id == user_id) | (Chat.receiver_id == user_id)).delete()
+
+    # Brisanje notifikacija
+    db.query(Notification).filter(Notification.user_id == user_id).delete()
+
+    # Brisanje ocjena (ratings)
+    db.query(Rating).filter(Rating.order_id.in_([order.id for order in user.orders])).delete()
+
+    # Brisanje email izvještaja
+    db.query(EmailReport).filter(EmailReport.user_id == user_id).delete()
+
+    # Brisanje tokena za reset lozinke
+    db.query(PasswordResetToken).filter(PasswordResetToken.user_id == user_id).delete()
+
+    # Brisanje bankovnog računa povezanog sa korisnikom
+    if user.bank_account:
+        db.delete(user.bank_account)
+
+    # Konačno brisanje korisnika
     db.delete(user)
     db.commit()
 
