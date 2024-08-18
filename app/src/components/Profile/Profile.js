@@ -118,7 +118,7 @@ function Profile({ darkMode, toggleDarkMode }) {
 
     try {
       const token = localStorage.getItem("token");
-      const response = await axios.put("http://localhost:8000/change-password", passwordData, {
+      await axios.put("http://localhost:8000/change-password", passwordData, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -132,10 +132,15 @@ function Profile({ darkMode, toggleDarkMode }) {
         confirmPassword: "",
       });
     } catch (error) {
-      console.error(t('Profile.errorChangingPassword'));
-      setNotification({ message: t('Profile.errorChangingPassword'), type: 'error' });
+      if (error.response && error.response.data.detail === "New password cannot be the same as the old password") {
+        setNotification({ message: t('Profile.newPasswordCannotBeSame'), type: 'error' });
+      } else {
+        console.error(t('Profile.errorChangingPassword'));
+        setNotification({ message: t('Profile.errorChangingPassword'), type: 'error' });
+      }
     }
   };
+
 
   if (loading) {
     return <div>{t('Profile.loading')}</div>;

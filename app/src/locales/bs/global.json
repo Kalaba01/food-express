@@ -361,6 +361,7 @@
     "errorChangingPassword": "Greška prilikom promjene lozinke",
     "passwordsDontMatch": "Nova lozinka i potvrda se ne podudaraju",
     "passwordChangedSuccessfully": "Lozinka je uspješno promijenjena",
+   "newPasswordCannotBeSame": "Nova lozinka ne može biti ista kao stara lozinka",
     "profilePicture": "Profilna Slika",
     "editProfile": "Uredi Profil",
     "changePassword": "Promijeni Lozinku",

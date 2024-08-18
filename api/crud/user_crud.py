@@ -247,8 +247,13 @@ async def update_user_profile(db: Session, user_id: int, username: str, email: s
 async def change_user_password(db: Session, user_id: int, old_password: str, new_password: str) -> bool:
     user = db.query(User).filter(User.id == user_id).first()
     
-    if not user or not verify_password(old_password, user.hashed_password):
+    if not user or not await verify_password(old_password, user.hashed_password):
         return False
+    
+    if await verify_password(new_password, user.hashed_password):
+        raise HTTPException(
+            status_code=400, detail="New password cannot be the same as the old password"
+        )
     
     user.hashed_password = get_password_hash(new_password)
     db.commit()

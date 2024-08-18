@@ -361,6 +361,7 @@
     "errorChangingPassword": "Error changing password",
     "passwordsDontMatch": "New password and confirmation do not match",
     "passwordChangedSuccessfully": "Password changed successfully",
+    "newPasswordCannotBeSame": "New password cannot be the same as the old password",
     "profilePicture": "Profile Picture",
     "editProfile": "Edit Profile",
     "changePassword": "Change Password",
