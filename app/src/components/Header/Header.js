@@ -1,5 +1,5 @@
 import React from 'react';
-import { LoginRegister, Theme, Language, Logout, HamburgerMenu } from "../index";
+import { LoginRegister, Theme, Language, Logout, HamburgerMenu, Chat } from "../index";
 import { jwtDecode } from "jwt-decode";
 import { useTranslation } from 'react-i18next';
 import { FaUser } from 'react-icons/fa';
@@ -10,12 +10,13 @@ function Header({ darkMode, toggleDarkMode, openPopupModal, userType, showIcons 
   const { t } = useTranslation('global');
   const token = localStorage.getItem('token');
   let isLoggedIn = false;
+  let currentUser = null;
 
   if (token) {
     try {
-      const decodedToken = jwtDecode(token);
+      currentUser = jwtDecode(token);
       const currentTime = Date.now() / 1000;
-      if (decodedToken.exp > currentTime) {
+      if (currentUser.exp > currentTime) {
         isLoggedIn = true;
       } else {
         localStorage.removeItem('token');
@@ -42,6 +43,7 @@ function Header({ darkMode, toggleDarkMode, openPopupModal, userType, showIcons 
               <Link to="/profile" className="profile-icon">
                 <FaUser size={24} />
               </Link>
+              <Chat userType={currentUser} />
               <Theme darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
               <Language className="language-icon" />
               {userType !== "forgot" && <Logout />}

@@ -1,9 +1,20 @@
 import os
 import asyncio
 import uuid
+import json
 
 from datetime import datetime, timedelta
-from fastapi import FastAPI, Depends, HTTPException, File, UploadFile, Form
+from fastapi import (
+    FastAPI,
+    Depends,
+    HTTPException,
+    File,
+    UploadFile,
+    Form,
+    WebSocket,
+    WebSocketDisconnect,
+)
+from fastapi.websockets import WebSocket
 from fastapi.security import OAuth2PasswordRequestForm
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
@@ -21,6 +32,8 @@ from models.models import (
     Restaurant,
     MenuCategory,
     Item,
+    Chat,
+    Conversation,
 )
 from schemas.schemas import (
     UserCreate,
@@ -43,7 +56,7 @@ from schemas.schemas import (
     ImageUpdate,
     CourierCreate,
     CourierUpdate,
-    PasswordChangeRequest
+    PasswordChangeRequest,
 )
 
 from auth.auth import create_access_token, get_current_user
@@ -73,7 +86,7 @@ from crud.user_crud import (
     update_user_details,
     get_profile,
     update_user_profile,
-    change_user_password
+    change_user_password,
 )
 from crud.request_crud import (
     create_request,
@@ -129,6 +142,16 @@ from crud.couriers_crud import (
     search_restaurants,
     search_users,
 )
+from crud.chat_crud import (
+    create_conversation,
+    get_conversation,
+    create_message,
+    get_conversation_messages,
+    get_last_message,
+    get_user_chat_history,
+    get_users_sorted_by_role,
+    handle_send_message,
+)
 
 
 def start_application():
@@ -163,6 +186,49 @@ if __name__ == "__main__":
     import uvicorn
 
     uvicorn.run(app, host="0.0.0.0", port=8000)
+
+connections = {}
+
+@app.websocket("/ws/chat/{conversation_id}")
+async def websocket_endpoint(websocket: WebSocket, conversation_id: int):
+    await websocket.accept()
+    print(f"New WebSocket connection: {conversation_id}")
+
+    if conversation_id not in connections:
+        connections[conversation_id] = []
+    connections[conversation_id].append(websocket)
+
+    try:
+        while True:
+            data = await websocket.receive_text()
+            print(f"Received message: {data}")
+
+            # Parsiraj JSON podatke
+            parsed_data = json.loads(data)
+
+            # Emitovanje poruke svim povezanim klijentima za tu konverzaciju
+            for connection in connections[conversation_id]:
+                await connection.send_text(json.dumps(parsed_data))
+
+    except WebSocketDisconnect:
+        print(f"WebSocket disconnected: {conversation_id}")
+        connections[conversation_id].remove(websocket)
+        if len(connections[conversation_id]) == 0:
+            del connections[conversation_id]
+
+@app.post("/upload-image/")
+async def upload_image(
+    item_id: int = None,
+    restaurant_id: int = None,
+    file: UploadFile = File(...),
+    db: Session = Depends(get_db),
+):
+    image_data = await file.read()
+    new_image = Image(image=image_data, item_id=item_id, restaurant_id=restaurant_id)
+    db.add(new_image)
+    db.commit()
+    db.refresh(new_image)
+    return {"message": "Image uploaded successfully", "image_id": new_image.id}
 
 
 # Registracija
@@ -673,11 +739,58 @@ async def update_profile(
 async def change_password(
     password_data: PasswordChangeRequest,
     db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user)
+    current_user: User = Depends(get_current_user),
 ):
-    success = await change_user_password(db, current_user.id, password_data.oldPassword, password_data.newPassword)
+    success = await change_user_password(
+        db, current_user.id, password_data.oldPassword, password_data.newPassword
+    )
     if not success:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST, detail="Old password is incorrect"
         )
     return {"message": "Password changed successfully"}
+
+
+@app.get("/api/chat/history/{user_id}")
+async def get_user_chat_history_route(user_id: int, db: Session = Depends(get_db)):
+    return await get_user_chat_history(db, user_id)
+
+
+@app.get("/api/chat/users")
+async def get_users_by_role(role: str, current_user_id: int, db: Session = Depends(get_db)):
+    return await get_users_sorted_by_role(db, role, current_user_id)
+
+
+@app.post("/conversations/start/{user1_id}/{user2_id}")
+async def start_conversation(
+    user1_id: int, user2_id: int, db: Session = Depends(get_db)
+):
+    conversation = await get_conversation(db, user1_id, user2_id)
+    if not conversation:
+        conversation = await create_conversation(db, user1_id, user2_id)
+    return conversation
+
+
+@app.get("/conversations/{conversation_id}/messages/")
+async def read_messages(conversation_id: int, db: Session = Depends(get_db)):
+    return await get_conversation_messages(db, conversation_id)
+
+
+@app.post("/conversations/{conversation_id}/messages/")
+async def send_message(
+    conversation_id: int,
+    sender_id: int,
+    receiver_id: int,
+    message: str,
+    db: Session = Depends(get_db),
+):
+    return await handle_send_message(
+        db, conversation_id, sender_id, receiver_id, message, connections
+    )
+
+
+@app.get("/conversations/{conversation_id}/last-message/")
+async def get_last_conversation_message(
+    conversation_id: int, db: Session = Depends(get_db)
+):
+    return await get_last_message(db, conversation_id)

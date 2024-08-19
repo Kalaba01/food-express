@@ -227,9 +227,11 @@ class Chat(Base):
     receiver_id = Column(Integer, ForeignKey("users.id"))
     message = Column(Text, nullable=False)
     created_at = Column(DateTime, default=datetime.datetime.utcnow)
+    conversation_id = Column(Integer, ForeignKey("conversations.id"), nullable=True)
 
     sender = relationship("User", foreign_keys=[sender_id], back_populates="chat_sent")
     receiver = relationship("User", foreign_keys=[receiver_id], back_populates="chat_received")
+    conversation = relationship("Conversation", back_populates="messages")
 
 class EmailReport(Base):
     __tablename__ = "email_reports"
@@ -292,3 +294,14 @@ class PasswordResetToken(Base):
     expiration = Column(DateTime, nullable=False)
 
     user = relationship("User", back_populates="password_reset_tokens")
+
+class Conversation(Base):
+    __tablename__ = "conversations"
+    id = Column(Integer, primary_key=True, index=True)
+    participant1_id = Column(Integer, ForeignKey("users.id"))
+    participant2_id = Column(Integer, ForeignKey("users.id"))
+
+    participant1 = relationship("User", foreign_keys=[participant1_id], backref="conversations_participant1")
+    participant2 = relationship("User", foreign_keys=[participant2_id], backref="conversations_participant2")
+
+    messages = relationship("Chat", back_populates="conversation")

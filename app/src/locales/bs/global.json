@@ -372,5 +372,17 @@
     "newPassword": "Nova Lozinka",
     "confirmNewPassword": "Potvrdi Novu Lozinku",
     "close": "Zatvori"
+  },
+  "Chat": {
+    "chatTitle": "Razgovor",
+    "chatHistory": "Istorija Razgovora",
+    "admins": "Administratori",
+    "owners": "Vlasnici",
+    "couriers": "Kuriri",
+    "customers": "Korisnici",
+    "noChatHistory": "Nema dostupne istorije razgovora",
+    "typeMessage": "Unesite poruku...",
+    "send": "Pošalji",
+    "users": "Korisnici"
   }
 }

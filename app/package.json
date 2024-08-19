@@ -20,6 +20,7 @@
     "react-leaflet-draw": "^0.20.4",
     "react-router-dom": "^6.25.1",
     "react-scripts": "5.0.1",
+    "socket.io-client": "^4.7.5",
     "web-vitals": "^2.1.4"
   },
   "scripts": {

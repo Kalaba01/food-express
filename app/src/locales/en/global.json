@@ -372,5 +372,17 @@
     "newPassword": "New Password",
     "confirmNewPassword": "Confirm New Password",
     "close": "Close"
+  },
+  "Chat": {
+    "chatTitle": "Chat",
+    "chatHistory": "Chat History",
+    "admins": "Admins",
+    "owners": "Owners",
+    "couriers": "Couriers",
+    "customers": "Customers",
+    "noChatHistory": "No chat history available",
+    "typeMessage": "Type a message...",
+    "send": "Send",
+    "users": "Users"
   }
 }
