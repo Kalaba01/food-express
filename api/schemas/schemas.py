@@ -292,3 +292,6 @@ class ForgotPasswordRequest(BaseModel):
 class PasswordChangeRequest(BaseModel):
     oldPassword: str
     newPassword: str
+
+class SearchQuery(BaseModel):
+    query: constr(min_length=1, max_length=100)

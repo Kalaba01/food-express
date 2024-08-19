@@ -57,6 +57,7 @@ from schemas.schemas import (
     CourierCreate,
     CourierUpdate,
     PasswordChangeRequest,
+    SearchQuery
 )
 
 from auth.auth import create_access_token, get_current_user
@@ -151,6 +152,10 @@ from crud.chat_crud import (
     get_user_chat_history,
     get_users_sorted_by_role,
     handle_send_message,
+)
+from crud.customer_crud import (
+    search_restaurants,
+    search_items
 )
 
 
@@ -794,3 +799,11 @@ async def get_last_conversation_message(
     conversation_id: int, db: Session = Depends(get_db)
 ):
     return await get_last_message(db, conversation_id)
+
+@app.get("/api/search/restaurants")
+async def search_restaurants_route(query: SearchQuery = Depends(), db: Session = Depends(get_db)):
+    return await search_restaurants(db, query.query)
+
+@app.get("/api/search/items")
+async def search_items_route(query: SearchQuery = Depends(), db: Session = Depends(get_db)):
+    return await search_items(db, query.query)

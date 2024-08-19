@@ -384,5 +384,14 @@
     "typeMessage": "Type a message...",
     "send": "Send",
     "users": "Users"
+  },
+  "SearchBar": {
+    "searchPlaceholder": "I need to...",
+    "restaurants": "Restaurants",
+    "items": "Items",
+    "category": "Category",
+    "contact": "Contact",
+    "noResultsFound": "We couldn't find any results matching your query. Please try again.",
+    "errorFetchingResults": "Error fetching search results:"
   }
 }

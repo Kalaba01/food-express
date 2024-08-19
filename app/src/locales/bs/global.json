@@ -384,5 +384,14 @@
     "typeMessage": "Unesite poruku...",
     "send": "Pošalji",
     "users": "Korisnici"
+  },
+  "SearchBar": {
+    "searchPlaceholder": "Treba mi...",
+    "restaurants": "Restorani",
+    "items": "Artikli",
+    "category": "Kategorija",
+    "contact": "Kontakt",
+    "noResultsFound": "Nismo pronašli nijedan rezultat koji odgovara vašem upitu. Molimo pokušajte ponovo.",
+    "errorFetchingResults": "Greška pri preuzimanju rezultata pretrage:"
   }
 }
