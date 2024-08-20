@@ -151,6 +151,10 @@ body.dark-mode .results-section h2 {
     color: #007bff;
 }
 
+.result-card h3:hover{
+    cursor: pointer;
+}
+
 .result-card p {
     margin: 0;
     color: #555;

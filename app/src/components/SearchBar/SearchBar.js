@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { FaSearch, FaChevronDown, FaStar, FaStarHalfAlt } from 'react-icons/fa';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./SearchBar.css";
 
@@ -10,6 +11,7 @@ function SearchBar() {
   const [searchType, setSearchType] = useState("restaurants");
   const [results, setResults] = useState({ restaurants: [], items: [] });
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -68,6 +70,14 @@ function SearchBar() {
     );
   };
 
+  const handleRestaurantClick = (restaurantName) => {
+    navigate(`/restaurants/${encodeURIComponent(restaurantName)}`);
+  };
+
+  const handleItemClick = (restaurantName) => {
+    navigate(`/restaurants/${encodeURIComponent(restaurantName)}`);
+  };
+
   return (
     <div className="search-bar-container">
       <div className="search-bar">
@@ -100,7 +110,7 @@ function SearchBar() {
             <h2>{t("SearchBar.restaurants")}</h2>
             <div className="results-cards">
               {results.restaurants.map((restaurant) => (
-                <div key={restaurant.id} className="result-card">
+                <div key={restaurant.id} className="result-card" onClick={() => handleRestaurantClick(restaurant.name)}>
                   <h3>{restaurant.name}</h3>
                   {renderStars(restaurant.rating)}
                   <p>{restaurant.address}, {restaurant.city}</p>
@@ -117,7 +127,7 @@ function SearchBar() {
             <h2>{t("SearchBar.items")}</h2>
             <div className="results-cards">
               {results.items.map((item) => (
-                <div key={item.id} className="result-card">
+                <div key={item.id} className="result-card" onClick={() => handleItemClick(item.restaurant_name)}>
                   <h3>{item.name}</h3>
                   <p>{item.description}</p>
                 </div>
@@ -125,7 +135,6 @@ function SearchBar() {
             </div>
           </div>
         )}
-
       </div>
     </div>
   );

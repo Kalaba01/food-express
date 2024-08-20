@@ -25,10 +25,26 @@ async def search_restaurants(db: Session, query: str):
     return response
 
 async def search_items(db: Session, query: str):
-    results = db.query(Item).filter(Item.name.ilike(f"%{query}%")).all()
+    results = db.query(Item, Restaurant.name.label("restaurant_name")) \
+                .join(Restaurant, Item.restaurant_id == Restaurant.id) \
+                .filter(Item.name.ilike(f"%{query}%")).all()
+
     if not results:
         return {"message": "No items found matching your query"}
-    return results
+
+    items = [
+        {
+            "id": item.Item.id,
+            "name": item.Item.name,
+            "description": item.Item.description,
+            "price": item.Item.price,
+            "restaurant_name": item.restaurant_name
+        }
+        for item in results
+    ]
+
+    return items
+
 
 async def get_restaurant_details(db: Session, restaurant_name: str):
     restaurant = db.query(Restaurant).filter(Restaurant.name.ilike(f"%{restaurant_name}%")).first()
