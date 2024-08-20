@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from "react";
-import { Header, Gallery, GalleryPopup } from "../index";
-import { FaStar, FaStarHalfAlt } from 'react-icons/fa';
+import React, { useState, useEffect, useContext } from "react";
 import { useParams } from "react-router-dom";
+import { BasketContext } from '../../BasketContext';
+import { Header, Gallery, GalleryPopup } from "../index";
+import { FaStar, FaStarHalfAlt } from "react-icons/fa";
 import axios from "axios";
 import "./CustomerRestaurant.css";
 
@@ -9,9 +10,9 @@ function CustomerRestaurant({ darkMode, toggleDarkMode }) {
   const { restaurantName } = useParams();
   const [restaurant, setRestaurant] = useState(null);
   const [menu, setMenu] = useState([]);
-  const [basket, setBasket] = useState([]);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [currentItemImages, setCurrentItemImages] = useState([]);
+  const { setBasket } = useContext(BasketContext);
 
   useEffect(() => {
     const fetchRestaurantDetails = async () => {
@@ -45,7 +46,9 @@ function CustomerRestaurant({ darkMode, toggleDarkMode }) {
       prevState.map((category) => ({
         ...category,
         items: category.items.map((item) =>
-          item.id === itemId ? { ...item, quantity: Math.max(Number(quantity), 1) } : item
+          item.id === itemId
+            ? { ...item, quantity: Math.max(Number(quantity), 1) }
+            : item
         ),
       }))
     );
@@ -56,7 +59,9 @@ function CustomerRestaurant({ darkMode, toggleDarkMode }) {
       prevState.map((category) => ({
         ...category,
         items: category.items.map((item) =>
-          item.id === itemId ? { ...item, quantity: (item.quantity || 1) + 1 } : item
+          item.id === itemId
+            ? { ...item, quantity: (item.quantity || 1) + 1 }
+            : item
         ),
       }))
     );
@@ -67,27 +72,31 @@ function CustomerRestaurant({ darkMode, toggleDarkMode }) {
       prevState.map((category) => ({
         ...category,
         items: category.items.map((item) =>
-          item.id === itemId ? { ...item, quantity: Math.max((item.quantity || 1) - 1, 1) } : item
+          item.id === itemId
+            ? { ...item, quantity: Math.max((item.quantity || 1) - 1, 1) }
+            : item
         ),
       }))
     );
   };
 
   const addToBasket = (item) => {
-    setBasket((prevState) => {
-      const existingItem = prevState.find((i) => i.id === item.id);
+    setBasket((prevBasket) => {
+      const existingItem = prevBasket.find((i) => i.id === item.id);
       if (existingItem) {
-        return prevState.map((i) =>
-          i.id === item.id ? { ...i, quantity: i.quantity + item.quantity } : i
+        return prevBasket.map((i) =>
+          i.id === item.id
+            ? { ...i, quantity: i.quantity + (item.quantity || 1) }
+            : i
         );
       } else {
-        return [...prevState, { ...item, quantity: item.quantity || 1 }];
+        return [...prevBasket, { ...item, quantity: item.quantity || 1 }];
       }
     });
   };
 
   const openGalleryPopup = (images) => {
-    setCurrentItemImages(images.map(img => img.image));
+    setCurrentItemImages(images.map((img) => img.image));
     setIsPopupOpen(true);
   };
 
@@ -115,7 +124,11 @@ function CustomerRestaurant({ darkMode, toggleDarkMode }) {
 
   return (
     <>
-      <Header darkMode={darkMode} toggleDarkMode={toggleDarkMode} userType="customer" />
+      <Header
+        darkMode={darkMode}
+        toggleDarkMode={toggleDarkMode}
+        userType="customer"
+      />
       <div className="restaurant-details">
         <h1>{restaurant.name}</h1>
         {restaurant.average_rating !== undefined && (
@@ -129,7 +142,7 @@ function CustomerRestaurant({ darkMode, toggleDarkMode }) {
         <p>Category: {restaurant.category}</p>
         <p>Contact: {restaurant.contact}</p>
         {restaurant.images && restaurant.images.length > 0 && (
-          <Gallery images={restaurant.images.map(img => img.image)} />
+          <Gallery images={restaurant.images.map((img) => img.image)} />
         )}
         <div className="menu-categories">
           {menu.map((category) => (
@@ -138,22 +151,34 @@ function CustomerRestaurant({ darkMode, toggleDarkMode }) {
               <div className="menu-items">
                 {category.items.map((item) => (
                   <div key={item.id} className="menu-item">
-                    <h3 className="clickable-item-name" onClick={() => openGalleryPopup(item.images)}>
+                    <h3
+                      className="clickable-item-name"
+                      onClick={() => openGalleryPopup(item.images)}
+                    >
                       {item.name}
                     </h3>
                     <p className="item-description">{item.description}</p>
                     <p className="item-price">Price: {item.price} BAM</p>
                     <div className="item-quantity-controls">
-                      <button onClick={() => decrementQuantity(item.id)}>-</button>
+                      <button onClick={() => decrementQuantity(item.id)}>
+                        -
+                      </button>
                       <input
                         type="number"
                         min="1"
                         value={item.quantity || 1}
-                        onChange={(e) => setItemQuantity(item.id, e.target.value)}
+                        onChange={(e) =>
+                          setItemQuantity(item.id, e.target.value)
+                        }
                       />
-                      <button onClick={() => incrementQuantity(item.id)}>+</button>
+                      <button onClick={() => incrementQuantity(item.id)}>
+                        +
+                      </button>
                     </div>
-                    <button className="add-to-basket-button" onClick={() => addToBasket(item)}>
+                    <button
+                      className="add-to-basket-button"
+                      onClick={() => addToBasket(item)}
+                    >
                       Add
                     </button>
                   </div>
@@ -162,7 +187,12 @@ function CustomerRestaurant({ darkMode, toggleDarkMode }) {
             </div>
           ))}
         </div>
-        {isPopupOpen && <GalleryPopup images={currentItemImages} onClose={closeGalleryPopup} />}
+        {isPopupOpen && (
+          <GalleryPopup
+            images={currentItemImages}
+            onClose={closeGalleryPopup}
+          />
+        )}
       </div>
     </>
   );

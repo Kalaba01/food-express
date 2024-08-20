@@ -1,27 +1,25 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
+import { BasketContext } from '../../BasketContext';
 import { FaShoppingCart } from 'react-icons/fa';
 import './Basket.css';
 
-function Basket() {
+function Basket({ items = [], onRemove }) {
   const [basketVisible, setBasketVisible] = useState(false);
-  const [items, setItems] = useState([
-    { id: 1, name: "Pizza", quantity: 2, price: 15 },
-    { id: 2, name: "Burger", quantity: 1, price: 8 }
-  ]);
+  const { basket, setBasket } = useContext(BasketContext);
 
   const toggleBasket = () => {
     setBasketVisible(!basketVisible);
   };
 
-  const removeFromBasket = (id) => {
-    setItems(items.filter(item => item.id !== id));
+  const removeFromBasket = (itemId) => {
+    setBasket((prevBasket) => prevBasket.filter((item) => item.id !== itemId));
   };
 
   const totalPrice = items.reduce((total, item) => total + item.price * item.quantity, 0);
 
   return (
     <div className="basket-container">
-      <FaShoppingCart size={24} onClick={toggleBasket} className="basket-icon" />
+      <FaShoppingCart size={24} onClick={toggleBasket}  className="basket-icon" />
       {basketVisible && (
         <div className="basket-popup">
           <h2>Your Basket</h2>
@@ -29,16 +27,16 @@ function Basket() {
             {items.map(item => (
               <li key={item.id}>
                 <p>{item.name} (x{item.quantity})</p>
-                <p>Price: {item.price * item.quantity}</p>
+                <p>Price: {item.price * item.quantity} BAM</p>
                 <button onClick={() => removeFromBasket(item.id)}>Remove</button>
               </li>
             ))}
           </ul>
           <div className="total-price">
-            <h3>Total: {totalPrice}</h3>
+            <h3>Total: {totalPrice} BAM</h3>
           </div>
         </div>
-      )}
+       )} 
     </div>
   );
 }

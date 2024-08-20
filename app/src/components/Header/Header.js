@@ -1,13 +1,15 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { LoginRegister, Theme, Language, Logout, HamburgerMenu, Chat, Basket } from "../index";
-import { jwtDecode } from "jwt-decode";
 import { useTranslation } from 'react-i18next';
+import { BasketContext } from '../../BasketContext';
+import { jwtDecode } from "jwt-decode";
 import { FaUser } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import './Header.css';
 
 function Header({ darkMode, toggleDarkMode, openPopupModal, userType, showIcons = true, hideHamburgerMenu = false }) {
   const { t } = useTranslation('global');
+  const { basket, setBasket } = useContext(BasketContext);
   const token = localStorage.getItem('token');
   let isLoggedIn = false;
   let currentUser = null;
@@ -43,7 +45,7 @@ function Header({ darkMode, toggleDarkMode, openPopupModal, userType, showIcons 
               <Link to="/profile" className="profile-icon">
                 <FaUser size={24} />
               </Link>
-              {currentUser.role === 'customer' && <Basket />}
+              {currentUser.role === 'customer' && <Basket items={basket} />}
               <Chat userType={currentUser} />
               <Theme darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
               <Language className="language-icon" />

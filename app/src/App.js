@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Routes, Route } from 'react-router-dom';
 import { FormPopup, NotificationPopup, Customer, Owner, Courier, Admin, LandingPage, Unauthorized, ForgotPassword, ResetPassword, Requests, Users, NotFound, Footer, GoTop, DeliveryZones, Restaurants, Orders, Restaurant, CustomerRestaurant, Couriers, Profile } from './components/index';
+import { BasketProvider } from './BasketContext';
 import { jwtDecode } from 'jwt-decode';
 import ProtectedRoute from './components/ProtectedRoute';
 import i18n from './i18n';
@@ -92,50 +93,52 @@ function App() {
   }, []);
 
   return (
-    <div className={`App ${darkMode ? 'dark' : ''}`}>
-      {isPopupOpen && (
-        <FormPopup
-          type={formType}
-          closeModal={closePopupModal}
-          switchToOtherForm={switchToOtherForm}
-          showNotification={showNotification}
-          handleLogin={handleLogin}
-        />
-      )}
-      {notification.message && <NotificationPopup message={notification.message} type={notification.type} />}
+    <BasketProvider>
+      <div className={`App ${darkMode ? 'dark' : ''}`}>
+        {isPopupOpen && (
+          <FormPopup
+            type={formType}
+            closeModal={closePopupModal}
+            switchToOtherForm={switchToOtherForm}
+            showNotification={showNotification}
+            handleLogin={handleLogin}
+          />
+        )}
+        {notification.message && <NotificationPopup message={notification.message} type={notification.type} />}
 
-      <div className="main-content">
-        <Routes>
-          <Route path="/" element={
-            <LandingPage 
-              openPopupModal={openPopupModal}
-              darkMode={darkMode}
-              toggleDarkMode={toggleDarkMode}
-            />
-          } />
-          <Route path="/forgot" element={<ForgotPassword darkMode={darkMode} toggleDarkMode={toggleDarkMode} />} />
-          <Route path="/reset-password" element={<ResetPassword darkMode={darkMode} toggleDarkMode={toggleDarkMode} />} />
-          <Route path="/profile" element={<ProtectedRoute allowedRoles={['customer', 'owner', 'courier', 'administrator']}><Profile darkMode={darkMode} toggleDarkMode={toggleDarkMode} /></ProtectedRoute>} />
-          <Route path="/customer" element={<ProtectedRoute allowedRoles={['customer']}><Customer darkMode={darkMode} toggleDarkMode={toggleDarkMode} /></ProtectedRoute>} />
-          <Route path="/owner" element={<ProtectedRoute allowedRoles={['owner']}><Owner darkMode={darkMode} toggleDarkMode={toggleDarkMode} /></ProtectedRoute>} />
-          <Route path="/owner/restaurant/:id" element={<ProtectedRoute allowedRoles={['owner']}><Restaurant darkMode={darkMode} toggleDarkMode={toggleDarkMode} /></ProtectedRoute>} />
-          <Route path="/courier" element={<ProtectedRoute allowedRoles={['courier']}><Courier darkMode={darkMode} toggleDarkMode={toggleDarkMode} /></ProtectedRoute>} />
-          <Route path="/admin" element={<ProtectedRoute allowedRoles={['administrator']}><Admin darkMode={darkMode} toggleDarkMode={toggleDarkMode} /></ProtectedRoute>} />
-          <Route path="/admin/requests" element={<ProtectedRoute allowedRoles={['administrator']}><Requests darkMode={darkMode} toggleDarkMode={toggleDarkMode} /></ProtectedRoute>} />
-          <Route path="/admin/users" element={<ProtectedRoute allowedRoles={['administrator']}><Users darkMode={darkMode} toggleDarkMode={toggleDarkMode} /></ProtectedRoute>} />
-          <Route path="/admin/delivery-zones" element={<ProtectedRoute allowedRoles={['administrator']}><DeliveryZones darkMode={darkMode} toggleDarkMode={toggleDarkMode} /></ProtectedRoute>} />
-          <Route path="/admin/restaurants" element={<ProtectedRoute allowedRoles={['administrator']}><Restaurants darkMode={darkMode} toggleDarkMode={toggleDarkMode} /></ProtectedRoute>} />
-          <Route path="/admin/orders" element={<ProtectedRoute allowedRoles={['administrator']}><Orders darkMode={darkMode} toggleDarkMode={toggleDarkMode} /></ProtectedRoute>} />
-          <Route path="/admin/couriers" element={<ProtectedRoute allowedRoles={['administrator']}><Couriers darkMode={darkMode} toggleDarkMode={toggleDarkMode} /></ProtectedRoute>} />
-          <Route path="/unauthorized" element={<Unauthorized darkMode={darkMode} toggleDarkMode={toggleDarkMode} />} />
-          <Route path="*" element={<NotFound darkMode={darkMode} toggleDarkMode={toggleDarkMode} />} />
-          <Route path="/restaurants/:restaurantName" element={<CustomerRestaurant darkMode={darkMode} toggleDarkMode={toggleDarkMode} />} />
-        </Routes>
+        <div className="main-content">
+          <Routes>
+            <Route path="/" element={
+              <LandingPage 
+                openPopupModal={openPopupModal}
+                darkMode={darkMode}
+                toggleDarkMode={toggleDarkMode}
+              />
+            } />
+            <Route path="/forgot" element={<ForgotPassword darkMode={darkMode} toggleDarkMode={toggleDarkMode} />} />
+            <Route path="/reset-password" element={<ResetPassword darkMode={darkMode} toggleDarkMode={toggleDarkMode} />} />
+            <Route path="/profile" element={<ProtectedRoute allowedRoles={['customer', 'owner', 'courier', 'administrator']}><Profile darkMode={darkMode} toggleDarkMode={toggleDarkMode} /></ProtectedRoute>} />
+            <Route path="/customer" element={<ProtectedRoute allowedRoles={['customer']}><Customer darkMode={darkMode} toggleDarkMode={toggleDarkMode} /></ProtectedRoute>} />
+            <Route path="/owner" element={<ProtectedRoute allowedRoles={['owner']}><Owner darkMode={darkMode} toggleDarkMode={toggleDarkMode} /></ProtectedRoute>} />
+            <Route path="/owner/restaurant/:id" element={<ProtectedRoute allowedRoles={['owner']}><Restaurant darkMode={darkMode} toggleDarkMode={toggleDarkMode} /></ProtectedRoute>} />
+            <Route path="/courier" element={<ProtectedRoute allowedRoles={['courier']}><Courier darkMode={darkMode} toggleDarkMode={toggleDarkMode} /></ProtectedRoute>} />
+            <Route path="/admin" element={<ProtectedRoute allowedRoles={['administrator']}><Admin darkMode={darkMode} toggleDarkMode={toggleDarkMode} /></ProtectedRoute>} />
+            <Route path="/admin/requests" element={<ProtectedRoute allowedRoles={['administrator']}><Requests darkMode={darkMode} toggleDarkMode={toggleDarkMode} /></ProtectedRoute>} />
+            <Route path="/admin/users" element={<ProtectedRoute allowedRoles={['administrator']}><Users darkMode={darkMode} toggleDarkMode={toggleDarkMode} /></ProtectedRoute>} />
+            <Route path="/admin/delivery-zones" element={<ProtectedRoute allowedRoles={['administrator']}><DeliveryZones darkMode={darkMode} toggleDarkMode={toggleDarkMode} /></ProtectedRoute>} />
+            <Route path="/admin/restaurants" element={<ProtectedRoute allowedRoles={['administrator']}><Restaurants darkMode={darkMode} toggleDarkMode={toggleDarkMode} /></ProtectedRoute>} />
+            <Route path="/admin/orders" element={<ProtectedRoute allowedRoles={['administrator']}><Orders darkMode={darkMode} toggleDarkMode={toggleDarkMode} /></ProtectedRoute>} />
+            <Route path="/admin/couriers" element={<ProtectedRoute allowedRoles={['administrator']}><Couriers darkMode={darkMode} toggleDarkMode={toggleDarkMode} /></ProtectedRoute>} />
+            <Route path="/unauthorized" element={<Unauthorized darkMode={darkMode} toggleDarkMode={toggleDarkMode} />} />
+            <Route path="*" element={<NotFound darkMode={darkMode} toggleDarkMode={toggleDarkMode} />} />
+            <Route path="/restaurants/:restaurantName" element={<CustomerRestaurant darkMode={darkMode} toggleDarkMode={toggleDarkMode} />} />
+          </Routes>
+        </div>
+
+        <GoTop />
+        <Footer />
       </div>
-
-      <GoTop />
-      <Footer />
-    </div>
+    </BasketProvider>
   );
 }
 
