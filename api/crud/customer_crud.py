@@ -1,5 +1,7 @@
+import base64
+from fastapi import HTTPException
 from sqlalchemy.orm import Session
-from models.models import Restaurant, Item
+from models.models import Restaurant, Item, MenuCategory, Image
 from utils.rating_utils import calculate_average_rating
 
 async def search_restaurants(db: Session, query: str):
@@ -27,3 +29,61 @@ async def search_items(db: Session, query: str):
     if not results:
         return {"message": "No items found matching your query"}
     return results
+
+async def get_restaurant_details(db: Session, restaurant_name: str):
+    restaurant = db.query(Restaurant).filter(Restaurant.name.ilike(f"%{restaurant_name}%")).first()
+    
+    if not restaurant:
+        raise HTTPException(status_code=404, detail="Restaurant not found")
+    
+    restaurant_images = db.query(Image).filter(Image.restaurant_id == restaurant.id).all()
+
+    average_rating = calculate_average_rating(restaurant.total_rating, restaurant.rating_count)
+    
+    return {
+        "id": restaurant.id,
+        "name": restaurant.name,
+        "address": restaurant.address,
+        "city": restaurant.city,
+        "category": restaurant.category,
+        "contact": restaurant.contact,
+        "latitude": restaurant.latitude,
+        "longitude": restaurant.longitude,
+        "average_rating": average_rating,
+        "images": [
+            {"id": img.id, "image": f"data:image/png;base64,{base64.b64encode(img.image).decode('utf-8')}"}
+            for img in restaurant_images
+        ]
+    }
+
+async def get_restaurant_menu(db: Session, restaurant_name: str):
+    restaurant = db.query(Restaurant).filter(Restaurant.name.ilike(f"%{restaurant_name}%")).first()
+    
+    if not restaurant:
+        raise HTTPException(status_code=404, detail="Restaurant not found")
+
+    menu_categories = db.query(MenuCategory).filter_by(restaurant_id=restaurant.id).all()
+    
+    menu_data = []
+    for category in menu_categories:
+        items = db.query(Item).filter_by(menu_category_id=category.id).all()
+        item_data = []
+        for item in items:
+            item_images = db.query(Image).filter_by(item_id=item.id).all()
+            item_data.append({
+                "id": item.id,
+                "name": item.name,
+                "description": item.description,
+                "price": item.price,
+                "images": [
+                    {"id": img.id, "image": f"data:image/png;base64,{base64.b64encode(img.image).decode('utf-8')}"}
+                    for img in item_images
+                ]
+            })
+        menu_data.append({
+            "category_name": category.name,
+            "category_description": category.description,
+            "items": item_data
+        })
+    
+    return menu_data

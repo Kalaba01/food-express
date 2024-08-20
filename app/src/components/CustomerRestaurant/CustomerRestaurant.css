@@ -1,0 +1,96 @@
+.restaurant-details {
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+body.dark-mode .restaurant-details {
+    background-color: #2c3e50;
+    color: #ecf0f1;
+}
+
+.clickable-item-name {
+    color: #3498db;
+    cursor: pointer;
+    text-decoration: underline;
+    margin-right: 15px;
+}
+
+.clickable-item-name:hover {
+    color: #2980b9;
+}
+
+.star-rating {
+    display: inline-flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.star {
+    font-size: 24px;
+    color: #f39c12;
+    margin-right: 2px;
+}
+
+.menu-items {
+    margin-top: 10px;
+}
+
+.menu-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 0px 5%;
+    padding: 10px 0;
+    border-bottom: 1px solid #ddd;
+}
+
+.item-description {
+    flex-grow: 1;
+    margin-left: 15px;
+}
+
+.item-price {
+    margin-left: 15px;
+    white-space: nowrap;
+}
+
+.item-quantity-controls {
+    display: flex;
+    align-items: center;
+    margin-left: 15px;
+}
+
+.item-quantity-controls button {
+    width: 30px;
+    height: 30px;
+    font-size: 18px;
+    text-align: center;
+    border: 1px solid #ddd;
+    background-color: var(--secondary-color);
+    cursor: pointer;
+    padding: 0 !important;
+}
+
+.item-quantity-controls input {
+    width: 50px;
+    text-align: center;
+    margin: 0 5px;
+    border: 1px solid #ddd;
+    height: 30px;
+}
+
+.add-to-basket-button {
+    margin-left: 15px;
+    padding: 5px 10px;
+    background-color: #3498db;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.add-to-basket-button:hover {
+    background-color: #2980b9;
+}

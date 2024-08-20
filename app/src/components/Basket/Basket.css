@@ -1,0 +1,65 @@
+.basket-container {
+    position: relative;
+    margin: 5px 20px 0px 10px;
+}
+
+.basket-icon {
+    cursor: pointer;
+    color: #fff;
+}
+
+.basket-popup {
+    position: absolute;
+    top: 40px;
+    right: 0;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    z-index: -1000;
+    width: 300px;
+}
+
+body.dark-mode .basket-popup {
+    background-color: #34495e;
+    color: #ecf0f1;
+}
+
+.basket-popup h2 {
+    margin: 0 0 10px 0;
+    font-size: 20px;
+    text-align: center;
+}
+
+.basket-popup ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.basket-popup ul li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 0;
+}
+
+.basket-popup ul li button {
+    background-color: #e74c3c;
+    color: #fff;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.basket-popup ul li button:hover {
+    background-color: #c0392b;
+}
+
+.basket-popup .total-price {
+    margin-top: 15px;
+    text-align: right;
+    font-size: 18px;
+    font-weight: bold;
+}

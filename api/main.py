@@ -155,7 +155,9 @@ from crud.chat_crud import (
 )
 from crud.customer_crud import (
     search_restaurants,
-    search_items
+    search_items,
+    get_restaurant_details,
+    get_restaurant_menu
 )
 
 
@@ -807,3 +809,11 @@ async def search_restaurants_route(query: SearchQuery = Depends(), db: Session =
 @app.get("/api/search/items")
 async def search_items_route(query: SearchQuery = Depends(), db: Session = Depends(get_db)):
     return await search_items(db, query.query)
+
+@app.get("/api/restaurants/{restaurant_name}/details")
+async def get_restaurant_details_route(restaurant_name: str, db: Session = Depends(get_db)):
+    return await get_restaurant_details(db, restaurant_name)
+
+@app.get("/api/restaurants/{restaurant_name}/menu")
+async def get_restaurant_menu_route(restaurant_name: str, db: Session = Depends(get_db)):
+    return await get_restaurant_menu(db, restaurant_name)

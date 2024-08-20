@@ -1,0 +1,55 @@
+.custom-gallery-container {
+    position: relative;
+    width: 100%;
+    max-width: 350px;
+    margin: 0 auto;
+    overflow: hidden;
+}
+
+.custom-gallery-image-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.custom-gallery-image {
+    height: 250px;
+    border-radius: 20px;
+}
+
+.custom-gallery-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: transparent;
+    color: black;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    z-index: 10;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 25px;
+    height: 25px;
+    transition: color 0.3s ease;
+}
+
+.custom-gallery-left-arrow {
+    left: 5px;
+}
+
+.custom-gallery-right-arrow {
+    right: 5px;
+}
+
+.custom-gallery-left-arrow:hover,
+.custom-gallery-right-arrow:hover {
+    color: #007bff;
+}
+
+.custom-gallery-arrow svg {
+    width: 24px;
+    height: 24px;
+}

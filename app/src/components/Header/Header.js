@@ -1,5 +1,5 @@
 import React from 'react';
-import { LoginRegister, Theme, Language, Logout, HamburgerMenu, Chat } from "../index";
+import { LoginRegister, Theme, Language, Logout, HamburgerMenu, Chat, Basket } from "../index";
 import { jwtDecode } from "jwt-decode";
 import { useTranslation } from 'react-i18next';
 import { FaUser } from 'react-icons/fa';
@@ -43,6 +43,7 @@ function Header({ darkMode, toggleDarkMode, openPopupModal, userType, showIcons 
               <Link to="/profile" className="profile-icon">
                 <FaUser size={24} />
               </Link>
+              {currentUser.role === 'customer' && <Basket />}
               <Chat userType={currentUser} />
               <Theme darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
               <Language className="language-icon" />

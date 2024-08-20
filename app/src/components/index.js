@@ -30,5 +30,9 @@ import Couriers from "./Couriers/Couriers";
 import Profile from "./Profile/Profile";
 import Chat from "./Chat/Chat";
 import SearchBar from "./SearchBar/SearchBar";
+import CustomerRestaurant from "./CustomerRestaurant/CustomerRestaurant";
+import Basket from "./Basket/Basket";
+import Gallery from "./Gallery/Gallery";
+import GalleryPopup from "./GalleryPopup/GalleryPopup";
 
-export  { Admin, Captcha, Courier, Customer, Footer, FormPopup, GoTop, Header, Language, LoginRegister, NotificationPopup, Owner, Theme, LandingPage, Unauthorized, Logout, ForgotPassword, ResetPassword, HamburgerMenu, Requests, Users, NotFound, LookupTable, DeliveryZones, Restaurants, ConfirmDelete, Orders, Restaurant, Couriers, Profile, Chat, SearchBar }
+export  { Admin, Captcha, Courier, Customer, Footer, FormPopup, GoTop, Header, Language, LoginRegister, NotificationPopup, Owner, Theme, LandingPage, Unauthorized, Logout, ForgotPassword, ResetPassword, HamburgerMenu, Requests, Users, NotFound, LookupTable, DeliveryZones, Restaurants, ConfirmDelete, Orders, Restaurant, Couriers, Profile, Chat, SearchBar, CustomerRestaurant, Basket, Gallery, GalleryPopup }
