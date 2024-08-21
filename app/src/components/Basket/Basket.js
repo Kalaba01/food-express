@@ -3,7 +3,7 @@ import { BasketContext } from '../../BasketContext';
 import { FaShoppingCart } from 'react-icons/fa';
 import './Basket.css';
 
-function Basket({ items = [], onRemove }) {
+function Basket() {
   const [basketVisible, setBasketVisible] = useState(false);
   const { basket, setBasket } = useContext(BasketContext);
 
@@ -15,7 +15,7 @@ function Basket({ items = [], onRemove }) {
     setBasket((prevBasket) => prevBasket.filter((item) => item.id !== itemId));
   };
 
-  const totalPrice = items.reduce((total, item) => total + item.price * item.quantity, 0);
+  const totalPrice = basket.reduce((total, item) => total + item.price * item.quantity, 0);
 
   return (
     <div className="basket-container">
@@ -24,7 +24,7 @@ function Basket({ items = [], onRemove }) {
         <div className="basket-popup">
           <h2>Your Basket</h2>
           <ul>
-            {items.map(item => (
+            {basket.map(item => (
               <li key={item.id}>
                 <p>{item.name} (x{item.quantity})</p>
                 <p>Price: {item.price * item.quantity} BAM</p>

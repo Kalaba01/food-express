@@ -131,7 +131,7 @@ function App() {
             <Route path="/admin/couriers" element={<ProtectedRoute allowedRoles={['administrator']}><Couriers darkMode={darkMode} toggleDarkMode={toggleDarkMode} /></ProtectedRoute>} />
             <Route path="/unauthorized" element={<Unauthorized darkMode={darkMode} toggleDarkMode={toggleDarkMode} />} />
             <Route path="*" element={<NotFound darkMode={darkMode} toggleDarkMode={toggleDarkMode} />} />
-            <Route path="/restaurants/:restaurantName" element={<CustomerRestaurant darkMode={darkMode} toggleDarkMode={toggleDarkMode} />} />
+            <Route path="/restaurants/:restaurantName" element={<ProtectedRoute allowedRoles={["customer"]}> <CustomerRestaurant darkMode={darkMode} toggleDarkMode={toggleDarkMode} /></ProtectedRoute>} />
           </Routes>
         </div>
 
