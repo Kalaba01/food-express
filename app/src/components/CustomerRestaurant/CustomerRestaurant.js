@@ -1,14 +1,14 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useParams } from "react-router-dom";
-import { useTranslation } from 'react-i18next';
-import { BasketContext } from '../../BasketContext';
+import { useTranslation } from "react-i18next";
+import { BasketContext } from "../../BasketContext";
 import { Header, Gallery, GalleryPopup } from "../index";
 import { FaStar, FaStarHalfAlt } from "react-icons/fa";
 import axios from "axios";
 import "./CustomerRestaurant.css";
 
 function CustomerRestaurant({ darkMode, toggleDarkMode }) {
-  const { t } = useTranslation('global');
+  const { t } = useTranslation("global");
   const { restaurantName } = useParams();
   const [restaurant, setRestaurant] = useState(null);
   const [menu, setMenu] = useState([]);
@@ -20,7 +20,9 @@ function CustomerRestaurant({ darkMode, toggleDarkMode }) {
     const fetchRestaurantDetails = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:8000/api/restaurants/${encodeURIComponent(restaurantName)}/details`
+          `http://localhost:8000/api/restaurants/${encodeURIComponent(
+            restaurantName
+          )}/details`
         );
         setRestaurant(response.data);
       } catch (error) {
@@ -31,7 +33,9 @@ function CustomerRestaurant({ darkMode, toggleDarkMode }) {
     const fetchRestaurantMenu = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:8000/api/restaurants/${encodeURIComponent(restaurantName)}/menu`
+          `http://localhost:8000/api/restaurants/${encodeURIComponent(
+            restaurantName
+          )}/menu`
         );
         setMenu(response.data);
       } catch (error) {
@@ -83,16 +87,24 @@ function CustomerRestaurant({ darkMode, toggleDarkMode }) {
   };
 
   const addToBasket = (item) => {
+    const itemToAdd = {
+      id: item.id,
+      name: item.name,
+      price: item.price,
+      quantity: item.quantity || 1,
+      restaurant_id: item.restaurant_id,
+    };
+
     setBasket((prevBasket) => {
       const existingItem = prevBasket.find((i) => i.id === item.id);
       if (existingItem) {
         return prevBasket.map((i) =>
           i.id === item.id
-            ? { ...i, quantity: i.quantity + (item.quantity || 1) }
+            ? { ...i, quantity: i.quantity + itemToAdd.quantity }
             : i
         );
       } else {
-        return [...prevBasket, { ...item, quantity: item.quantity || 1 }];
+        return [...prevBasket, itemToAdd];
       }
     });
   };
@@ -141,8 +153,12 @@ function CustomerRestaurant({ darkMode, toggleDarkMode }) {
         <p>
           {restaurant.address}, {restaurant.city}
         </p>
-        <p>{t('CustomerRestaurant.category')}: {restaurant.category}</p>
-        <p>{t('CustomerRestaurant.contact')}: {restaurant.contact}</p>
+        <p>
+          {t("CustomerRestaurant.category")}: {restaurant.category}
+        </p>
+        <p>
+          {t("CustomerRestaurant.contact")}: {restaurant.contact}
+        </p>
         {restaurant.images && restaurant.images.length > 0 && (
           <Gallery images={restaurant.images.map((img) => img.image)} />
         )}
@@ -160,7 +176,9 @@ function CustomerRestaurant({ darkMode, toggleDarkMode }) {
                       {item.name}
                     </h3>
                     <p className="item-description">{item.description}</p>
-                    <p className="item-price">{t('CustomerRestaurant.price')}: {item.price} BAM</p>
+                    <p className="item-price">
+                      {t("CustomerRestaurant.price")}: {item.price} BAM
+                    </p>
                     <div className="item-quantity-controls">
                       <button onClick={() => decrementQuantity(item.id)}>
                         -
@@ -181,7 +199,7 @@ function CustomerRestaurant({ darkMode, toggleDarkMode }) {
                       className="add-to-basket-button"
                       onClick={() => addToBasket(item)}
                     >
-                      {t('CustomerRestaurant.add')}
+                      {t("CustomerRestaurant.add")}
                     </button>
                   </div>
                 ))}
