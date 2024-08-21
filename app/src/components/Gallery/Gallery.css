@@ -4,6 +4,7 @@
     max-width: 350px;
     margin: 0 auto;
     overflow: hidden;
+    z-index: 0;
 }
 
 .custom-gallery-image-wrapper {
@@ -15,6 +16,7 @@
 .custom-gallery-image {
     height: 250px;
     border-radius: 20px;
+    z-index: -1;
 }
 
 .custom-gallery-arrow {
@@ -26,7 +28,6 @@
     border: none;
     padding: 10px;
     cursor: pointer;
-    z-index: 10;
     border-radius: 50%;
     display: flex;
     justify-content: center;

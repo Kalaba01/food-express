@@ -1,4 +1,5 @@
 import React, { useState, useContext } from 'react';
+import { Order } from "../index";
 import { useTranslation } from 'react-i18next';
 import { BasketContext } from '../../BasketContext';
 import { FaShoppingCart } from 'react-icons/fa';
@@ -6,8 +7,9 @@ import './Basket.css';
 
 function Basket() {
   const { t } = useTranslation('global');
-  const [basketVisible, setBasketVisible] = useState(false);
   const { basket, setBasket } = useContext(BasketContext);
+  const [basketVisible, setBasketVisible] = useState(false);
+  const [isOrderPopupOpen, setIsOrderPopupOpen] = useState(false);
 
   const toggleBasket = () => {
     setBasketVisible(!basketVisible);
@@ -15,6 +17,15 @@ function Basket() {
 
   const removeFromBasket = (itemId) => {
     setBasket((prevBasket) => prevBasket.filter((item) => item.id !== itemId));
+  };
+
+  const openOrderPopup = () => {
+    setIsOrderPopupOpen(true);
+    toggleBasket();
+  };
+  
+  const closeOrderPopup = () => {
+    setIsOrderPopupOpen(false);
   };
 
   const totalPrice = basket.reduce((total, item) => total + item.price * item.quantity, 0);
@@ -38,10 +49,11 @@ function Basket() {
             <h3>{t('Basket.total')}: {totalPrice} BAM</h3>
           </div>
           {basket.length > 0 && (
-            <button className="order-button">{t('Basket.order')}</button>
+            <button className="order-button" onClick={openOrderPopup}>{t('Basket.order')}</button>
           )}
         </div>
       )}
+      {isOrderPopupOpen && <Order onClose={closeOrderPopup} />}
     </div>
   );
 }

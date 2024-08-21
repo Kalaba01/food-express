@@ -406,5 +406,21 @@
     "remove": "Ukloni",
     "total": "Ukupno",
     "order": "Naruči"
+  },
+  "Order": {
+    "confirmOrder": "Potvrdi narudžbu",
+    "address": "Adresa",
+    "contact": "Kontakt",
+    "paymentMethod": "Način plaćanja",
+    "choosePayment": "Izaberite način plaćanja",
+    "cash": "Gotovina",
+    "card": "Kartica",
+    "cardNumber": "Broj kartice",
+    "cashAmounts": "Iznosi gotovine",
+    "includeCutlery": "Escajg",
+    "yes":"Da",
+    "no":"Ne",
+    "confirm": "Potvrdi",
+    "fillAllFields": "Molimo popunite sva potrebna polja."
   }
 }

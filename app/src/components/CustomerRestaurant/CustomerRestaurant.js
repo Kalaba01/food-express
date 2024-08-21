@@ -92,6 +92,7 @@ function CustomerRestaurant({ darkMode, toggleDarkMode }) {
       name: item.name,
       price: item.price,
       quantity: item.quantity || 1,
+      category: item.category,
       restaurant_id: item.restaurant_id,
     };
 

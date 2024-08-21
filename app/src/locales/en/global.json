@@ -406,5 +406,21 @@
     "remove": "Remove",
     "total": "Total",
     "order": "Order"
+  },
+  "Order": {
+    "confirmOrder": "Confirm Order",
+    "address": "Address",
+    "contact": "Contact",
+    "paymentMethod": "Payment Method",
+    "choosePayment": "Choose Payment",
+    "cash": "Cash",
+    "card": "Card",
+    "cardNumber": "Card Number",
+    "cashAmounts": "Cash Amounts",
+    "includeCutlery": "Cutlery",
+    "yes":"Yes",
+    "no":"No",
+    "confirm": "Confirm",
+    "fillAllFields": "Please fill in all the required fields."
   }
 }

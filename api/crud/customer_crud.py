@@ -91,6 +91,7 @@ async def get_restaurant_menu(db: Session, restaurant_name: str):
                 "name": item.name,
                 "description": item.description,
                 "price": item.price,
+                "category": item.category,
                 "restaurant_id": restaurant.id,
                 "images": [
                     {"id": img.id, "image": f"data:image/png;base64,{base64.b64encode(img.image).decode('utf-8')}"}

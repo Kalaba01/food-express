@@ -35,7 +35,6 @@ body {
 
 .main-content {
   flex: 1;
-  /* Ensure the main content takes up remaining space */
 }
 
 .modal {

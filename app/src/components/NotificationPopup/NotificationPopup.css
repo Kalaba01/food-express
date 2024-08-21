@@ -12,11 +12,11 @@
 }
 
 .notification-popup.success {
-    background-color: #4caf50; /* Zelena boja za uspeh */
+    background-color: #4caf50;
 }
 
 .notification-popup.error {
-    background-color: #f44336; /* Crvena boja za grešku */
+    background-color: #f44336;
 }
 
 @keyframes fadeInOut {
