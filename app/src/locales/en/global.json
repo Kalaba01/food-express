@@ -393,5 +393,11 @@
     "contact": "Contact",
     "noResultsFound": "We couldn't find any results matching your query. Please try again.",
     "errorFetchingResults": "Error fetching search results:"
+  },
+  "CustomerRestaurant": {
+    "category": "Category",
+    "contact": "Contact",
+    "price": "Price",
+    "add": "Add"
   }
 }

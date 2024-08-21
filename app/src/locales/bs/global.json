@@ -393,5 +393,11 @@
     "contact": "Kontakt",
     "noResultsFound": "Nismo pronašli nijedan rezultat koji odgovara vašem upitu. Molimo pokušajte ponovo.",
     "errorFetchingResults": "Greška pri preuzimanju rezultata pretrage:"
+  },
+  "CustomerRestaurant": {
+    "category": "Kategorija",
+    "contact": "Kontakt",
+    "price": "Cijena",
+    "add": "Dodaj"
   }
 }
