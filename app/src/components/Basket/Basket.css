@@ -14,10 +14,12 @@
     right: 0;
     background-color: #fff;
     border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
     padding: 20px;
-    z-index: -1000;
+    z-index: 1000;
     width: 300px;
+    max-height: 400px; /* Postavi maksimalnu visinu */
+    overflow-y: auto; /* Dodaj scroll */
 }
 
 body.dark-mode .basket-popup {
@@ -27,7 +29,7 @@ body.dark-mode .basket-popup {
 
 .basket-popup h2 {
     margin: 0 0 10px 0;
-    font-size: 20px;
+    font-size: 22px;
     text-align: center;
 }
 
@@ -41,7 +43,16 @@ body.dark-mode .basket-popup {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 5px 0;
+    padding: 10px 0;
+    border-bottom: 1px solid #ecf0f1;
+}
+
+.basket-popup ul li:last-child {
+    border-bottom: none;
+}
+
+.basket-popup ul li p {
+    margin: 0;
 }
 
 .basket-popup ul li button {
@@ -51,6 +62,7 @@ body.dark-mode .basket-popup {
     padding: 5px 10px;
     border-radius: 5px;
     cursor: pointer;
+    transition: background-color 0.3s;
 }
 
 .basket-popup ul li button:hover {
@@ -62,4 +74,34 @@ body.dark-mode .basket-popup {
     text-align: right;
     font-size: 18px;
     font-weight: bold;
+}
+
+.order-button {
+    background-color: #27ae60;
+    color: #fff;
+    border: none;
+    padding: 10px;
+    width: 100%;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-top: 10px;
+}
+
+.order-button:hover {
+    background-color: #2ecc71;
+}
+
+.basket-popup::-webkit-scrollbar {
+    width: 8px;
+}
+
+.basket-popup::-webkit-scrollbar-thumb {
+    background-color: #bdc3c7;
+    border-radius: 4px;
+}
+
+body.dark-mode .basket-popup::-webkit-scrollbar-thumb {
+    background-color: #95a5a6;
 }

@@ -19,7 +19,7 @@ function Basket() {
 
   return (
     <div className="basket-container">
-      <FaShoppingCart size={24} onClick={toggleBasket}  className="basket-icon" />
+      <FaShoppingCart size={24} onClick={toggleBasket} className="basket-icon" />
       {basketVisible && (
         <div className="basket-popup">
           <h2>Your Basket</h2>
@@ -35,8 +35,11 @@ function Basket() {
           <div className="total-price">
             <h3>Total: {totalPrice} BAM</h3>
           </div>
+          {basket.length > 0 && (
+            <button className="order-button">Order</button>
+          )}
         </div>
-       )} 
+      )}
     </div>
   );
 }
