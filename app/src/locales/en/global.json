@@ -399,5 +399,12 @@
     "contact": "Contact",
     "price": "Price",
     "add": "Add"
+  },
+  "Basket": {
+    "yourBasket": "Your Basket",
+    "price": "Price",
+    "remove": "Remove",
+    "total": "Total",
+    "order": "Order"
   }
 }

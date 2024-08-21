@@ -399,5 +399,12 @@
     "contact": "Kontakt",
     "price": "Cijena",
     "add": "Dodaj"
+  },
+  "Basket": {
+    "yourBasket": "Vaša Korpa",
+    "price": "Cijena",
+    "remove": "Ukloni",
+    "total": "Ukupno",
+    "order": "Naruči"
   }
 }
