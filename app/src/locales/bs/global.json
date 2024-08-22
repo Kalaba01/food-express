@@ -185,6 +185,7 @@
     "createZone": "Kreiraj Zonu",
     "viewZone": "Pregled Zonu",
     "name": "Naziv Zone",
+    "save": "Sačuvaj",
     "success": {
       "edit": "Zona uspješno uređena!",
       "create": "Zona uspješno kreirana!",

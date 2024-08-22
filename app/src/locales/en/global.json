@@ -185,6 +185,7 @@
     "createZone": "Create Zone",
     "viewZone": "View Zone",
     "name": "Zone Name",
+    "save": "Save",
     "success": {
       "edit": "Zone edited successfully!",
       "create": "Zone created successfully!",
