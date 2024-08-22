@@ -156,6 +156,8 @@ class OrderCreate(BaseModel):
     delivery_latitude: float
     delivery_longitude: float
     cutlery_included: bool
+    contact: str
+    money: Optional[str] = None
 
 class OrderUpdate(BaseModel):
     customer_id: Optional[int] = None
@@ -167,6 +169,8 @@ class OrderUpdate(BaseModel):
     delivery_longitude: Optional[float] = None
     cutlery_included: Optional[bool] = None
     updated_at: Optional[datetime.datetime] = Field(default_factory=datetime.datetime.utcnow)
+    contact: Optional[str] = None
+    money: Optional[str] = None
 
 # Order Item schemas for managing items within an order
 class OrderItemCreate(BaseModel):
@@ -191,6 +195,7 @@ class CourierUpdate(BaseModel):
     wallet_amount: Optional[float] = None
     wallet_details: Optional[str] = None
     restaurant_id: Optional[int] = None
+    online: Optional[bool] = None
 
 # Order Assignment schemas for managing the assignment of orders to couriers
 class OrderAssignmentCreate(BaseModel):

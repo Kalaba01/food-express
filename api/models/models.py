@@ -57,7 +57,7 @@ class User(Base):
     username = Column(String, unique=True, index=True, nullable=False)
     email = Column(String, unique=True, index=True, nullable=False)
     hashed_password = Column(String, nullable=False)
-    role = Column(String, nullable=False)  # 'administrator', 'owner', 'courier', 'customer'
+    role = Column(String, nullable=False)
     image_id = Column(Integer, ForeignKey("images.id"), nullable=True)
 
     owned_restaurants = relationship("Restaurant", back_populates="owner")
@@ -65,7 +65,6 @@ class User(Base):
     orders = relationship("Order", back_populates="customer")
     chat_sent = relationship("Chat", foreign_keys="[Chat.sender_id]", back_populates="sender")
     chat_received = relationship("Chat", foreign_keys="[Chat.receiver_id]", back_populates="receiver")
-    notifications = relationship("Notification", back_populates="user")
     email_reports = relationship("EmailReport", back_populates="user")
     bank_account = relationship("Bank", back_populates="user", uselist=False)
     image = relationship("Image")
@@ -109,7 +108,7 @@ class OperatingHours(Base):
     __tablename__ = "operating_hours"
     id = Column(Integer, primary_key=True, index=True)
     restaurant_id = Column(Integer, ForeignKey("restaurants.id"))
-    day_of_week = Column(String, nullable=False)  # 'Monday', 'Tuesday', etc.
+    day_of_week = Column(String, nullable=False)
     opening_time = Column(Time, nullable=False)
     closing_time = Column(Time, nullable=False)
 
@@ -124,7 +123,7 @@ class Item(Base):
     weight = Column(Float, nullable=False)
     preparation_time = Column(Integer, nullable=False)
     restaurant_id = Column(Integer, ForeignKey("restaurants.id"))
-    menu_category_id = Column(Integer, ForeignKey("menu_categories.id"))  # Dodata kolona za povezivanje sa kategorijom menija
+    menu_category_id = Column(Integer, ForeignKey("menu_categories.id"))
     category = Column(Enum(ItemCategory), nullable=False)
 
     restaurant = relationship("Restaurant", back_populates="items")
@@ -155,6 +154,8 @@ class Order(Base):
     created_at = Column(DateTime, default=datetime.datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.datetime.utcnow)
     cutlery_included = Column(Boolean, default=False)
+    contact = Column(String, nullable=False)
+    money = Column(Text, nullable=True)
 
     customer = relationship("User", back_populates="orders")
     restaurant = relationship("Restaurant", back_populates="orders")
@@ -180,8 +181,9 @@ class Courier(Base):
     vehicle_type = Column(Enum(VehicleType), nullable=False)
     halal_mode = Column(Boolean, default=False)
     wallet_amount = Column(Float, nullable=False)
-    wallet_details = Column(Text, nullable=False)  # JSON format to store denominations
+    wallet_details = Column(Text, nullable=False)
     restaurant_id = Column(Integer, ForeignKey("restaurants.id"))
+    online = Column(Boolean, default=False)
 
     user = relationship("User", back_populates="couriers")
     restaurant = relationship("Restaurant", back_populates="couriers")
@@ -210,16 +212,6 @@ class Rating(Base):
     order = relationship("Order", back_populates="ratings")
     restaurant = relationship("Restaurant", back_populates="ratings")
 
-class Notification(Base):
-    __tablename__ = "notifications"
-    id = Column(Integer, primary_key=True, index=True)
-    user_id = Column(Integer, ForeignKey("users.id"))
-    message = Column(Text, nullable=False)
-    created_at = Column(DateTime, default=datetime.datetime.utcnow)
-    read = Column(Boolean, default=False)
-
-    user = relationship("User", back_populates="notifications")
-
 class Chat(Base):
     __tablename__ = "chats"
     id = Column(Integer, primary_key=True, index=True)
@@ -237,9 +229,9 @@ class EmailReport(Base):
     __tablename__ = "email_reports"
     id = Column(Integer, primary_key=True, index=True)
     user_id = Column(Integer, ForeignKey("users.id"))
-    report_type = Column(String, nullable=False)  # 'administrator', 'owner'
+    report_type = Column(String, nullable=False)
     created_at = Column(DateTime, default=datetime.datetime.utcnow)
-    report_content = Column(Text, nullable=False)  # JSON format
+    report_content = Column(Text, nullable=False)
 
     user = relationship("User", back_populates="email_reports")
 
@@ -247,7 +239,7 @@ class OrderQueue(Base):
     __tablename__ = "order_queue"
     id = Column(Integer, primary_key=True, index=True)
     order_id = Column(Integer, ForeignKey("orders.id"))
-    status = Column(String, nullable=False)  # 'waiting', 'assigned'
+    status = Column(String, nullable=False)
 
     order = relationship("Order")
 
