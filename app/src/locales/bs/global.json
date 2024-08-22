@@ -408,7 +408,7 @@
     "order": "Naruči"
   },
   "Order": {
-    "confirmOrder": "Potvrdi narudžbu",
+    "confirmOrder": "Potvrdite narudžbu",
     "address": "Adresa",
     "contact": "Kontakt",
     "paymentMethod": "Način plaćanja",
@@ -418,9 +418,12 @@
     "cardNumber": "Broj kartice",
     "cashAmounts": "Iznosi gotovine",
     "includeCutlery": "Escajg",
-    "yes":"Da",
-    "no":"Ne",
+    "yes": "Da",
+    "no": "Ne",
     "confirm": "Potvrdi",
-    "fillAllFields": "Molimo popunite sva potrebna polja."
+    "fillAllFields": "Molimo popunite sva potrebna polja.",
+    "invalidSession": "Nevažeća sesija. Molimo prijavite se ponovo.",
+    "success": "Vaša narudžba je uspješno poslana!",
+    "error": "Narudžba nije mogla biti obrađena"
   }
 }

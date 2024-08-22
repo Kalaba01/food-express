@@ -131,7 +131,7 @@ from crud.item_crud import (
 from crud.orders_crud import (
     get_all_orders,
     get_order_by_id,
-    create_new_order,
+    new_order_create,
     update_order,
     delete_order,
 )
@@ -159,7 +159,9 @@ from crud.customer_crud import (
     get_restaurant_details,
     get_restaurant_menu
 )
-
+from crud.order_crud import (
+    create_order
+)
 
 def start_application():
     app = FastAPI()
@@ -654,8 +656,8 @@ async def read_order(order_id: int, db: Session = Depends(get_db)):
 
 # Ruta za kreiranje nove narudžbe
 @app.post("/orders/")
-async def create_order(order: OrderCreate, db: Session = Depends(get_db)):
-    return await create_new_order(db, order)
+async def order_create_route(order: OrderCreate, db: Session = Depends(get_db)):
+    return await new_order_create(db, order)
 
 
 # Ruta za ažuriranje narudžbe
@@ -817,3 +819,7 @@ async def get_restaurant_details_route(restaurant_name: str, db: Session = Depen
 @app.get("/api/restaurants/{restaurant_name}/menu")
 async def get_restaurant_menu_route(restaurant_name: str, db: Session = Depends(get_db)):
     return await get_restaurant_menu(db, restaurant_name)
+
+@app.post("/order/")
+async def create_order_route(order: OrderCreate, db: Session = Depends(get_db)):
+    return await create_order(db, order)

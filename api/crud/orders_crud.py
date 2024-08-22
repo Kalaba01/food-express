@@ -69,7 +69,7 @@ async def get_order_by_id(db: Session, order_id: int):
     return {"order": order, "order_items": order_items}
 
 # Funkcija za kreiranje nove narudžbe
-async def create_new_order(db: Session, order: OrderCreate):
+async def new_order_create(db: Session, order: OrderCreate):
     new_order = Order(
         customer_id=order.customer_id,
         restaurant_id=order.restaurant_id,

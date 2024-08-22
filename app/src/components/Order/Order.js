@@ -1,6 +1,9 @@
 import React, { useState, useContext, useEffect } from 'react';
+import { NotificationPopup } from "../index";
+import { jwtDecode } from 'jwt-decode';
 import { useTranslation } from 'react-i18next';
 import { BasketContext } from '../../BasketContext';
+import axios from 'axios';
 import './Order.css';
 
 function Order({ onClose }) {
@@ -8,10 +11,11 @@ function Order({ onClose }) {
   const { basket, setBasket } = useContext(BasketContext);
   const [address, setAddress] = useState('');
   const [contact, setContact] = useState('');
-  const [paymentMethod, setPaymentMethod] = useState('');  // Inicijalna vrednost prazna
+  const [paymentMethod, setPaymentMethod] = useState('');
   const [cardNumber, setCardNumber] = useState('');
+  const [notification, setNotification] = useState({ message: '', type: '' });
   const [cutleryIncluded, setCutleryIncluded] = useState(false);
-  const [showCutleryOption, setShowCutleryOption] = useState(false);  // Kontrola za prikaz Cutlery opcije
+  const [showCutleryOption, setShowCutleryOption] = useState(false);
   const [cashAmounts, setCashAmounts] = useState({
     twoHundred: 0,
     oneHundred: 0,
@@ -32,29 +36,43 @@ function Order({ onClose }) {
     setShowCutleryOption(containsFood);
   }, [basket]);
 
-  const handleConfirmOrder = () => {
-    // Provera da li su sva polja popunjena
+  const handleConfirmOrder = async () => {
     if (!address || !contact || !paymentMethod || (paymentMethod === 'card' && !cardNumber)) {
-      alert(t('Order.fillAllFields'));
+      setNotification({ message: t('Order.fillAllFields'), type: 'error' });
       return;
     }
 
-    // Logika za potvrdu narudžbe
+    const token = localStorage.getItem('token');
+    const decodedToken = jwtDecode(token);
+    const customerId = decodedToken ? decodedToken.id : null;
+
+    if (!customerId) {
+      setNotification({ message: t('Order.invalidSession'), type: 'error' });
+      return;
+    }
+
     const orderData = {
-      address,
-      contact,
-      paymentMethod,
-      cardNumber: paymentMethod === 'card' ? cardNumber : null,
-      cashAmounts: paymentMethod === 'cash' ? cashAmounts : null,
-      cutleryIncluded: showCutleryOption ? cutleryIncluded : null,  // Dodato: Informacija o priboru za jelo
-      items: basket,
+      customer_id: customerId,
+      restaurant_id: basket[0].restaurant_id,
+      total_price: basket.reduce((total, item) => total + item.price * item.quantity, 0),
+      status: 'pending',
+      delivery_address: address,
+      cutlery_included: showCutleryOption ? cutleryIncluded : null,
+      contact: contact,
+      payment_method: paymentMethod,
+      card_number: paymentMethod === 'card' ? cardNumber : null,
+      money: paymentMethod === 'cash' ? JSON.stringify(cashAmounts) : null,
+      items: basket
     };
 
-    console.log('Order confirmed:', orderData);
-
-    // Prazni korpu nakon potvrde narudžbe
-    setBasket([]);
-    onClose();
+    try {
+      const response = await axios.post('http://localhost:8000/order/', orderData);
+      setNotification({ message: t('Order.success'), type: 'success' });
+      setBasket([]);
+      onClose();
+    } catch (error) {
+      setNotification({ message: `${t('Order.error')}: ${error.response.data.detail}`, type: 'error' });
+    }
   };
 
   return (
@@ -82,7 +100,7 @@ function Order({ onClose }) {
           value={paymentMethod}
           onChange={(e) => setPaymentMethod(e.target.value)}
         >
-          <option value="" disabled>{t('Order.choosePayment')}</option>  {/* Dodato kao placeholder */}
+          <option value="" disabled>{t('Order.choosePayment')}</option>
           <option value="cash">{t('Order.cash')}</option>
           <option value="card">{t('Order.card')}</option>
         </select>
@@ -102,8 +120,6 @@ function Order({ onClose }) {
           <div className="cash-payment">
             <label>{t('Order.cashAmounts')}</label>
             <div className="cash-denominations">
-              {/* Input polja za apoene novca */}
-              {/* Svi apoeni prikazani prema instrukcijama */}
               <div>
                 <label>200 BAM</label>
                 <input
@@ -216,7 +232,6 @@ function Order({ onClose }) {
           </div>
         )}
 
-        {/* Prikaz opcije za pribor za jelo ako je bar jedan item iz korpe kategorije food */}
         {showCutleryOption && (
           <div className="cutlery-option">
             <label>{t('Order.includeCutlery')}</label>
@@ -234,6 +249,9 @@ function Order({ onClose }) {
           {t('Order.confirm')}
         </button>
       </div>
+      {notification.message && (
+      <NotificationPopup message={notification.message} type={notification.type} />
+    )}
     </div>
   );
 }

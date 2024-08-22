@@ -153,11 +153,11 @@ class OrderCreate(BaseModel):
     total_price: float
     status: OrderStatusEnum = OrderStatusEnum.pending
     delivery_address: str
-    delivery_latitude: float
-    delivery_longitude: float
-    cutlery_included: bool
+    cutlery_included: Optional[bool] = None
     contact: str
+    payment_method: str
     money: Optional[str] = None
+    card_number: Optional[str] = None
 
 class OrderUpdate(BaseModel):
     customer_id: Optional[int] = None
@@ -170,7 +170,9 @@ class OrderUpdate(BaseModel):
     cutlery_included: Optional[bool] = None
     updated_at: Optional[datetime.datetime] = Field(default_factory=datetime.datetime.utcnow)
     contact: Optional[str] = None
+    payment_method: Optional[str] = None
     money: Optional[str] = None
+    card_number: Optional[str] = None
 
 # Order Item schemas for managing items within an order
 class OrderItemCreate(BaseModel):

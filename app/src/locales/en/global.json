@@ -418,9 +418,12 @@
     "cardNumber": "Card Number",
     "cashAmounts": "Cash Amounts",
     "includeCutlery": "Cutlery",
-    "yes":"Yes",
-    "no":"No",
+    "yes": "Yes",
+    "no": "No",
     "confirm": "Confirm",
-    "fillAllFields": "Please fill in all the required fields."
+    "fillAllFields": "Please fill in all the required fields.",
+    "invalidSession": "Invalid session. Please log in again.",
+    "success": "Your order has been successfully placed!",
+    "error": "Order could not be processed"
   }
 }
