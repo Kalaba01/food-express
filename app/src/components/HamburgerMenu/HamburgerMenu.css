@@ -49,6 +49,7 @@
     display: inline-block;
     width: 100%;
     text-align: center;
+    margin-bottom: 10px; /* Dodajte malo margine ispod dropdown-a */
 }
 
 .hamburger-restaurants-button {
@@ -75,15 +76,13 @@
 
 .hamburger-restaurants-content {
     display: none;
-    position: absolute;
     background-color: var(--header-background);
     min-width: 160px;
     z-index: 1000;
-    top: 100%;
-    left: 0;
     transition: max-height 0.3s ease-in-out;
     overflow: hidden;
     max-height: 0;
+    padding-top: 5px; /* Ostavite prostor između dugmeta i sadržaja */
 }
 
 .hamburger-restaurants-content.open {

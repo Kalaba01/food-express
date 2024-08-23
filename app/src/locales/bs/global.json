@@ -246,7 +246,8 @@
     },
     "owner": {
       "restaurants": "Restorani",
-      "noRestaurants": "Nema Restorana"
+      "noRestaurants": "Nema Restorana",
+      "pendingOrders": "Narudžbe na čekanju"
     }
   },
   "Orders": {
