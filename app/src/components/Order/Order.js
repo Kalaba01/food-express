@@ -17,18 +17,18 @@ function Order({ onClose }) {
   const [cutleryIncluded, setCutleryIncluded] = useState(false);
   const [showCutleryOption, setShowCutleryOption] = useState(false);
   const [cashAmounts, setCashAmounts] = useState({
-    twoHundred: 0,
-    oneHundred: 0,
-    fifty: 0,
-    twenty: 0,
-    ten: 0,
-    five: 0,
-    two: 0,
-    one: 0,
-    fiftyCents: 0,
-    twentyCents: 0,
-    tenCents: 0,
-    fiveCents: 0
+    "200BAM": 0,
+    "100BAM": 0,
+    "50BAM": 0,
+    "20BAM": 0,
+    "10BAM": 0,
+    "5BAM": 0,
+    "2BAM": 0,
+    "1BAM": 0,
+    "0.50BAM": 0,
+    "0.20BAM": 0,
+    "0.10BAM": 0,
+    "0.05BAM": 0
   });
 
   useEffect(() => {
@@ -36,21 +36,32 @@ function Order({ onClose }) {
     setShowCutleryOption(containsFood);
   }, [basket]);
 
+  const filterCashAmounts = (cashAmounts) => {
+    return Object.entries(cashAmounts).reduce((filtered, [key, value]) => {
+      if (value > 0) {
+        filtered[key] = value;
+      }
+      return filtered;
+    }, {});
+  };
+
   const handleConfirmOrder = async () => {
     if (!address || !contact || !paymentMethod || (paymentMethod === 'card' && !cardNumber)) {
       setNotification({ message: t('Order.fillAllFields'), type: 'error' });
       return;
     }
-
+  
     const token = localStorage.getItem('token');
     const decodedToken = jwtDecode(token);
     const customerId = decodedToken ? decodedToken.id : null;
-
+  
     if (!customerId) {
       setNotification({ message: t('Order.invalidSession'), type: 'error' });
       return;
     }
-
+  
+    const filteredCashAmounts = paymentMethod === 'cash' ? filterCashAmounts(cashAmounts) : null;
+  
     const orderData = {
       customer_id: customerId,
       restaurant_id: basket[0].restaurant_id,
@@ -61,10 +72,10 @@ function Order({ onClose }) {
       contact: contact,
       payment_method: paymentMethod,
       card_number: paymentMethod === 'card' ? cardNumber : null,
-      money: paymentMethod === 'cash' ? JSON.stringify(cashAmounts) : null,
+      money: paymentMethod === 'cash' ? JSON.stringify(filteredCashAmounts) : null,
       items: basket
     };
-
+  
     try {
       const response = await axios.post('http://localhost:8000/order/', orderData);
       setNotification({ message: t('Order.success'), type: 'success' });
@@ -73,7 +84,7 @@ function Order({ onClose }) {
     } catch (error) {
       setNotification({ message: `${t('Order.error')}: ${error.response.data.detail}`, type: 'error' });
     }
-  };
+  };  
 
   return (
     <div className="order-modal">
@@ -125,8 +136,8 @@ function Order({ onClose }) {
                 <input
                   type="number"
                   min="0"
-                  value={cashAmounts.twoHundred}
-                  onChange={(e) => setCashAmounts({ ...cashAmounts, twoHundred: Number(e.target.value) })}
+                  value={cashAmounts["200BAM"]}
+                  onChange={(e) => setCashAmounts({ ...cashAmounts, "200BAM": Number(e.target.value) })}
                 />
               </div>
               <div>
@@ -134,8 +145,8 @@ function Order({ onClose }) {
                 <input
                   type="number"
                   min="0"
-                  value={cashAmounts.oneHundred}
-                  onChange={(e) => setCashAmounts({ ...cashAmounts, oneHundred: Number(e.target.value) })}
+                  value={cashAmounts["100BAM"]}
+                  onChange={(e) => setCashAmounts({ ...cashAmounts, "100BAM": Number(e.target.value) })}
                 />
               </div>
               <div>
@@ -143,8 +154,8 @@ function Order({ onClose }) {
                 <input
                   type="number"
                   min="0"
-                  value={cashAmounts.fifty}
-                  onChange={(e) => setCashAmounts({ ...cashAmounts, fifty: Number(e.target.value) })}
+                  value={cashAmounts["50BAM"]}
+                  onChange={(e) => setCashAmounts({ ...cashAmounts, "50BAM": Number(e.target.value) })}
                 />
               </div>
               <div>
@@ -152,8 +163,8 @@ function Order({ onClose }) {
                 <input
                   type="number"
                   min="0"
-                  value={cashAmounts.twenty}
-                  onChange={(e) => setCashAmounts({ ...cashAmounts, twenty: Number(e.target.value) })}
+                  value={cashAmounts["20BAM"]}
+                  onChange={(e) => setCashAmounts({ ...cashAmounts, "20BAM": Number(e.target.value) })}
                 />
               </div>
               <div>
@@ -161,8 +172,8 @@ function Order({ onClose }) {
                 <input
                   type="number"
                   min="0"
-                  value={cashAmounts.ten}
-                  onChange={(e) => setCashAmounts({ ...cashAmounts, ten: Number(e.target.value) })}
+                  value={cashAmounts["10BAM"]}
+                  onChange={(e) => setCashAmounts({ ...cashAmounts, "10BAM": Number(e.target.value) })}
                 />
               </div>
               <div>
@@ -170,8 +181,8 @@ function Order({ onClose }) {
                 <input
                   type="number"
                   min="0"
-                  value={cashAmounts.five}
-                  onChange={(e) => setCashAmounts({ ...cashAmounts, five: Number(e.target.value) })}
+                  value={cashAmounts["5BAM"]}
+                  onChange={(e) => setCashAmounts({ ...cashAmounts, "5BAM": Number(e.target.value) })}
                 />
               </div>
               <div>
@@ -179,8 +190,8 @@ function Order({ onClose }) {
                 <input
                   type="number"
                   min="0"
-                  value={cashAmounts.two}
-                  onChange={(e) => setCashAmounts({ ...cashAmounts, two: Number(e.target.value) })}
+                  value={cashAmounts["2BAM"]}
+                  onChange={(e) => setCashAmounts({ ...cashAmounts, "2BAM": Number(e.target.value) })}
                 />
               </div>
               <div>
@@ -188,8 +199,8 @@ function Order({ onClose }) {
                 <input
                   type="number"
                   min="0"
-                  value={cashAmounts.one}
-                  onChange={(e) => setCashAmounts({ ...cashAmounts, one: Number(e.target.value) })}
+                  value={cashAmounts["1BAM"]}
+                  onChange={(e) => setCashAmounts({ ...cashAmounts, "1BAM": Number(e.target.value) })}
                 />
               </div>
               <div>
@@ -197,8 +208,8 @@ function Order({ onClose }) {
                 <input
                   type="number"
                   min="0"
-                  value={cashAmounts.fiftyCents}
-                  onChange={(e) => setCashAmounts({ ...cashAmounts, fiftyCents: Number(e.target.value) })}
+                  value={cashAmounts["0.50BAM"]}
+                  onChange={(e) => setCashAmounts({ ...cashAmounts, "0.50BAM": Number(e.target.value) })}
                 />
               </div>
               <div>
@@ -206,8 +217,8 @@ function Order({ onClose }) {
                 <input
                   type="number"
                   min="0"
-                  value={cashAmounts.twentyCents}
-                  onChange={(e) => setCashAmounts({ ...cashAmounts, twentyCents: Number(e.target.value) })}
+                  value={cashAmounts["0.20BAM"]}
+                  onChange={(e) => setCashAmounts({ ...cashAmounts, "0.20BAM": Number(e.target.value) })}
                 />
               </div>
               <div>
@@ -215,8 +226,8 @@ function Order({ onClose }) {
                 <input
                   type="number"
                   min="0"
-                  value={cashAmounts.tenCents}
-                  onChange={(e) => setCashAmounts({ ...cashAmounts, tenCents: Number(e.target.value) })}
+                  value={cashAmounts["0.10BAM"]}
+                  onChange={(e) => setCashAmounts({ ...cashAmounts, "0.10BAM": Number(e.target.value) })}
                 />
               </div>
               <div>
@@ -224,8 +235,8 @@ function Order({ onClose }) {
                 <input
                   type="number"
                   min="0"
-                  value={cashAmounts.fiveCents}
-                  onChange={(e) => setCashAmounts({ ...cashAmounts, fiveCents: Number(e.target.value) })}
+                  value={cashAmounts["0.05BAM"]}
+                  onChange={(e) => setCashAmounts({ ...cashAmounts, "0.05BAM": Number(e.target.value) })}
                 />
               </div>
             </div>
