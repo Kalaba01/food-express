@@ -426,5 +426,10 @@
     "invalidSession": "Invalid session. Please log in again.",
     "success": "Your order has been successfully placed!",
     "error": "Order could not be processed"
+  },
+  "Status": {
+    "online": "Online",
+    "offline": "Offline",
+    "save": "Save"
   }
 }

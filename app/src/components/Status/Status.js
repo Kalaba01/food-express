@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { HiOutlineStatusOnline } from 'react-icons/hi';
 import axios from 'axios';
+import { useTranslation } from 'react-i18next';
 import './Status.css';
 
 function Status({ id }) {
+  const { t } = useTranslation('global');
   const [status, setStatus] = useState('offline');
   const [showPopup, setShowPopup] = useState(false);
 
@@ -55,7 +57,7 @@ function Status({ id }) {
               checked={status === 'online'}
               onChange={() => handleStatusChange('online')}
             />
-            <label htmlFor="online">Online</label>
+            <label htmlFor="online">{t('Status.online')}</label>
           </div>
           <div className="status-option">
             <input
@@ -66,9 +68,11 @@ function Status({ id }) {
               checked={status === 'offline'}
               onChange={() => handleStatusChange('offline')}
             />
-            <label htmlFor="offline">Offline</label>
+            <label htmlFor="offline">{t('Status.offline')}</label>
           </div>
-          <button className="status-save-button" onClick={handleSaveStatus}>Save</button>
+          <button className="status-save-button" onClick={handleSaveStatus}>
+            {t('Status.save')}
+          </button>
         </div>
       )}
     </div>

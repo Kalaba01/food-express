@@ -426,5 +426,10 @@
     "invalidSession": "Nevažeća sesija. Molimo prijavite se ponovo.",
     "success": "Vaša narudžba je uspješno poslana!",
     "error": "Narudžba nije mogla biti obrađena"
+  },
+  "Status": {
+    "online": "Online",
+    "offline": "Offline",
+    "save": "Sačuvaj"
   }
 }
