@@ -75,7 +75,6 @@ class User(Base):
     chat_sent = relationship("Chat", foreign_keys="[Chat.sender_id]", back_populates="sender")
     chat_received = relationship("Chat", foreign_keys="[Chat.receiver_id]", back_populates="receiver")
     email_reports = relationship("EmailReport", back_populates="user")
-    bank_account = relationship("Bank", back_populates="user", uselist=False)
     image = relationship("Image")
     password_reset_tokens = relationship("PasswordResetToken", back_populates="user")
 
@@ -250,6 +249,7 @@ class OrderQueue(Base):
     id = Column(Integer, primary_key=True, index=True)
     order_id = Column(Integer, ForeignKey("orders.id"))
     status = Column(String, nullable=False)
+    estimated_preparation_time = Column(Integer, nullable=False)
 
     order = relationship("Order")
 
@@ -271,11 +271,8 @@ class DeliveryZone(Base):
 class Bank(Base):
     __tablename__ = "banks"
     id = Column(Integer, primary_key=True, index=True)
-    user_id = Column(Integer, ForeignKey("users.id"))
     balance = Column(Float, nullable=False)
     account_number = Column(String, unique=True, nullable=False)
-
-    user = relationship("User", back_populates="bank_account")
 
 class Request(Base):
     __tablename__ = "requests"

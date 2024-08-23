@@ -249,10 +249,12 @@ class EmailReportCreate(BaseModel):
 class OrderQueueCreate(BaseModel):
     order_id: int
     status: str
+    estimated_preparation_time: int
 
 class OrderQueueUpdate(BaseModel):
     order_id: Optional[int] = None
     status: Optional[str] = None
+    estimated_preparation_time: Optional[int] = None
 
 # Delivery Zone schemas for managing restaurant delivery zones
 class DeliveryZoneCreate(BaseModel):
@@ -276,15 +278,6 @@ class DeliveryZoneUpdate(BaseModel):
     point3_longitude: Optional[float] = None
     point4_latitude: Optional[float] = None
     point4_longitude: Optional[float] = None
-
-# Bank schemas for managing bank accounts associated with users
-class BankCreate(BaseModel):
-    user_id: int
-    balance: float
-
-class BankUpdate(BaseModel):
-    user_id: Optional[int] = None
-    balance: Optional[float] = None
 
 # Request schemas for managing different types of requests (partnership, delivery, etc.)
 class RequestCreate(BaseModel):
