@@ -155,18 +155,25 @@ class MenuCategoryUpdate(BaseModel):
     description: Optional[str] = None
     restaurant_id: Optional[int] = None
 
+# Order Item schemas for managing items within an order
+class OrderItemCreate(BaseModel):
+    item_id: int
+    quantity: int
+    price: float
+
 # Order schemas for managing orders placed by customers
 class OrderCreate(BaseModel):
     customer_id: int
     restaurant_id: int
     total_price: float
-    status: OrderStatusEnum = OrderStatusEnum.pending
     delivery_address: str
     cutlery_included: Optional[bool] = None
     contact: str
     payment_method: str
     money: Optional[str] = None
     card_number: Optional[str] = None
+    items: List[OrderItemCreate]
+
 
 class OrderUpdate(BaseModel):
     customer_id: Optional[int] = None
@@ -182,13 +189,6 @@ class OrderUpdate(BaseModel):
     payment_method: Optional[str] = None
     money: Optional[str] = None
     card_number: Optional[str] = None
-
-# Order Item schemas for managing items within an order
-class OrderItemCreate(BaseModel):
-    order_id: int
-    item_id: int
-    quantity: int
-    price: float
 
 # Courier schemas for managing courier-related operations
 class CourierCreate(BaseModel):

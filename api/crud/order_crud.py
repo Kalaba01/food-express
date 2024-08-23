@@ -1,8 +1,8 @@
 from sqlalchemy.orm import Session
 from fastapi import HTTPException
 from geopy.geocoders import Nominatim
-from models.models import Order, Bank
-from schemas.schemas import OrderCreate
+from models.models import Order, OrderItem, Bank
+from schemas.schemas import OrderCreate, OrderStatusEnum
 from utils.delivery_utils import is_in_delivery_zone
 from utils.card_utils import validate_card_payment
 
@@ -30,7 +30,7 @@ async def create_order(db: Session, order: OrderCreate):
         customer_id=order.customer_id,
         restaurant_id=order.restaurant_id,
         total_price=order.total_price,
-        status=order.status,
+        status=OrderStatusEnum.pending,
         delivery_address=order.delivery_address,
         delivery_latitude=latitude,
         delivery_longitude=longitude,
@@ -42,4 +42,16 @@ async def create_order(db: Session, order: OrderCreate):
     db.add(new_order)
     db.commit()
     db.refresh(new_order)
+
+    for item in order.items:
+        order_item = OrderItem(
+            order_id=new_order.id,
+            item_id=item.item_id,
+            quantity=item.quantity,
+            price=item.price
+        )
+        db.add(order_item)
+
+    db.commit()
+
     return new_order

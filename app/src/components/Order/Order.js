@@ -66,14 +66,17 @@ function Order({ onClose }) {
       customer_id: customerId,
       restaurant_id: basket[0].restaurant_id,
       total_price: basket.reduce((total, item) => total + item.price * item.quantity, 0),
-      status: 'pending',
       delivery_address: address,
       cutlery_included: showCutleryOption ? cutleryIncluded : null,
       contact: contact,
       payment_method: paymentMethod,
       card_number: paymentMethod === 'card' ? cardNumber : null,
       money: paymentMethod === 'cash' ? JSON.stringify(filteredCashAmounts) : null,
-      items: basket
+      items: basket.map(item => ({
+          item_id: item.id,
+          quantity: item.quantity,
+          price: item.price
+      }))
     };
   
     try {
@@ -84,7 +87,7 @@ function Order({ onClose }) {
     } catch (error) {
       setNotification({ message: `${t('Order.error')}: ${error.response.data.detail}`, type: 'error' });
     }
-  };  
+  };
 
   return (
     <div className="order-modal">
