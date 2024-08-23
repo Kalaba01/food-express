@@ -50,6 +50,10 @@ class CourierStatus(enum.Enum):
     offline = "offline"
     busy = "busy"
 
+class OrderQueueStatusEnum(enum.Enum):
+    pending = "pending"
+    assigned = "assigned"
+
 class Image(Base):
     __tablename__ = "images"
     id = Column(Integer, primary_key=True, index=True)
@@ -248,7 +252,7 @@ class OrderQueue(Base):
     __tablename__ = "order_queue"
     id = Column(Integer, primary_key=True, index=True)
     order_id = Column(Integer, ForeignKey("orders.id"))
-    status = Column(String, nullable=False)
+    status = Column(Enum(OrderQueueStatusEnum), nullable=False, default=OrderQueueStatusEnum.pending)
     estimated_preparation_time = Column(Integer, nullable=False)
 
     order = relationship("Order")

@@ -12,7 +12,7 @@ from fastapi import (
     UploadFile,
     Form,
     WebSocket,
-    WebSocketDisconnect,
+    WebSocketDisconnect
 )
 from fastapi.websockets import WebSocket
 from fastapi.security import OAuth2PasswordRequestForm

@@ -57,6 +57,10 @@ body.dark-mode .order-row:hover {
     gap: 10px;
 }
 
+.order-actions button {
+    pointer-events: auto;
+}
+
 .accept-button,
 .deny-button {
     padding: 5px 10px;
@@ -83,20 +87,9 @@ body.dark-mode .deny-button {
     background-color: #e57373;
 }
 
-.accept-button:hover {
-    background-color: #45a049;
-}
-
-body.dark-mode .accept-button:hover {
-    background-color: #388e3c;
-}
-
+.accept-button:hover,
 .deny-button:hover {
-    background-color: #da190b;
-}
-
-body.dark-mode .deny-button:hover {
-    background-color: #c62828;
+    filter: brightness(0.9);
 }
 
 .order-popup {
@@ -123,7 +116,7 @@ body.dark-mode .order-popup {
 .order-popup .order-item-header,
 .order-popup .order-item {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(5, 1fr);
     gap: 10px;
     margin-bottom: 10px;
 }

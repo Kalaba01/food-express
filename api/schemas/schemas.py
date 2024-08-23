@@ -51,6 +51,10 @@ class UpdateOrderStatusEnum(str, Enum):
     preparing = "preparing"
     cancelled = "cancelled"
 
+class OrderQueueStatusEnum(str, Enum):
+    pending = "pending"
+    assigned = "assigned"
+
 # Image schemas for handling image uploads and updates
 class ImageCreate(BaseModel):
     image: bytes
@@ -252,7 +256,7 @@ class EmailReportCreate(BaseModel):
 # Order Queue schemas for managing the queue of orders
 class OrderQueueCreate(BaseModel):
     order_id: int
-    status: str
+    status: OrderQueueStatusEnum = OrderQueueStatusEnum.pending
     estimated_preparation_time: int
 
 class OrderQueueUpdate(BaseModel):
