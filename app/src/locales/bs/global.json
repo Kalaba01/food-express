@@ -431,5 +431,26 @@
     "online": "Online",
     "offline": "Offline",
     "save": "Sačuvaj"
+  },
+  "PendingOrders": {
+    "title": "Narudžbe na čekanju",
+    "name": "Ime",
+    "price": "Cijena",
+    "address": "Adresa",
+    "cutlery": "Pribor",
+    "actions": "Akcije",
+    "accept": "Prihvati",
+    "deny": "Odbij",
+    "noOrders": "Trenutno nema narudžbi koje zahtijevaju vašu reakciju.",
+    "details": "Detalji narudžbe",
+    "description": "Opis",
+    "quantity": "Količina",
+    "category": "Kategorija",
+    "close": "Zatvori",
+    "fetchError": "Neuspješno preuzimanje narudžbi na čekanju",
+    "acceptError": "Neuspješno prihvatanje narudžbe",
+    "denyError": "Neuspješno odbijanje narudžbe",
+    "yes": "Da",
+    "no": "Ne"
   }
 }

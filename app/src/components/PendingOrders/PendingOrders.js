@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Header } from "../index";
 import axios from 'axios';
+import { useTranslation } from 'react-i18next';
 import './PendingOrders.css';
 
 function PendingOrders({ darkMode, toggleDarkMode, openPopupModal, userType }) {
+  const { t } = useTranslation('global');
   const [orders, setOrders] = useState([]);
   const [selectedOrder, setSelectedOrder] = useState(null);
 
@@ -15,7 +17,7 @@ function PendingOrders({ darkMode, toggleDarkMode, openPopupModal, userType }) {
       });
       setOrders(response.data);
     } catch (error) {
-      console.error('Failed to fetch pending orders', error);
+      console.error(t('PendingOrders.fetchError'), error);
     }
   };
 
@@ -31,7 +33,7 @@ function PendingOrders({ darkMode, toggleDarkMode, openPopupModal, userType }) {
         });
         fetchPendingOrders();
     } catch (error) {
-        console.error('Failed to accept order', error);
+        console.error(t('PendingOrders.acceptError'), error);
     }
   };
 
@@ -43,7 +45,7 @@ function PendingOrders({ darkMode, toggleDarkMode, openPopupModal, userType }) {
         });
         fetchPendingOrders();
     } catch (error) {
-        console.error('Failed to deny order', error);
+        console.error(t('PendingOrders.denyError'), error);
     }
   };
 
@@ -64,14 +66,14 @@ function PendingOrders({ darkMode, toggleDarkMode, openPopupModal, userType }) {
         userType={userType} 
       />
       <div className={`pending-orders-container ${darkMode ? 'dark-mode' : ''}`}>
-        <h2>Pending Orders</h2>
+        <h2>{t('PendingOrders.title')}</h2>
         <div className="order-table">
           <div className="order-row order-header">
-            <div>Name</div>
-            <div>Price</div>
-            <div>Address</div>
-            <div>Cutlery</div>
-            <div>Actions</div>
+            <div>{t('PendingOrders.name')}</div>
+            <div>{t('PendingOrders.price')}</div>
+            <div>{t('PendingOrders.address')}</div>
+            <div>{t('PendingOrders.cutlery')}</div>
+            <div>{t('PendingOrders.actions')}</div>
           </div>
           {orders.length > 0 ? (
             orders.map(order => (
@@ -79,26 +81,26 @@ function PendingOrders({ darkMode, toggleDarkMode, openPopupModal, userType }) {
                 <div>{order.customer_name}</div>
                 <div>{order.total_price} BAM</div>
                 <div>{order.delivery_address}</div>
-                <div>{order.cutlery_included !== null && order.cutlery_included !== undefined ? (order.cutlery_included ? 'Yes' : 'No') : 'No'}</div>
+                <div>{order.cutlery_included !== null && order.cutlery_included !== undefined ? (order.cutlery_included ? t('PendingOrders.yes') : t('PendingOrders.no')) : t('PendingOrders.no')}</div>
                 <div className="order-actions">
-                  <button className="accept-button" onClick={(e) => handleAccept(order.order_id, e)}>Accept</button>
-                  <button className="deny-button" onClick={(e) => handleDeny(order.order_id, e)}>Deny</button>
+                  <button className="accept-button" onClick={(e) => handleAccept(order.order_id, e)}>{t('PendingOrders.accept')}</button>
+                  <button className="deny-button" onClick={(e) => handleDeny(order.order_id, e)}>{t('PendingOrders.deny')}</button>
                 </div>
               </div>
             ))
           ) : (
-            <p>No orders requiring your response at the moment.</p>
+            <p>{t('PendingOrders.noOrders')}</p>
           )}
         </div>
         {selectedOrder && (
           <div key={selectedOrder.order_id} className="order-popup">
-            <h3>Order Details</h3>
+            <h3>{t('PendingOrders.details')}</h3>
             <div className="order-item-header">
-              <div>Name</div>
-              <div>Description</div>
-              <div>Price</div>
-              <div>Quantity</div>
-              <div>Category</div>
+              <div>{t('PendingOrders.name')}</div>
+              <div>{t('PendingOrders.description')}</div>
+              <div>{t('PendingOrders.price')}</div>
+              <div>{t('PendingOrders.quantity')}</div>
+              <div>{t('PendingOrders.category')}</div>
             </div>
             {selectedOrder.items.map((item, index) => (
               <div key={index} className="order-item">
@@ -109,7 +111,7 @@ function PendingOrders({ darkMode, toggleDarkMode, openPopupModal, userType }) {
                 <div>{item.category}</div>
               </div>
             ))}
-            <button onClick={closePopup}>Close</button>
+            <button onClick={closePopup}>{t('PendingOrders.close')}</button>
           </div>
         )}
       </div>

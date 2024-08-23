@@ -431,5 +431,26 @@
     "online": "Online",
     "offline": "Offline",
     "save": "Save"
+  },
+  "PendingOrders": {
+    "title": "Pending Orders",
+    "name": "Name",
+    "price": "Price",
+    "address": "Address",
+    "cutlery": "Cutlery",
+    "actions": "Actions",
+    "accept": "Accept",
+    "deny": "Deny",
+    "noOrders": "No orders requiring your response at the moment.",
+    "details": "Order Details",
+    "description": "Description",
+    "quantity": "Quantity",
+    "category": "Category",
+    "close": "Close",
+    "fetchError": "Failed to fetch pending orders",
+    "acceptError": "Failed to accept order",
+    "denyError": "Failed to deny order",
+    "yes": "Yes",
+    "no": "No"
   }
 }
