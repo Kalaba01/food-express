@@ -47,6 +47,10 @@ class CourierStatusEnum(str, Enum):
     offline = "offline"
     busy = "busy"
 
+class UpdateOrderStatusEnum(str, Enum):
+    preparing = "preparing"
+    cancelled = "cancelled"
+
 # Image schemas for handling image uploads and updates
 class ImageCreate(BaseModel):
     image: bytes
@@ -304,3 +308,6 @@ class SearchQuery(BaseModel):
 class StatusUpdateRequest(BaseModel):
     id: int
     status: str
+
+class UpdateOrderStatusSchema(BaseModel):
+    status: UpdateOrderStatusEnum

@@ -104,6 +104,7 @@ function HamburgerMenu() {
                 )}
               </div>
             </div>
+            <a href="/owner/orders">{t("HamburgerMenu.owner.pendingOrders")}</a>
           </>
         );
       case "courier":

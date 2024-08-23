@@ -58,7 +58,8 @@ from schemas.schemas import (
     CourierUpdate,
     PasswordChangeRequest,
     SearchQuery,
-    StatusUpdateRequest
+    StatusUpdateRequest,
+    UpdateOrderStatusSchema
 )
 
 from auth.auth import create_access_token, get_current_user
@@ -166,6 +167,10 @@ from crud.order_crud import (
 from crud.status_crud import (
     get_courier_status,
     update_courier_status
+)
+from crud.pending_crud import (
+    get_pending_orders_for_owner,
+    update_order_status
 )
 
 def start_application():
@@ -836,3 +841,12 @@ async def get_status(id: int, db: Session = Depends(get_db)):
 @app.put("/courier/status")
 async def update_status(request: StatusUpdateRequest, db: Session = Depends(get_db)):
     return await update_courier_status(db, request.id, request.status)
+
+@app.get("/owner/orders")
+async def get_pending_orders(current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    owner_id = current_user.id
+    return await get_pending_orders_for_owner(db, owner_id)
+
+@app.put("/owner/orders/{order_id}/update")
+async def update_order_status_route(order_id: int, status: str, db: Session = Depends(get_db)):
+    return await update_order_status(db, order_id, status)
