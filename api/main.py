@@ -57,7 +57,8 @@ from schemas.schemas import (
     CourierCreate,
     CourierUpdate,
     PasswordChangeRequest,
-    SearchQuery
+    SearchQuery,
+    StatusUpdateRequest
 )
 
 from auth.auth import create_access_token, get_current_user
@@ -161,6 +162,10 @@ from crud.customer_crud import (
 )
 from crud.order_crud import (
     create_order
+)
+from crud.status_crud import (
+    get_courier_status,
+    update_courier_status
 )
 
 def start_application():
@@ -823,3 +828,11 @@ async def get_restaurant_menu_route(restaurant_name: str, db: Session = Depends(
 @app.post("/order/")
 async def create_order_route(order: OrderCreate, db: Session = Depends(get_db)):
     return await create_order(db, order)
+
+@app.get("/courier/status/{id}")
+async def get_status(id: int, db: Session = Depends(get_db)):
+    return await get_courier_status(db, id)
+
+@app.put("/courier/status")
+async def update_status(request: StatusUpdateRequest, db: Session = Depends(get_db)):
+    return await update_courier_status(db, request.id, request.status)

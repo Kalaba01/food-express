@@ -35,5 +35,6 @@ import Basket from "./Basket/Basket";
 import Gallery from "./Gallery/Gallery";
 import GalleryPopup from "./GalleryPopup/GalleryPopup";
 import Order from "./Order/Order";
+import Status from "./Status/Status";
 
-export  { Admin, Captcha, Courier, Customer, Footer, FormPopup, GoTop, Header, Language, LoginRegister, NotificationPopup, Owner, Theme, LandingPage, Unauthorized, Logout, ForgotPassword, ResetPassword, HamburgerMenu, Requests, Users, NotFound, LookupTable, DeliveryZones, Restaurants, ConfirmDelete, Orders, Restaurant, Couriers, Profile, Chat, SearchBar, CustomerRestaurant, Basket, Gallery, GalleryPopup, Order }
+export  { Admin, Captcha, Courier, Customer, Footer, FormPopup, GoTop, Header, Language, LoginRegister, NotificationPopup, Owner, Theme, LandingPage, Unauthorized, Logout, ForgotPassword, ResetPassword, HamburgerMenu, Requests, Users, NotFound, LookupTable, DeliveryZones, Restaurants, ConfirmDelete, Orders, Restaurant, Couriers, Profile, Chat, SearchBar, CustomerRestaurant, Basket, Gallery, GalleryPopup, Order, Status }

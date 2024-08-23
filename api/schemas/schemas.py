@@ -300,3 +300,7 @@ class PasswordChangeRequest(BaseModel):
 
 class SearchQuery(BaseModel):
     query: constr(min_length=1, max_length=100)
+
+class StatusUpdateRequest(BaseModel):
+    id: int
+    status: str

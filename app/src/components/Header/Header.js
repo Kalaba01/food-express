@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { LoginRegister, Theme, Language, Logout, HamburgerMenu, Chat, Basket } from "../index";
+import { LoginRegister, Theme, Language, Logout, HamburgerMenu, Chat, Basket, Status } from "../index";
 import { useTranslation } from 'react-i18next';
 import { BasketContext } from '../../BasketContext';
 import { jwtDecode } from "jwt-decode";
@@ -45,6 +45,7 @@ function Header({ darkMode, toggleDarkMode, openPopupModal, userType, showIcons 
               <Link to="/profile" className="profile-icon">
                 <FaUser size={24} />
               </Link>
+              {currentUser.role === 'courier' && <Status id={currentUser.id} />}
               {currentUser.role === 'customer' && <Basket items={basket} />}
               <Chat userType={currentUser} />
               <Theme darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
