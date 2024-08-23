@@ -28,7 +28,7 @@ class RequestStatusEnum(str, Enum):
 
 class OrderStatusEnum(str, Enum):
     pending = "pending"
-    confirmed = "confirmed"
+    preparing = "preparing"
     in_delivery = "in_delivery"
     delivered = "delivered"
     cancelled = "cancelled"
@@ -38,9 +38,14 @@ class VehicleTypeEnum(str, Enum):
     car = "car"
 
 class OrderAssignmentStatusEnum(str, Enum):
-    assigned = "assigned"
-    picked_up = "picked_up"
+    pending = "pending"
+    in_delivery = "in_delivery"
     delivered = "delivered"
+
+class CourierStatusEnum(str, Enum):
+    online = "online"
+    offline = "offline"
+    busy = "busy"
 
 # Image schemas for handling image uploads and updates
 class ImageCreate(BaseModel):
@@ -203,7 +208,7 @@ class CourierUpdate(BaseModel):
 class OrderAssignmentCreate(BaseModel):
     order_id: int
     courier_id: int
-    status: OrderAssignmentStatusEnum = OrderAssignmentStatusEnum.assigned
+    status: OrderAssignmentStatusEnum = OrderAssignmentStatusEnum.pending
 
 class OrderAssignmentUpdate(BaseModel):
     order_id: Optional[int] = None

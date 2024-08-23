@@ -21,7 +21,11 @@ async def create_order(db: Session, order: OrderCreate):
     if order.payment_method == 'card':
         if not validate_card_payment(db, order.card_number, order.total_price):
             raise HTTPException(status_code=400, detail="Insufficient funds on the card.")
+        order_money = order.card_number
 
+    elif order.payment_method == 'cash':
+        order_money = order.money
+    
     new_order = Order(
         customer_id=order.customer_id,
         restaurant_id=order.restaurant_id,
@@ -32,7 +36,8 @@ async def create_order(db: Session, order: OrderCreate):
         delivery_longitude=longitude,
         cutlery_included=order.cutlery_included,
         contact=order.contact,
-        money=order.money
+        payment_method=order.payment_method,
+        money=order_money
     )
     db.add(new_order)
     db.commit()

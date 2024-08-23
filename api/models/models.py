@@ -27,7 +27,7 @@ class RequestStatus(enum.Enum):
 
 class OrderStatus(enum.Enum):
     pending = "pending"
-    confirmed = "confirmed"
+    preparing = "preparing"
     in_delivery = "in_delivery"
     delivered = "delivered"
     cancelled = "cancelled"
@@ -37,9 +37,18 @@ class VehicleType(enum.Enum):
     car = "car"
 
 class OrderAssignmentStatus(enum.Enum):
-    assigned = "assigned"
-    picked_up = "picked_up"
+    pending = "pending"
+    in_delivery = "in_delivery"
     delivered = "delivered"
+
+class PaymentMethod(enum.Enum):
+    cash = "cash"
+    card = "card"
+
+class CourierStatus(enum.Enum):
+    online = "online"
+    offline = "offline"
+    busy = "busy"
 
 class Image(Base):
     __tablename__ = "images"
@@ -155,7 +164,8 @@ class Order(Base):
     updated_at = Column(DateTime, default=datetime.datetime.utcnow)
     cutlery_included = Column(Boolean, default=False)
     contact = Column(String, nullable=False)
-    money = Column(Text, nullable=True)
+    payment_method = Column(Enum(PaymentMethod), nullable=False)
+    money = Column(Text, nullable=False)
 
     customer = relationship("User", back_populates="orders")
     restaurant = relationship("Restaurant", back_populates="orders")
@@ -183,7 +193,7 @@ class Courier(Base):
     wallet_amount = Column(Float, nullable=False)
     wallet_details = Column(Text, nullable=False)
     restaurant_id = Column(Integer, ForeignKey("restaurants.id"))
-    online = Column(Boolean, default=False)
+    status = Column(Enum(CourierStatus), nullable=False, default=CourierStatus.offline)
 
     user = relationship("User", back_populates="couriers")
     restaurant = relationship("Restaurant", back_populates="couriers")
@@ -195,7 +205,7 @@ class OrderAssignment(Base):
     order_id = Column(Integer, ForeignKey("orders.id"))
     courier_id = Column(Integer, ForeignKey("couriers.id"))
     assigned_at = Column(DateTime, default=datetime.datetime.utcnow)
-    status = Column(Enum(OrderAssignmentStatus), nullable=False, default=OrderAssignmentStatus.assigned)
+    status = Column(Enum(OrderAssignmentStatus), nullable=False, default=OrderAssignmentStatus.pending)
 
     order = relationship("Order", back_populates="order_assignments")
     courier = relationship("Courier", back_populates="order_assignments")
