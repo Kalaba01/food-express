@@ -49,7 +49,7 @@
     display: inline-block;
     width: 100%;
     text-align: center;
-    margin-bottom: 10px; /* Dodajte malo margine ispod dropdown-a */
+    margin-bottom: 10px;
 }
 
 .hamburger-restaurants-button {
@@ -82,7 +82,7 @@
     transition: max-height 0.3s ease-in-out;
     overflow: hidden;
     max-height: 0;
-    padding-top: 5px; /* Ostavite prostor između dugmeta i sadržaja */
+    padding-top: 5px;
 }
 
 .hamburger-restaurants-content.open {

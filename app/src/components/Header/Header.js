@@ -1,6 +1,7 @@
 import React, { useContext } from 'react';
 import { LoginRegister, Theme, Language, Logout, HamburgerMenu, Chat, Basket, Status } from "../index";
 import { useTranslation } from 'react-i18next';
+import { useLocation } from 'react-router-dom';
 import { BasketContext } from '../../BasketContext';
 import { jwtDecode } from "jwt-decode";
 import { FaUser } from 'react-icons/fa';
@@ -13,6 +14,7 @@ function Header({ darkMode, toggleDarkMode, openPopupModal, userType, showIcons 
   const token = localStorage.getItem('token');
   let isLoggedIn = false;
   let currentUser = null;
+  const location = useLocation();
 
   if (token) {
     try {
@@ -28,6 +30,8 @@ function Header({ darkMode, toggleDarkMode, openPopupModal, userType, showIcons 
       localStorage.removeItem('token');
     }
   }
+
+  const isBasketVisible = location.pathname.startsWith('/restaurants/');
 
   return (
     <header className="top-bar">
@@ -46,7 +50,7 @@ function Header({ darkMode, toggleDarkMode, openPopupModal, userType, showIcons 
                 <FaUser size={24} />
               </Link>
               {currentUser.role === 'courier' && <Status id={currentUser.id} />}
-              {currentUser.role === 'customer' && <Basket items={basket} />}
+              {currentUser.role === 'customer' && isBasketVisible && <Basket items={basket} />}
               <Chat userType={currentUser} />
               <Theme darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
               <Language className="language-icon" />

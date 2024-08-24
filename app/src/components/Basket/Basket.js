@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { Order } from "../index";
 import { useTranslation } from 'react-i18next';
 import { BasketContext } from '../../BasketContext';
@@ -10,6 +10,10 @@ function Basket() {
   const { basket, setBasket } = useContext(BasketContext);
   const [basketVisible, setBasketVisible] = useState(false);
   const [isOrderPopupOpen, setIsOrderPopupOpen] = useState(false);
+
+  useEffect(() => {
+    setBasket([]);
+  }, []);
 
   const toggleBasket = () => {
     setBasketVisible(!basketVisible);
