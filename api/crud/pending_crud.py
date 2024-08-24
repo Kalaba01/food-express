@@ -1,4 +1,5 @@
 from sqlalchemy.orm import Session
+from sqlalchemy import func
 from fastapi import HTTPException
 from models.models import OrderStatus, Order, OrderItem, OrderQueue, Item, Restaurant, User, RestaurantCapacity
 from schemas.schemas import UpdateOrderStatusSchema, OrderQueueStatusEnum
@@ -72,10 +73,18 @@ async def update_order_status(db: Session, order_id: int, status: str):
 
         estimated_prep_time = int(max_prep_time * capacity_coefficient)
 
+        total_weight = db.query(
+            func.sum(Item.weight * OrderItem.quantity)
+        ).join(OrderItem, Item.id == OrderItem.item_id).filter(OrderItem.order_id == order_id).scalar()
+
+        if total_weight is None:
+            total_weight = 0.0
+
         new_queue_entry = OrderQueue(
             order_id=order.id,
             status=OrderQueueStatusEnum.pending,
-            estimated_preparation_time=estimated_prep_time
+            estimated_preparation_time=estimated_prep_time,
+            weight=total_weight
         )
         db.add(new_queue_entry)
         db.commit()

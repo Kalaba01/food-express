@@ -209,6 +209,7 @@ class OrderAssignment(Base):
     courier_id = Column(Integer, ForeignKey("couriers.id"))
     assigned_at = Column(DateTime, default=datetime.datetime.utcnow)
     status = Column(Enum(OrderAssignmentStatus), nullable=False, default=OrderAssignmentStatus.pending)
+    estimated_delivery_time = Column(Integer, nullable=False)
 
     order = relationship("Order", back_populates="order_assignments")
     courier = relationship("Courier", back_populates="order_assignments")
@@ -254,6 +255,7 @@ class OrderQueue(Base):
     order_id = Column(Integer, ForeignKey("orders.id"))
     status = Column(Enum(OrderQueueStatusEnum), nullable=False, default=OrderQueueStatusEnum.pending)
     estimated_preparation_time = Column(Integer, nullable=False)
+    weight = Column(Float, nullable=False, default=0.0)
 
     order = relationship("Order")
 
