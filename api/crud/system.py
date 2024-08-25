@@ -52,14 +52,13 @@ async def assign_orders_to_couriers(db: Session):
         couriers_three_criteria = []
         couriers_two_criteria = []
 
-        # Izračunaj udaljenost između restorana i adrese dostave
-        distance = calculate_route_distance(
-            (order.restaurant.latitude, order.restaurant.longitude),
-            (order.delivery_latitude, order.delivery_longitude),
-            'car'  # Tip vozila se menja ispod
-        )
-
         for courier in couriers:
+            distance = calculate_route_distance(
+                (order.restaurant.latitude, order.restaurant.longitude),
+                (order.delivery_latitude, order.delivery_longitude),
+                courier.vehicle_type.value
+            )
+
             meets_weight = (courier.vehicle_type == VehicleType.car or order_queue.weight <= 6000)  # 6 kg u gramima
             meets_distance = (
                 (courier.vehicle_type == VehicleType.bike and distance <= 5000) or  # 5 km u metrima
