@@ -172,6 +172,14 @@ from crud.pending_crud import (
     get_pending_orders_for_owner,
     update_order_status
 )
+from crud.system import (
+    assign_orders_to_couriers
+)
+
+async def schedule_assign_orders_to_couriers():
+    print("Function for assigning orders to couriers start!")
+    db: Session = next(get_db())
+    await assign_orders_to_couriers(db)
 
 def start_application():
     app = FastAPI()
@@ -198,6 +206,9 @@ scheduler.add_job(
 )
 scheduler.add_job(
     lambda: asyncio.run(remind_pending_requests()), CronTrigger(hour=0, minute=1)
+)
+scheduler.add_job(
+    lambda: asyncio.run(schedule_assign_orders_to_couriers()), 'interval', seconds=15
 )
 scheduler.start()
 
