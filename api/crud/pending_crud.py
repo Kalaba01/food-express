@@ -1,6 +1,8 @@
-from sqlalchemy.orm import Session
-from sqlalchemy import func
+from datetime import datetime, timedelta
+import pytz
 from fastapi import HTTPException
+from sqlalchemy.orm import Session
+from sqlalchemy import func, DateTime
 from models.models import OrderStatus, Order, OrderItem, OrderQueue, Item, Restaurant, User, RestaurantCapacity
 from schemas.schemas import UpdateOrderStatusSchema, OrderQueueStatusEnum
 
@@ -71,7 +73,23 @@ async def update_order_status(db: Session, order_id: int, status: str):
             RestaurantCapacity.crowded: 1.5,
         }[order.restaurant.capacity]
 
-        estimated_prep_time = int(max_prep_time * capacity_coefficient)
+        estimated_prep_time_minutes = int(max_prep_time * capacity_coefficient)
+        
+        # Koristi lokalno vrijeme
+        local_timezone = pytz.timezone("Europe/Sarajevo")
+        local_now = datetime.now(local_timezone)  # Trenutno lokalno vrijeme
+
+        print("Vrijeme 1: ", local_now)
+        print("Vrijeme 2: ", timedelta(minutes=estimated_prep_time_minutes))
+        print("Ukupno: ", local_now + timedelta(minutes=estimated_prep_time_minutes))
+
+        # Dodaj minute pripreme
+        estimated_prep_time = local_now + timedelta(minutes=estimated_prep_time_minutes)
+
+        # Ukloni informaciju o vremenskoj zoni za pohranu
+        estimated_prep_time_no_zone = estimated_prep_time.replace(tzinfo=None)
+
+        print("Est prep bez vremenske zone: ", estimated_prep_time_no_zone)
 
         total_weight = db.query(
             func.sum(Item.weight * OrderItem.quantity)
@@ -83,7 +101,7 @@ async def update_order_status(db: Session, order_id: int, status: str):
         new_queue_entry = OrderQueue(
             order_id=order.id,
             status=OrderQueueStatusEnum.pending,
-            estimated_preparation_time=estimated_prep_time,
+            estimated_preparation_time=estimated_prep_time_no_zone,
             weight=total_weight
         )
         db.add(new_queue_entry)

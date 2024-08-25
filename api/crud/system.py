@@ -1,4 +1,5 @@
 import json
+from datetime import timedelta
 from sqlalchemy.orm import Session
 from sqlalchemy import func
 from models.models import (
@@ -76,14 +77,19 @@ async def assign_orders_to_couriers(db: Session):
                 print(f"Total money given by customer: {total_money}")
 
                 required_change = calculate_required_change(order.total_price, total_money)
-                meets_change, optimal_change = get_optimal_change(required_change, courier.wallet)
+                meets_change, optimal_change = get_optimal_change(required_change, courier.wallet_details)
                 print(f"Courier {courier.id} can return exact change: {meets_change}")
                 if meets_change:
                     print(f"Optimal change for courier {courier.id} to return: {optimal_change}")
 
             criteria_count = sum([meets_weight, meets_distance, meets_change])
 
-            print(f"Courier ID {courier.id} meets {criteria_count} criteria.")
+            # Dodavanje detaljnog ispisa kriterijuma
+            print(f"Evaluating Courier ID {courier.id}:")
+            print(f"  - Meets weight criteria: {meets_weight}")
+            print(f"  - Meets distance criteria: {meets_distance}")
+            print(f"  - Meets change criteria: {meets_change}")
+            print(f"  - Total criteria met: {criteria_count}")
 
             if criteria_count == 3:
                 couriers_five_criteria.append(courier)
@@ -94,22 +100,43 @@ async def assign_orders_to_couriers(db: Session):
             else:
                 couriers_two_criteria.append(courier)
 
+        # Odaberi najboljeg kurira prema prioritetu kriterijuma
+        assigned_courier = None
+        if couriers_five_criteria:
+            assigned_courier = couriers_five_criteria[0]
+            print(f"Assigned courier ID {assigned_courier.id} meeting 5 criteria.")
+        elif couriers_four_criteria:
+            assigned_courier = couriers_four_criteria[0]
+            print(f"Assigned courier ID {assigned_courier.id} meeting 4 criteria.")
+        elif couriers_three_criteria:
+            assigned_courier = couriers_three_criteria[0]
+            print(f"Assigned courier ID {assigned_courier.id} meeting 3 criteria.")
+        elif couriers_two_criteria:
+            assigned_courier = couriers_two_criteria[0]
+            print(f"Assigned courier ID {assigned_courier.id} meeting 2 criteria.")
 
         if assigned_courier:
-            # Kreiraj unos u order_assignments tabeli
+            # Konvertuj vreme putovanja iz minuta u timedelta
+            travel_time = calculate_travel_time(
+                (order.restaurant.latitude, order.restaurant.longitude),
+                (order.delivery_latitude, order.delivery_longitude),
+                assigned_courier.vehicle_type.value
+            )
+            travel_time_delta = timedelta(minutes=travel_time)
+
+            # Kreiraj unos u order_assignments tabeli, sada sa optimalnim kusurom
+            estimated_delivery_time = order_queue.estimated_preparation_time + travel_time_delta
+            
             new_assignment = OrderAssignment(
                 order_id=order.id,
                 courier_id=assigned_courier.id,
                 status=OrderAssignmentStatus.in_delivery,  # Status postavljen na 'in_delivery'
-                estimated_delivery_time=order_queue.estimated_preparation_time + calculate_travel_time(
-                    (order.restaurant.latitude, order.restaurant.longitude),
-                    (order.delivery_latitude, order.delivery_longitude),
-                    assigned_courier.vehicle_type.value
-                )
+                estimated_delivery_time=estimated_delivery_time,
+                optimal_change=json.dumps(optimal_change) if optimal_change else None  # Dodavanje optimalnog kusura
             )
             db.add(new_assignment)
             order_queue.status = OrderQueueStatusEnum.assigned
             db.commit()
-            print(f"Order ID {order.id} assigned to courier ID {assigned_courier.id}.")
+            print(f"Order ID {order.id} assigned to courier ID {assigned_courier.id} with optimal change: {optimal_change}.")
         else:
             print(f"No suitable courier found for order ID {order.id}.")
