@@ -28,7 +28,6 @@ class RequestStatus(enum.Enum):
 class OrderStatus(enum.Enum):
     pending = "pending"
     preparing = "preparing"
-    in_delivery = "in_delivery"
     delivered = "delivered"
     cancelled = "cancelled"
 
@@ -209,7 +208,10 @@ class OrderAssignment(Base):
     courier_id = Column(Integer, ForeignKey("couriers.id"))
     assigned_at = Column(DateTime, default=datetime.datetime.utcnow)
     status = Column(Enum(OrderAssignmentStatus), nullable=False, default=OrderAssignmentStatus.pending)
-    estimated_delivery_time = Column(Integer, nullable=False)
+    estimated_delivery_time = Column(DateTime, nullable=False)
+    optimal_change = Column(Text, nullable=True)
+    courier_finish = Column(Boolean, default=False)
+    customer_finish = Column(Boolean, default=False)
 
     order = relationship("Order", back_populates="order_assignments")
     courier = relationship("Courier", back_populates="order_assignments")
@@ -254,7 +256,7 @@ class OrderQueue(Base):
     id = Column(Integer, primary_key=True, index=True)
     order_id = Column(Integer, ForeignKey("orders.id"))
     status = Column(Enum(OrderQueueStatusEnum), nullable=False, default=OrderQueueStatusEnum.pending)
-    estimated_preparation_time = Column(Integer, nullable=False)
+    estimated_preparation_time = Column(DateTime, nullable=False)
     weight = Column(Float, nullable=False, default=0.0)
 
     order = relationship("Order")

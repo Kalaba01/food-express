@@ -29,7 +29,6 @@ class RequestStatusEnum(str, Enum):
 class OrderStatusEnum(str, Enum):
     pending = "pending"
     preparing = "preparing"
-    in_delivery = "in_delivery"
     delivered = "delivered"
     cancelled = "cancelled"
 
