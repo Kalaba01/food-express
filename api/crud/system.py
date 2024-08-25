@@ -136,6 +136,7 @@ async def assign_orders_to_couriers(db: Session):
             )
             db.add(new_assignment)
             order_queue.status = OrderQueueStatusEnum.assigned
+            assigned_courier.status = CourierStatus.busy
             db.commit()
             print(f"Order ID {order.id} assigned to courier ID {assigned_courier.id} with optimal change: {optimal_change}.")
         else:
