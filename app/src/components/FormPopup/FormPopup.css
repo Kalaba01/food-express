@@ -81,6 +81,7 @@
     flex-direction: column;
     margin-bottom: 20px;
     width: 99%;
+    gap: 0px !important;
 }
 
 .input-wrapper {
