@@ -36,7 +36,6 @@ class VehicleType(enum.Enum):
     car = "car"
 
 class OrderAssignmentStatus(enum.Enum):
-    pending = "pending"
     in_delivery = "in_delivery"
     delivered = "delivered"
 
@@ -207,7 +206,7 @@ class OrderAssignment(Base):
     order_id = Column(Integer, ForeignKey("orders.id"))
     courier_id = Column(Integer, ForeignKey("couriers.id"))
     assigned_at = Column(DateTime, default=datetime.datetime.utcnow)
-    status = Column(Enum(OrderAssignmentStatus), nullable=False, default=OrderAssignmentStatus.pending)
+    status = Column(Enum(OrderAssignmentStatus), nullable=False, default=OrderAssignmentStatus.in_delivery)
     estimated_delivery_time = Column(DateTime, nullable=False)
     optimal_change = Column(Text, nullable=True)
     courier_finish = Column(Boolean, default=False)
