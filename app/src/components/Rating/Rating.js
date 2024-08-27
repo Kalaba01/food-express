@@ -1,9 +1,11 @@
 import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
 import ReactStars from "react-rating-stars-component";
 import axios from "axios";
 import "./Rating.css";
 
 function Rating({ orderId, onClose }) {
+  const { t } = useTranslation('global');
   const [restaurantRating, setRestaurantRating] = useState(0);
   const [courierRating, setCourierRating] = useState(0);
   const [comment, setComment] = useState("");
@@ -11,7 +13,6 @@ function Rating({ orderId, onClose }) {
   const handleSubmit = async () => {  
     try {
       const token = localStorage.getItem("token");
-      console.log(orderId);
       const data = {
         order_id: orderId,
         restaurant_rating: restaurantRating,
@@ -30,20 +31,20 @@ function Rating({ orderId, onClose }) {
         }
       );
 
-      console.log("Rating submitted successfully");
+      console.log(t("Rating.successMessage"));
       onClose();
     } catch (error) {
-      console.error("Error submitting rating:", error);
+      console.error(t("Rating.errorMessage"), error);
     }
   };
 
   return (
     <div className="rating-popup">
       <div className="rating-content">
-        <h3>Rate Your Experience</h3>
+        <h3>{t("Rating.title")}</h3>
 
         <div className="rating-section">
-          <label>Rate Restaurant:</label>
+          <label>{t("Rating.rateRestaurant")}:</label>
           <div className="stars-container">
             <ReactStars
               count={5}
@@ -56,7 +57,7 @@ function Rating({ orderId, onClose }) {
         </div>
 
         <div className="rating-section">
-          <label>Rate Courier:</label>
+          <label>{t("Rating.rateCourier")}:</label>
           <div className="stars-container">
             <ReactStars
               count={5}
@@ -69,7 +70,7 @@ function Rating({ orderId, onClose }) {
         </div>
 
         <div className="rating-section">
-          <label>Comment:</label>
+          <label>{t("Rating.comment")}:</label>
           <textarea
             value={comment}
             onChange={(e) => setComment(e.target.value)}
@@ -78,10 +79,10 @@ function Rating({ orderId, onClose }) {
 
         <div className="rating-actions">
           <button onClick={handleSubmit} className="submit-btn">
-            Finish
+            {t("Rating.finish")}
           </button>
           <button onClick={onClose} className="cancel-btn">
-            Cancel
+            {t("Rating.cancel")}
           </button>
         </div>
       </div>

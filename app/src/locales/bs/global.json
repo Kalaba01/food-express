@@ -470,5 +470,15 @@
   "actions": "Akcije",
   "notAssigned": "Nije dodijeljen",
   "finish": "Završi"
+  },
+  "Rating": {
+    "title": "Ocijenite Vaše Iskustvo",
+    "rateRestaurant": "Ocijenite Restoran",
+    "rateCourier": "Ocijenite Kurira",
+    "comment": "Komentar",
+    "finish": "Završi",
+    "cancel": "Otkaži",
+    "successMessage": "Ocjena uspješno poslana",
+    "errorMessage": "Greška prilikom slanja ocjene"
   }
 }

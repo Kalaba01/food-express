@@ -470,5 +470,15 @@
   "actions": "Actions",
   "notAssigned": "Not assigned",
   "finish": "Finish"
+  },
+  "Rating": {
+    "title": "Rate Your Experience",
+    "rateRestaurant": "Rate Restaurant",
+    "rateCourier": "Rate Courier",
+    "comment": "Comment",
+    "finish": "Finish",
+    "cancel": "Cancel",
+    "successMessage": "Rating submitted successfully",
+    "errorMessage": "Error submitting rating"
   }
 }
