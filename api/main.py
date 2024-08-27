@@ -59,7 +59,8 @@ from schemas.schemas import (
     PasswordChangeRequest,
     SearchQuery,
     StatusUpdateRequest,
-    UpdateOrderStatusSchema
+    UpdateOrderStatusSchema,
+    RatingCreate
 )
 
 from auth.auth import create_access_token, get_current_user
@@ -174,6 +175,12 @@ from crud.pending_crud import (
 )
 from crud.system import (
     assign_orders_to_couriers
+)
+from crud.track_orders_crud import (
+    get_customer_orders
+)
+from crud.rating_crud import (
+    submit_rating
 )
 
 async def schedule_assign_orders_to_couriers():
@@ -861,3 +868,12 @@ async def get_pending_orders(current_user: User = Depends(get_current_user), db:
 @app.put("/owner/orders/{order_id}/update")
 async def update_order_status_route(order_id: int, status: str, db: Session = Depends(get_db)):
     return await update_order_status(db, order_id, status)
+
+# Ruta za praćenje narudžbi
+@app.get("/customer/track-orders")
+async def track_orders(current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    return await get_customer_orders(current_user.id, db)
+
+@app.post("/rating/submit")
+async def rate_order(rating_data: RatingCreate, db: Session = Depends(get_db)):
+    return await submit_rating(rating_data, db)

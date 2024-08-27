@@ -1,0 +1,100 @@
+.track-orders {
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.track-orders h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.track-orders table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.track-orders th,
+.track-orders td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.track-orders th {
+    background-color: #f8f8f8;
+    color: #333;
+}
+
+.track-orders td {
+    background-color: #fff;
+    color: #333;
+}
+
+.track-orders .status {
+    padding: 5px 10px;
+    border-radius: 4px;
+    color: #fff;
+}
+
+.track-orders .status.waiting {
+    background-color: #f0ad4e;
+}
+
+.track-orders .status.preparing {
+    background-color: #5bc0de;
+}
+
+.track-orders .status.delivering {
+    background-color: #5cb85c;
+}
+
+.track-orders .finish-btn {
+    background-color: #5cb85c;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.track-orders .finish-btn:hover {
+    background-color: #4cae4c;
+}
+
+/* Dark Mode Styles */
+body.dark-mode .track-orders h2 {
+    color: #f8f8f8;
+}
+
+body.dark-mode .track-orders th {
+    background-color: #444;
+    color: #f8f8f8;
+}
+
+body.dark-mode .track-orders td {
+    background-color: #333;
+    color: #f8f8f8;
+    border-bottom: 1px solid #555;
+}
+
+body.dark-mode .track-orders .finish-btn {
+    background-color: #337ab7;
+}
+
+body.dark-mode .track-orders .finish-btn:hover {
+    background-color: #286090;
+}
+
+body.dark-mode .track-orders .status.waiting {
+    background-color: #d9534f;
+}
+
+body.dark-mode .track-orders .status.preparing {
+    background-color: #5bc0de;
+}
+
+body.dark-mode .track-orders .status.delivering {
+    background-color: #5cb85c;
+}

@@ -225,20 +225,9 @@ class OrderAssignmentUpdate(BaseModel):
 # Rating schemas for managing ratings of orders and couriers
 class RatingCreate(BaseModel):
     order_id: int
-    restaurant_rating: int
-    courier_rating: int
+    restaurant_rating: float
+    courier_rating: float
     comments: Optional[str]
-
-# Notification schemas for managing notifications sent to users
-class NotificationCreate(BaseModel):
-    user_id: int
-    message: str
-    read: bool
-
-class NotificationUpdate(BaseModel):
-    user_id: Optional[int] = None
-    message: Optional[str] = None
-    read: Optional[bool] = None
 
 # Chat schemas for managing chat messages between users
 class ChatCreate(BaseModel):

@@ -75,8 +75,7 @@ function HamburgerMenu() {
       case "customer":
         return (
           <>
-            <a href="/courier/route1">Item 1</a>
-            <a href="/courier/route2">Item 2</a>
+             <a href="/customer/track-orders">Track Orders</a>
           </>
         );
       case "owner":
