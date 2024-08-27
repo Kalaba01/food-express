@@ -105,7 +105,7 @@ function LandingPage({ openPopupModal, darkMode, toggleDarkMode }) {
 
         <section className="faq">
           <h2>{t('LandingPage.faq.header')}</h2>
-          {[...Array(3)].map((_, index) => (
+          {[...Array(4)].map((_, index) => (
             <div key={index} className={`faq-item ${faqOpen === index ? 'active' : ''}`} onClick={() => toggleFaq(index)}>
               <h3>{t(`LandingPage.faq.question${index + 1}`)}</h3>
               <div className={`faq-answer ${faqOpen === index ? 'open' : ''}`}>

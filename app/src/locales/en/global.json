@@ -28,9 +28,11 @@
       "question1": "How do I place an order?",
       "question2": "What payment methods are accepted?",
       "question3": "How can I track my delivery?",
+      "question4": "I didn't find my question",
       "answer1": "To place an order, simply browse through the restaurants listed on our platform, select your desired items, and proceed to checkout. You can either sign in to your account or place an order as a guest.",
       "answer2": "We accept various payment methods including credit/debit cards and cash on delivery. You can select your preferred payment method during the checkout process.",
-      "answer3": "Once your order is placed, you can track its status in real-time through our platform. You will receive notifications when the order is confirmed, when the courier picks it up, and when it's on the way to your location."
+      "answer3": "Once your order is placed, you can track its status in real-time through our platform. You will receive notifications when the order is confirmed, when the courier picks it up, and when it's on the way to your location.",
+      "answer4": "If you didn't find the answer to your question, feel free to contact us at foodexpressproject@outlook.com. We are here to help!"
     }
   },
   "FormPopup": {
