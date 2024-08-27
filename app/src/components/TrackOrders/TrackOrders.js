@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { Header, Rating } from "../index";
 import axios from "axios";
+import { useTranslation } from "react-i18next";
 import "./TrackOrders.css";
 
 function TrackOrders({ darkMode, toggleDarkMode }) {
+  const { t } = useTranslation('global');
   const [orders, setOrders] = useState([]);
-  const [statusTitle, setStatusTitle] = useState("Status");
+  const [statusTitle, setStatusTitle] = useState(t("TrackOrders.status"));
   const [showRating, setShowRating] = useState(false);
   const [selectedOrderId, setSelectedOrderId] = useState(null);
 
@@ -48,11 +50,11 @@ function TrackOrders({ darkMode, toggleDarkMode }) {
           if (response.data.length > 0) {
             const firstOrder = response.data[0];
             if (firstOrder.statusColumn === "Preparing") {
-              setStatusTitle("Preparing");
+              setStatusTitle(t("TrackOrders.preparing"));
             } else if (firstOrder.statusColumn === "Delivering") {
-              setStatusTitle("Delivery");
+              setStatusTitle(t("TrackOrders.delivering"));
             } else {
-              setStatusTitle("Status");
+              setStatusTitle(t("TrackOrders.status"));
             }
           }
         } else {
@@ -105,19 +107,17 @@ function TrackOrders({ darkMode, toggleDarkMode }) {
 
   const getStatusColumn = (order) => {
     if (order.statusColumn === "Waiting") {
-      return <span className="status waiting">Waiting</span>;
+      return <span className="status waiting">{t("TrackOrders.waiting")}</span>;
     } else if (order.statusColumn === "Preparing") {
-      const preparationTime = new Date(order.timeValue);
       const timeLeftInMinutes = order.remainingTime
         ? Math.ceil(order.remainingTime / 60)
         : 0;
-      return <span className="status preparing">{timeLeftInMinutes} min</span>;
+      return <span className="status preparing">{`${timeLeftInMinutes} ${t("TrackOrders.minutes")}`}</span>;
     } else if (order.statusColumn === "Delivering") {
-      const deliveryTime = new Date(order.timeValue);
       const timeLeftInMinutes = order.remainingTime
         ? Math.ceil(order.remainingTime / 60)
         : 0;
-      return <span className="status delivering">{timeLeftInMinutes} min</span>;
+      return <span className="status delivering">{`${timeLeftInMinutes} ${t("TrackOrders.minutes")}`}</span>;
     }
     return null;
   };
@@ -130,24 +130,24 @@ function TrackOrders({ darkMode, toggleDarkMode }) {
         userType="customer"
       />
       <div className="track-orders">
-        <h2>Track Orders</h2>
+        <h2>{t("TrackOrders.trackOrders")}</h2>
         <table>
           <thead>
             <tr>
-              <th>Courier</th>
-              <th>Restaurant</th>
-              <th>Address</th>
-              <th>Contact</th>
-              <th>Price</th>
-              <th>Payment</th>
+              <th>{t("TrackOrders.courier")}</th>
+              <th>{t("TrackOrders.restaurant")}</th>
+              <th>{t("TrackOrders.address")}</th>
+              <th>{t("TrackOrders.contact")}</th>
+              <th>{t("TrackOrders.price")}</th>
+              <th>{t("TrackOrders.payment")}</th>
               <th>{statusTitle}</th>
-              <th>Actions</th>
+              <th>{t("TrackOrders.actions")}</th>
             </tr>
           </thead>
           <tbody>
             {orders.map((order) => (
               <tr key={order.id}>
-                <td>{order.courierUsername || "Not assigned"}</td>
+                <td>{order.courierUsername || t("TrackOrders.notAssigned")}</td>
                 <td>{order.restaurantName || "N/A"}</td>
                 <td>{order.restaurantAddress || "N/A"}</td>
                 <td>{order.restaurantContact || "N/A"}</td>
@@ -159,7 +159,7 @@ function TrackOrders({ darkMode, toggleDarkMode }) {
                     onClick={() => handleFinish(order.id)}
                     className="finish-btn"
                   >
-                    Finish
+                    {t("TrackOrders.finish")}
                   </button>
                 </td>
               </tr>

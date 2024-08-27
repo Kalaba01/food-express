@@ -453,5 +453,22 @@
     "denyError": "Neuspješno odbijanje narudžbe",
     "yes": "Da",
     "no": "Ne"
+  },
+  "TrackOrders": {
+    "status": "Status",
+  "preparing": "Priprema",
+  "delivering": "Dostava",
+  "waiting": "Čekanje",
+  "minutes": "minuta",
+  "trackOrders": "Praćenje narudžbi",
+  "courier": "Kurir",
+  "restaurant": "Restoran",
+  "address": "Adresa",
+  "contact": "Kontakt",
+  "price": "Cijena",
+  "payment": "Plaćanje",
+  "actions": "Akcije",
+  "notAssigned": "Nije dodijeljen",
+  "finish": "Završi"
   }
 }

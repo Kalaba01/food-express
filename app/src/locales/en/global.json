@@ -453,5 +453,22 @@
     "denyError": "Failed to deny order",
     "yes": "Yes",
     "no": "No"
+  },
+  "TrackOrders": {
+    "status": "Status",
+  "preparing": "Preparing",
+  "delivering": "Delivering",
+  "waiting": "Waiting",
+  "minutes": "min",
+  "trackOrders": "Track Orders",
+  "courier": "Courier",
+  "restaurant": "Restaurant",
+  "address": "Address",
+  "contact": "Contact",
+  "price": "Price",
+  "payment": "Payment",
+  "actions": "Actions",
+  "notAssigned": "Not assigned",
+  "finish": "Finish"
   }
 }
