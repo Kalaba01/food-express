@@ -428,7 +428,8 @@
     "fillAllFields": "Molimo popunite sva potrebna polja.",
     "invalidSession": "Nevažeća sesija. Molimo prijavite se ponovo.",
     "success": "Vaša narudžba je uspješno poslana!",
-    "error": "Narudžba nije mogla biti obrađena"
+    "error": "Narudžba nije mogla biti obrađena",
+    "insufficientCash": "Nedovoljno gotovine za narudžbu"
   },
   "Status": {
     "online": "Online",

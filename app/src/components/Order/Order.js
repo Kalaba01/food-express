@@ -47,27 +47,43 @@ function Order({ onClose }) {
     }, {});
   };
 
+  const calculateTotalCash = () => {
+    return Object.entries(cashAmounts).reduce((total, [denomination, count]) => {
+      const value = parseFloat(denomination.replace('BAM', ''));
+      return total + (value * count);
+    }, 0);
+  };
+
   const handleConfirmOrder = async () => {
     if (!address || !contact || !paymentMethod || (paymentMethod === 'card' && !cardNumber)) {
       setNotification({ message: t('Order.fillAllFields'), type: 'error' });
       return;
     }
-  
+
     const token = localStorage.getItem('token');
     const decodedToken = jwtDecode(token);
     const customerId = decodedToken ? decodedToken.id : null;
-  
+
     if (!customerId) {
       setNotification({ message: t('Order.invalidSession'), type: 'error' });
       return;
     }
-  
+
     const filteredCashAmounts = paymentMethod === 'cash' ? filterCashAmounts(cashAmounts) : null;
-  
+    const totalPrice = basket.reduce((total, item) => total + item.price * item.quantity, 0);
+
+    if (paymentMethod === 'cash') {
+      const totalCash = calculateTotalCash();
+      if (totalCash < totalPrice) {
+        setNotification({ message: t('Order.insufficientCash'), type: 'error' });
+        return;
+      }
+    }
+
     const orderData = {
       customer_id: customerId,
       restaurant_id: basket[0].restaurant_id,
-      total_price: basket.reduce((total, item) => total + item.price * item.quantity, 0),
+      total_price: totalPrice,
       delivery_address: address,
       cutlery_included: showCutleryOption ? cutleryIncluded : null,
       contact: contact,
@@ -80,7 +96,7 @@ function Order({ onClose }) {
           price: item.price
       }))
     };
-  
+
     try {
       const response = await axios.post('http://localhost:8000/order/', orderData);
       setNotification({ message: t('Order.success'), type: 'success' });
@@ -267,8 +283,8 @@ function Order({ onClose }) {
         </button>
       </div>
       {notification.message && (
-      <NotificationPopup message={notification.message} type={notification.type} />
-    )}
+        <NotificationPopup message={notification.message} type={notification.type} />
+      )}
     </div>
   );
 }

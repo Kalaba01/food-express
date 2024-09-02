@@ -428,7 +428,8 @@
     "fillAllFields": "Please fill in all the required fields.",
     "invalidSession": "Invalid session. Please log in again.",
     "success": "Your order has been successfully placed!",
-    "error": "Order could not be processed"
+    "error": "Order could not be processed",
+    "insufficientCash": "Insufficient cash provided for the order"
   },
   "Status": {
     "online": "Online",
