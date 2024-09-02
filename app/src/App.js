@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Routes, Route } from 'react-router-dom';
-import { FormPopup, NotificationPopup, Customer, Owner, Courier, Admin, LandingPage, Unauthorized, ForgotPassword, ResetPassword, Requests, Users, NotFound, Footer, GoTop, DeliveryZones, Restaurants, Orders, Restaurant, CustomerRestaurant, Couriers, Profile, PendingOrders, TrackOrders } from './components/index';
+import { FormPopup, NotificationPopup, Customer, Owner, Courier, Admin, LandingPage, Unauthorized, ForgotPassword, ResetPassword, Requests, Users, NotFound, Footer, GoTop, DeliveryZones, Restaurants, Orders, Restaurant, CustomerRestaurant, Couriers, Profile, PendingOrders, TrackOrders, OrderHistory } from './components/index';
 import { BasketProvider } from './BasketContext';
 import { jwtDecode } from 'jwt-decode';
 import ProtectedRoute from './components/ProtectedRoute';
@@ -120,6 +120,7 @@ function App() {
             <Route path="/profile" element={<ProtectedRoute allowedRoles={['customer', 'owner', 'courier', 'administrator']}><Profile darkMode={darkMode} toggleDarkMode={toggleDarkMode} /></ProtectedRoute>} />
             <Route path="/customer" element={<ProtectedRoute allowedRoles={['customer']}><Customer darkMode={darkMode} toggleDarkMode={toggleDarkMode} /></ProtectedRoute>} />
             <Route path="/customer/track-orders" element={<ProtectedRoute allowedRoles={['customer']}><TrackOrders darkMode={darkMode} toggleDarkMode={toggleDarkMode} /></ProtectedRoute>} />
+            <Route path="/customer/order-history" element={<ProtectedRoute allowedRoles={['customer']}><OrderHistory darkMode={darkMode} toggleDarkMode={toggleDarkMode} /></ProtectedRoute>} />
             <Route path="/owner" element={<ProtectedRoute allowedRoles={['owner']}><Owner darkMode={darkMode} toggleDarkMode={toggleDarkMode} /></ProtectedRoute>} />
             <Route path="/restaurants/:restaurantName" element={<ProtectedRoute allowedRoles={["customer"]}> <CustomerRestaurant darkMode={darkMode} toggleDarkMode={toggleDarkMode} /></ProtectedRoute>} />
             <Route path="/owner/restaurant/:id" element={<ProtectedRoute allowedRoles={['owner']}><Restaurant darkMode={darkMode} toggleDarkMode={toggleDarkMode} /></ProtectedRoute>} />

@@ -182,6 +182,9 @@ from crud.track_orders_crud import (
 from crud.rating_crud import (
     submit_rating
 )
+from crud.order_history import (
+    get_customer_order_history_with_items
+)
 
 async def schedule_assign_orders_to_couriers():
     print("Function for assigning orders to couriers start!")
@@ -214,9 +217,9 @@ scheduler.add_job(
 scheduler.add_job(
     lambda: asyncio.run(remind_pending_requests()), CronTrigger(hour=0, minute=1)
 )
-scheduler.add_job(
-    lambda: asyncio.run(schedule_assign_orders_to_couriers()), 'interval', seconds=15
-)
+# scheduler.add_job(
+#     lambda: asyncio.run(schedule_assign_orders_to_couriers()), 'interval', seconds=15
+# )
 scheduler.start()
 
 if __name__ == "__main__":
@@ -874,6 +877,13 @@ async def update_order_status_route(order_id: int, status: str, db: Session = De
 async def track_orders(current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
     return await get_customer_orders(current_user.id, db)
 
+#Ruta za ocjenjivanje narudzbe od strane kupca
 @app.post("/rating/submit")
 async def rate_order(rating_data: RatingCreate, db: Session = Depends(get_db)):
     return await submit_rating(rating_data, db)
+
+#Ruta za vracanje istorije narudzbi zajedno sa itemima
+@app.get("/order-history/")
+def order_history(customer_id: int, db: Session = Depends(get_db)):
+    orders = get_customer_order_history_with_items(db, customer_id)
+    return orders

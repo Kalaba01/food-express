@@ -1,5 +1,6 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { NotificationPopup } from "../index";
+import { useNavigate } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
 import { useTranslation } from 'react-i18next';
 import { BasketContext } from '../../BasketContext';
@@ -30,6 +31,7 @@ function Order({ onClose }) {
     "0.10BAM": 0,
     "0.05BAM": 0
   });
+  const navigate = useNavigate();
 
   useEffect(() => {
     const containsFood = basket.some(item => item.category === 'food');
@@ -84,6 +86,7 @@ function Order({ onClose }) {
       setNotification({ message: t('Order.success'), type: 'success' });
       setBasket([]);
       onClose();
+      navigate('/customer/track-orders');
     } catch (error) {
       setNotification({ message: `${t('Order.error')}: ${error.response.data.detail}`, type: 'error' });
     }

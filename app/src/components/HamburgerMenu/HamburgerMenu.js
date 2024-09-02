@@ -76,6 +76,7 @@ function HamburgerMenu() {
         return (
           <>
              <a href="/customer/track-orders">Track Orders</a>
+             <a href="/customer/order-history">Order History</a>
           </>
         );
       case "owner":

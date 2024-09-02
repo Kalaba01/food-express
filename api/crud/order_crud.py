@@ -15,8 +15,8 @@ async def create_order(db: Session, order: OrderCreate):
     longitude = location.longitude
     latitude = location.latitude
 
-    if not is_in_delivery_zone(db, order.restaurant_id, latitude, longitude):
-        raise HTTPException(status_code=400, detail="We do not deliver to this address.")
+    # if not is_in_delivery_zone(db, order.restaurant_id, latitude, longitude):
+    #     raise HTTPException(status_code=400, detail="We do not deliver to this address.")
     
     if order.payment_method == 'card':
         if not validate_card_payment(db, order.card_number, order.total_price):
