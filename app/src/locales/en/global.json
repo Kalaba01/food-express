@@ -422,6 +422,10 @@
     "send": "Send",
     "users": "Users"
   },
+  "Logout": {
+    "logout": "Logout",
+    "cannotLogoutPendingOrders": "You cannot log out while you have pending deliveries."
+  },
   "SearchBar": {
     "searchPlaceholder": "I need to...",
     "restaurants": "Restaurants",

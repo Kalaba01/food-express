@@ -189,6 +189,9 @@ from crud.deliver_order_crud import (
     get_orders_for_courier,
     finish_order
 )
+from crud.courier_crud import (
+    has_unfinished_orders
+)
 
 async def schedule_assign_orders_to_couriers():
     print("Function for assigning orders to couriers start!")
@@ -901,3 +904,9 @@ async def get_courier_orders(courier_id: int, db: Session = Depends(get_db)):
 @app.post("/courier/finish-order/{order_id}")
 async def order_finish(order_id: int, db: Session = Depends(get_db)):
     return await finish_order(db, order_id)
+
+@app.get("/courier/{courier_id}/has-unfinished-orders")
+async def check_pending_orders(courier_id: int, db: Session = Depends(get_db)):
+    if await has_unfinished_orders(db, courier_id):
+        return {"has_unfinished_orders": True}
+    return {"has_unfinished_orders": False}

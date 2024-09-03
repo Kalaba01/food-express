@@ -422,6 +422,10 @@
     "send": "Pošalji",
     "users": "Korisnici"
   },
+  "Logout": {
+    "logout": "Odjava",
+    "cannotLogoutPendingOrders": "Ne možete se odjaviti dok imate nedovršene dostave."
+  },
   "SearchBar": {
     "searchPlaceholder": "Treba mi...",
     "restaurants": "Restorani",
