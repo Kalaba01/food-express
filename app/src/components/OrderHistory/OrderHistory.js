@@ -2,10 +2,12 @@ import React, { useState, useEffect, useContext } from 'react';
 import { Header, Order } from "../index";
 import { jwtDecode } from 'jwt-decode';
 import { BasketContext } from '../../BasketContext';
+import { useTranslation } from 'react-i18next';
 import axios from 'axios';
 import './OrderHistory.css';
 
 function OrderHistory({ darkMode, toggleDarkMode }) {
+  const { t } = useTranslation("global");
   const [orders, setOrders] = useState([]);
   const { setBasket, basket } = useContext(BasketContext);
   const [selectedOrderItems, setSelectedOrderItems] = useState([]);
@@ -68,16 +70,16 @@ function OrderHistory({ darkMode, toggleDarkMode }) {
         userType="customer"
       />
       <div className="order-history">
-        <h2>Your Order History</h2>
+        <h2>{t("OrderHistory.title")}</h2>
         {orders.length > 0 ? (
           <table>
             <thead>
               <tr>
-                <th>Restaurant</th>
-                <th>Category</th>
-                <th>Contact</th>
-                <th>Total Price</th>
-                <th>Actions</th>
+                <th>{t("OrderHistory.restaurant")}</th>
+                <th>{t("OrderHistory.category")}</th>
+                <th>{t("OrderHistory.contact")}</th>
+                <th>{t("OrderHistory.totalPrice")}</th>
+                <th>{t("OrderHistory.actions")}</th>
               </tr>
             </thead>
             <tbody>
@@ -93,14 +95,14 @@ function OrderHistory({ darkMode, toggleDarkMode }) {
                     {order.total_price} BAM
                   </td>
                   <td>
-                    <button onClick={() => handleOrderAgain(order)}>Order Again</button>
+                    <button onClick={() => handleOrderAgain(order)}>{t("OrderHistory.orderAgain")}</button>
                   </td>
                 </tr>
               ))}
             </tbody>
           </table>
         ) : (
-          <p>No orders found.</p>
+          <p>{t("OrderHistory.noOrders")}</p>
         )}
       </div>
 
@@ -108,7 +110,7 @@ function OrderHistory({ darkMode, toggleDarkMode }) {
         <div className="order-items-popup">
           <div className="popup-content">
             <span className="close-popup" onClick={handleClosePopup}>&times;</span>
-            <h3>Order Items</h3>
+            <h3>{t("OrderHistory.orderItems")}</h3>
             <ul>
               {selectedOrderItems.map((item, index) => (
                 <li key={index}>

@@ -33,7 +33,7 @@
       "answer2": "Prihvatamo razne metode plaćanja, uključujući kreditne/debitne kartice, PayPal i gotovinu prilikom dostave. Možete odabrati željenu metodu plaćanja tokom procesa naplate.",
       "answer3": "Nakon što izvršite narudžbu, možete pratiti njen status u stvarnom vremenu putem naše platforme. Dobit ćete obavijesti kada je narudžba potvrđena, kada je kurir preuzme i kada je na putu do vaše lokacije.",
       "answer4": "Ako niste pronašli odgovor na svoje pitanje, slobodno nas kontaktirajte na foodexpressproject@outlook.com. Tu smo da vam pomognemo!"
-  }
+    }
   },
   "FormPopup": {
     "login": {
@@ -338,13 +338,13 @@
     "alcohol": "Alkohol",
     "other": "Ostalo",
     "days": {
-        "Monday": "Ponedjeljak",
-        "Tuesday": "Utorak",
-        "Wednesday": "Srijeda",
-        "Thursday": "Četvrtak",
-        "Friday": "Petak",
-        "Saturday": "Subota",
-        "Sunday": "Nedjelja"
+      "Monday": "Ponedjeljak",
+      "Tuesday": "Utorak",
+      "Wednesday": "Srijeda",
+      "Thursday": "Četvrtak",
+      "Friday": "Petak",
+      "Saturday": "Subota",
+      "Sunday": "Nedjelja"
     }
   },
   "Couriers": {
@@ -372,7 +372,7 @@
     "errorChangingPassword": "Greška prilikom promjene lozinke",
     "passwordsDontMatch": "Nova lozinka i potvrda se ne podudaraju",
     "passwordChangedSuccessfully": "Lozinka je uspješno promijenjena",
-   "newPasswordCannotBeSame": "Nova lozinka ne može biti ista kao stara lozinka",
+    "newPasswordCannotBeSame": "Nova lozinka ne može biti ista kao stara lozinka",
     "profilePicture": "Profilna Slika",
     "editProfile": "Uredi Profil",
     "changePassword": "Promijeni Lozinku",
@@ -438,6 +438,17 @@
     "error": "Narudžba nije mogla biti obrađena",
     "insufficientCash": "Nedovoljno gotovine za narudžbu"
   },
+  "OrderHistory": {
+    "title": "Vaša istorija narudžbi",
+    "restaurant": "Restoran",
+    "category": "Kategorija",
+    "contact": "Kontakt",
+    "totalPrice": "Ukupna cijena",
+    "actions": "Akcije",
+    "orderAgain": "Naruči ponovo",
+    "noOrders": "Nema pronađenih narudžbi.",
+    "orderItems": "Stavke narudžbe"
+  },
   "Status": {
     "online": "Online",
     "offline": "Offline",
@@ -466,20 +477,20 @@
   },
   "TrackOrders": {
     "status": "Status",
-  "preparing": "Priprema",
-  "delivering": "Dostava",
-  "waiting": "Čekanje",
-  "minutes": "minuta",
-  "trackOrders": "Praćenje narudžbi",
-  "courier": "Kurir",
-  "restaurant": "Restoran",
-  "address": "Adresa",
-  "contact": "Kontakt",
-  "price": "Cijena",
-  "payment": "Plaćanje",
-  "actions": "Akcije",
-  "notAssigned": "Nije dodijeljen",
-  "finish": "Završi"
+    "preparing": "Priprema",
+    "delivering": "Dostava",
+    "waiting": "Čekanje",
+    "minutes": "minuta",
+    "trackOrders": "Praćenje narudžbi",
+    "courier": "Kurir",
+    "restaurant": "Restoran",
+    "address": "Adresa",
+    "contact": "Kontakt",
+    "price": "Cijena",
+    "payment": "Plaćanje",
+    "actions": "Akcije",
+    "notAssigned": "Nije dodijeljen",
+    "finish": "Završi"
   },
   "Rating": {
     "title": "Ocijenite Vaše Iskustvo",
