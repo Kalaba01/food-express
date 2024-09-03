@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { Header, NotificationPopup } from "../index";
 import { jwtDecode } from "jwt-decode";
+import { useTranslation } from "react-i18next";
 import axios from "axios";
 import "./DeliverOrder.css";
 
 function DeliverOrder({ darkMode, toggleDarkMode }) {
+  const { t } = useTranslation("global");
   const [orders, setOrders] = useState([]);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [popupContent, setPopupContent] = useState(null);
@@ -37,7 +39,7 @@ function DeliverOrder({ darkMode, toggleDarkMode }) {
   const handleShowItems = (items) => {
     const content = (
       <>
-        <h3>Order Items</h3>
+        <h3>{t("DeliverOrder.orderItems")}</h3>
         <ul>
           {items.map((item, index) => (
             <li key={index}>
@@ -56,8 +58,8 @@ function DeliverOrder({ darkMode, toggleDarkMode }) {
 
     const content = (
       <>
-        <h3>Payment Method Details</h3>
-        <p>The optimal change is:</p>
+        <h3>{t("DeliverOrder.paymentDetails")}</h3>
+        <p>{t("DeliverOrder.optimalChange")}</p>
         <ul>
           {parsedChange.map((change, index) => (
             <li key={index}>
@@ -90,7 +92,7 @@ function DeliverOrder({ darkMode, toggleDarkMode }) {
         }
       );
 
-      setNotification({ message: "Order successfully finished", type: "success" });
+      setNotification({ message: t("DeliverOrder.orderFinished"), type: "success" });
       
       const decodedToken = jwtDecode(token);
       const courierId = decodedToken ? decodedToken.id : null;
@@ -101,7 +103,7 @@ function DeliverOrder({ darkMode, toggleDarkMode }) {
       setOrders(response.data);
     } catch (error) {
       setNotification({
-        message: error.response?.data?.detail || "An error occurred while finishing the order",
+        message: error.response?.data?.detail || t("DeliverOrder.errorFinishingOrder"),
         type: "error"
       });
     }
@@ -115,20 +117,20 @@ function DeliverOrder({ darkMode, toggleDarkMode }) {
         userType="courier"
       />
       <div className="deliver-order">
-        <h2>Deliver Orders</h2>
+        <h2>{t("DeliverOrder.title")}</h2>
         {orders.length > 0 ? (
           <table>
             <thead>
               <tr>
-                <th>Restaurant</th>
-                <th>Address</th>
-                <th>Contact</th>
-                <th>Customer</th>
-                <th>Customer Address</th>
-                <th>Customer Contact</th>
-                <th>Price</th>
-                <th>Payment Method</th>
-                <th>Actions</th>
+                <th>{t("DeliverOrder.restaurant")}</th>
+                <th>{t("DeliverOrder.restaurantAddress")}</th>
+                <th>{t("DeliverOrder.restaurantContact")}</th>
+                <th>{t("DeliverOrder.customer")}</th>
+                <th>{t("DeliverOrder.customerAddress")}</th>
+                <th>{t("DeliverOrder.customerContact")}</th>
+                <th>{t("DeliverOrder.price")}</th>
+                <th>{t("DeliverOrder.paymentMethod")}</th>
+                <th>{t("DeliverOrder.actions")}</th>
               </tr>
             </thead>
             <tbody>
@@ -158,7 +160,7 @@ function DeliverOrder({ darkMode, toggleDarkMode }) {
                   </td>
                   <td>
                     <button onClick={() => handleFinishOrder(order.id)}>
-                      Finish
+                      {t("DeliverOrder.finish")}
                     </button>
                   </td>
                 </tr>
@@ -166,7 +168,7 @@ function DeliverOrder({ darkMode, toggleDarkMode }) {
             </tbody>
           </table>
         ) : (
-          <p>No orders to deliver.</p>
+          <p>{t("DeliverOrder.noOrders")}</p>
         )}
 
         {notification.message && (

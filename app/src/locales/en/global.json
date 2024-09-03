@@ -284,6 +284,25 @@
     "noItems": "No items in this order",
     "all": "All"
   },
+  "DeliverOrder": {
+    "title": "Deliver Orders",
+    "restaurant": "Restaurant",
+    "restaurantAddress": "Restaurant Address",
+    "restaurantContact": "Restaurant Contact",
+    "customer": "Customer",
+    "customerAddress": "Customer Address",
+    "customerContact": "Customer Contact",
+    "price": "Price",
+    "paymentMethod": "Payment Method",
+    "actions": "Actions",
+    "finish": "Finish",
+    "noOrders": "No orders to deliver.",
+    "orderItems": "Order Items",
+    "paymentDetails": "Payment Method Details",
+    "optimalChange": "The optimal change is:",
+    "orderFinished": "Order successfully finished",
+    "errorFinishingOrder": "An error occurred while finishing the order"
+  },
   "Restaurant": {
     "loading": "Loading...",
     "edit": "Edit",

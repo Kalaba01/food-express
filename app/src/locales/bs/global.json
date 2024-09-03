@@ -284,6 +284,25 @@
     "noItems": "Nema artikala u ovoj narudžbi",
     "all": "Sve"
   },
+  "DeliverOrder": {
+    "title": "Dostavi Narudžbe",
+    "restaurant": "Restoran",
+    "restaurantAddress": "Adresa Restorana",
+    "restaurantContact": "Kontakt Restorana",
+    "customer": "Kupac",
+    "customerAddress": "Adresa Kupca",
+    "customerContact": "Kontakt Kupca",
+    "price": "Cijena",
+    "paymentMethod": "Način Plaćanja",
+    "actions": "Akcije",
+    "finish": "Završi",
+    "noOrders": "Nema narudžbi za dostavu.",
+    "orderItems": "Stavke Narudžbe",
+    "paymentDetails": "Detalji o Načinu Plaćanja",
+    "optimalChange": "Optimalna kusur je:",
+    "orderFinished": "Narudžba uspješno završena",
+    "errorFinishingOrder": "Došlo je do greške prilikom završetka narudžbe"
+  },
   "Restaurant": {
     "loading": "Učitavanje...",
     "edit": "Uredi",
