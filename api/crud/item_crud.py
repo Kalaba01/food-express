@@ -5,8 +5,8 @@ from models.models import Item, Image
 from schemas.schemas import ItemCreate, ItemUpdate
 
 
-async def get_items(db: Session, category_id: int):
-    items = db.query(Item).filter(Item.menu_category_id == category_id).all()
+async def get_items(db: Session, restaurant_id: int):
+    items = db.query(Item).filter(Item.restaurant_id == restaurant_id).all()
 
     result = []
     for item in items:

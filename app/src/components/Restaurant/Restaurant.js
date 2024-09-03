@@ -4,6 +4,8 @@ import {
   LookupTable,
   ConfirmDelete,
   NotificationPopup,
+  Gallery,
+  GalleryPopup,
 } from "../index";
 import {
   FaStar,
@@ -55,17 +57,21 @@ function Restaurant({ darkMode, toggleDarkMode }) {
   const [currentGalleryItem, setCurrentGalleryItem] = useState(null);
   const [currentGalleryImageIndex, setCurrentGalleryImageIndex] = useState(0);
   const [deleteType, setDeleteType] = useState(null);
-  const [notification, setNotification] = useState({
-    message: "",
-    type: "",
-    visible: false,
-  });
+  const [notification, setNotification] = useState({ message: "", type: "" });
+  const [selectedDay, setSelectedDay] = useState(0);
 
-  const showNotification = (message, type = "info") => {
-    setNotification({ message, type, visible: true });
-    setTimeout(() => {
-      setNotification((prev) => ({ ...prev, visible: false }));
-    }, 3000);
+  const daysOfWeek = [
+    t("Restaurant.days.Monday"),
+    t("Restaurant.days.Tuesday"),
+    t("Restaurant.days.Wednesday"),
+    t("Restaurant.days.Thursday"),
+    t("Restaurant.days.Friday"),
+    t("Restaurant.days.Saturday"),
+    t("Restaurant.days.Sunday"),
+  ];
+
+  const handleDayChange = (e) => {
+    setSelectedDay(parseInt(e.target.value, 10));
   };
 
   const fetchRestaurant = async () => {
@@ -90,7 +96,7 @@ function Restaurant({ darkMode, toggleDarkMode }) {
             ? response.data.total_rating / response.data.rating_count
             : null,
         operating_hours: response.data.operating_hours || [],
-        category: response.data.category || ""
+        category: response.data.category || "",
       });
     } catch (error) {
       console.error("Error fetching restaurant:", error);
@@ -111,7 +117,10 @@ function Restaurant({ darkMode, toggleDarkMode }) {
       setCategories(categoriesResponse.data || []);
     } catch (error) {
       console.error("Error fetching categories:", error);
-      showNotification(t("Restaurant.errorFetchingCategories"), "error");
+      setNotification({
+        message: t("Restaurant.errorFetchingCategories"),
+        type: "error",
+      });
     }
   };
 
@@ -129,7 +138,10 @@ function Restaurant({ darkMode, toggleDarkMode }) {
       setItems(itemsResponse.data || []);
     } catch (error) {
       console.error("Error fetching items:", error);
-      showNotification(t("Restaurant.errorFetchingItems"), "error");
+      setNotification({
+        message: t("Restaurant.errorFetchingItems"),
+        type: "error",
+      });
     }
   };
 
@@ -148,11 +160,6 @@ function Restaurant({ darkMode, toggleDarkMode }) {
   const openImageGalleryPopup = (item) => {
     if (item && item.images && item.images.length > 0) {
       setCurrentGalleryItem(item);
-      setCurrentGalleryImageIndex(0);
-      setIsImageGalleryOpen(true);
-    } else {
-      setCurrentGalleryItem({ images: [] });
-      setCurrentGalleryImageIndex(0);
       setIsImageGalleryOpen(true);
     }
   };
@@ -160,18 +167,6 @@ function Restaurant({ darkMode, toggleDarkMode }) {
   const closeImageGalleryPopup = () => {
     setIsImageGalleryOpen(false);
     setCurrentGalleryItem(null);
-  };
-
-  const handleNextGalleryImage = () => {
-    setCurrentGalleryImageIndex((prevIndex) =>
-      prevIndex === currentGalleryItem.images.length - 1 ? 0 : prevIndex + 1
-    );
-  };
-
-  const handlePrevGalleryImage = () => {
-    setCurrentGalleryImageIndex((prevIndex) =>
-      prevIndex === 0 ? currentGalleryItem.images.length - 1 : prevIndex - 1
-    );
   };
 
   const openEditCategoryPopup = (category) => {
@@ -296,6 +291,10 @@ function Restaurant({ darkMode, toggleDarkMode }) {
         }
       );
       setEditingRestaurant(false);
+      setNotification({
+        message: t("Restaurant.restaurantUpdated"),
+        type: "success",
+      });
     } catch (error) {
       console.error("Error saving restaurant data:", error);
     }
@@ -375,14 +374,23 @@ function Restaurant({ darkMode, toggleDarkMode }) {
 
         closeDeletePopup();
 
-        showNotification(t("Restaurant.imageDeleted"), "success");
+        setNotification({
+          message: t("Restaurant.imageDeleted"),
+          type: "success",
+        });
       } catch (error) {
         console.error("Error deleting image:", error);
-        showNotification(t("Restaurant.errorDeletingImage"), "error");
+        setNotification({
+          message: t("Restaurant.errorDeletingImage"),
+          type: "error",
+        });
       }
     } else {
       console.error("Image ID is undefined or invalid, cannot delete.");
-      showNotification(t("Restaurant.invalidImageId"), "error");
+      setNotification({
+        message: t("Restaurant.invalidImageId"),
+        type: "error",
+      });
     }
   };
 
@@ -415,15 +423,17 @@ function Restaurant({ darkMode, toggleDarkMode }) {
               : cat
           )
         );
-        showNotification(t("Restaurant.categoryUpdated"), "success");
+        setNotification({
+          message: t("Restaurant.categoryUpdated"),
+          type: "success",
+        });
       } else {
-        // Add new category
         const response = await axios.post(
           `http://localhost:8000/restaurants/${id}/categories`,
           {
             name: currentCategory.name,
             description: currentCategory.description,
-            restaurant_id: id, // Dodaj restaurant_id u zahtev
+            restaurant_id: id,
           },
           {
             headers: {
@@ -432,46 +442,49 @@ function Restaurant({ darkMode, toggleDarkMode }) {
           }
         );
         setCategories([...categories, response.data]);
-        showNotification(t("Restaurant.categoryAdded"), "success");
+        setNotification({
+          message: t("Restaurant.categoryAdded"),
+          type: "success",
+        });
       }
       closeAddCategoryPopup();
+      closeEditCategoryPopup();
     } catch (error) {
       console.error("Error saving category:", error);
-      showNotification(t("Restaurant.errorSavingCategory"), "error");
+      setNotification({
+        message: t("Restaurant.errorSavingCategory"),
+        type: "error",
+      });
     }
   };
 
-  const handleSaveItem = async (e) => {
+  const handleAddItem = async (e) => {
     e.preventDefault();
     const token = localStorage.getItem("token");
 
     try {
-      let itemId = currentItem?.id;
-
-      if (!itemId) {
-        const response = await axios.post(
-          `http://localhost:8000/restaurants/${id}/items`,
-          {
-            name: currentItem?.name,
-            description: currentItem?.description,
-            price: parseFloat(currentItem?.price),
-            weight: parseInt(currentItem?.weight, 10),
-            preparation_time: parseInt(currentItem?.preparation_time, 10),
-            restaurant_id: id,
-            menu_category_id: categories.find(
-              (category) => category.name === currentItem?.menuCategory
-            )?.id,
-            category: currentItem?.category,
+      const response = await axios.post(
+        `http://localhost:8000/restaurants/${id}/items`,
+        {
+          name: currentItem?.name,
+          description: currentItem?.description,
+          price: parseFloat(currentItem?.price),
+          weight: parseInt(currentItem?.weight, 10),
+          preparation_time: parseInt(currentItem?.preparation_time, 10),
+          restaurant_id: id,
+          menu_category_id: categories.find(
+            (category) => category.name === currentItem?.menuCategory
+          )?.id,
+          category: currentItem?.category,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
           },
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        itemId = response.data.id;
-        setItems([...items, response.data]);
-      }
+        }
+      );
+
+      const newItemId = response.data.id;
 
       const imageUploads = currentItem.images
         .filter((image) => image.file)
@@ -480,7 +493,71 @@ function Restaurant({ darkMode, toggleDarkMode }) {
           formData.append("file", image.file);
 
           const response = await axios.post(
-            `http://localhost:8000/items/${itemId}/images`,
+            `http://localhost:8000/items/${newItemId}/images`,
+            formData,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "multipart/form-data",
+              },
+            }
+          );
+
+          return response.data.image;
+        });
+
+      await Promise.all(imageUploads);
+
+      await fetchItems();
+
+      closeAddItemPopup();
+
+      setNotification({
+        message: t("Restaurant.itemAdded"),
+        type: "success",
+      });
+    } catch (error) {
+      console.error("Error adding item:", error);
+      setNotification({
+        message: t("Restaurant.errorAddingItem"),
+        type: "error",
+      });
+    }
+  };
+
+  const handleEditItem = async (e) => {
+    e.preventDefault();
+    const token = localStorage.getItem("token");
+
+    try {
+      await axios.put(
+        `http://localhost:8000/restaurants/${id}/items/${currentItem.id}`,
+        {
+          name: currentItem?.name,
+          description: currentItem?.description,
+          price: parseFloat(currentItem?.price),
+          weight: parseInt(currentItem?.weight, 10),
+          preparation_time: parseInt(currentItem?.preparation_time, 10),
+          menu_category_id: categories.find(
+            (category) => category.name === currentItem?.menuCategory
+          )?.id,
+          category: currentItem?.category,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      const imageUploads = currentItem.images
+        .filter((image) => image.file)
+        .map(async (image) => {
+          const formData = new FormData();
+          formData.append("file", image.file);
+
+          const response = await axios.post(
+            `http://localhost:8000/items/${currentItem.id}/images`,
             formData,
             {
               headers: {
@@ -498,12 +575,17 @@ function Restaurant({ darkMode, toggleDarkMode }) {
       await fetchItems();
 
       closeEditItemPopup();
-      closeAddItemPopup();
 
-      showNotification(t("Restaurant.itemAdded"), "success");
+      setNotification({
+        message: t("Restaurant.itemUpdated"),
+        type: "success",
+      });
     } catch (error) {
-      console.error("Error saving item:", error);
-      showNotification(t("Restaurant.errorSavingItem"), "error");
+      console.error("Error updating item:", error);
+      setNotification({
+        message: t("Restaurant.errorUpdatingItem"),
+        type: "error",
+      });
     }
   };
 
@@ -520,7 +602,10 @@ function Restaurant({ darkMode, toggleDarkMode }) {
           }
         );
         setItems(items.filter((item) => item.id !== itemToDelete.id));
-        showNotification(t("Restaurant.itemDeleted"), "success");
+        setNotification({
+          message: t("Restaurant.itemDeleted"),
+          type: "success",
+        });
       } else if (deleteType === "category" && categoryToDelete) {
         await axios.delete(
           `http://localhost:8000/restaurants/${id}/categories/${categoryToDelete.id}`,
@@ -533,7 +618,10 @@ function Restaurant({ darkMode, toggleDarkMode }) {
         setCategories(
           categories.filter((cat) => cat.id !== categoryToDelete.id)
         );
-        showNotification(t("Restaurant.categoryDeleted"), "success");
+        setNotification({
+          message: t("Restaurant.categoryDeleted"),
+          type: "success",
+        });
       } else if (deleteType === "restaurantImage" && imageToDelete !== null) {
         await handleConfirmDeleteRestaurantImage();
       } else if (deleteType === "itemImage" && imageToDelete !== null) {
@@ -542,7 +630,10 @@ function Restaurant({ darkMode, toggleDarkMode }) {
       closeDeletePopup();
     } catch (error) {
       console.error("Error deleting item, category or image:", error);
-      showNotification(t("Restaurant.errorDeletingItem"), "error");
+      setNotification({
+        message: t("Restaurant.errorDeletingItem"),
+        type: "error",
+      });
     }
   };
 
@@ -614,14 +705,23 @@ function Restaurant({ darkMode, toggleDarkMode }) {
         setCurrentGalleryImageIndex(newIndex);
 
         closeDeletePopup();
-        showNotification(t("Restaurant.itemImageDeleted"), "success");
+        setNotification({
+          message: t("Restaurant.itemImageDeleted"),
+          type: "success",
+        });
       } catch (error) {
         console.error("Error deleting image:", error);
-        showNotification(t("Restaurant.errorDeletingItemImage"), "error");
+        setNotification({
+          message: t("Restaurant.errorDeletingItemImage"),
+          type: "error",
+        });
       }
     } else {
       console.error("Image ID is undefined or invalid, cannot delete.");
-      showNotification(t("Restaurant.invalidImageId"), "error");
+      setNotification({
+        message: t("Restaurant.invalidImageId"),
+        type: "error",
+      });
     }
   };
 
@@ -643,8 +743,8 @@ function Restaurant({ darkMode, toggleDarkMode }) {
           <ul>
             {restaurant.operating_hours.map((hours, index) => (
               <li key={index}>
-                {t(`Restaurant.days.${hours.day_of_week}`)}: {hours.opening_time} -{" "}
-                {hours.closing_time}
+                {t(`Restaurant.days.${hours.day_of_week}`)}:{" "}
+                {hours.opening_time} - {hours.closing_time}
               </li>
             ))}
           </ul>
@@ -669,21 +769,11 @@ function Restaurant({ darkMode, toggleDarkMode }) {
 
         <div className="restaurant-images">
           {restaurant.images.length > 0 ? (
-            <div className="restaurant-images-gallery">
-              <FaArrowLeft
-                className="gallery-arrow left"
-                onClick={handlePrevImage}
-              />
-              <img
-                src={`data:image/jpeg;base64,${restaurant.images[currentImageIndex].image}`}
-                alt={`Restaurant ${currentImageIndex + 1}`}
-                className="gallery-image"
-              />
-              <FaArrowRight
-                className="gallery-arrow right"
-                onClick={handleNextImage}
-              />
-            </div>
+            <Gallery
+              images={restaurant.images.map(
+                (image) => `data:image/jpeg;base64,${image.image}`
+              )}
+            />
           ) : (
             <p className="no-images">{t("Restaurant.noImages")}</p>
           )}
@@ -754,92 +844,65 @@ function Restaurant({ darkMode, toggleDarkMode }) {
                   <h3>{t("Restaurant.operatingHours")}</h3>
                   {restaurantData.operating_hours.length > 0 ? (
                     <>
-                      {restaurantData.operating_hours
-                        .slice(0, 6)
-                        .map((hours, index) => (
-                          <div
-                            key={index}
-                            className="form-row operating-hours-input"
-                          >
-                            <label>{t(`Restaurant.days.${hours.day_of_week}`)}</label>
-                            <input
-                              type="time"
-                              value={hours.opening_time}
-                              onChange={(e) =>
-                                setRestaurantData((prevData) => {
-                                  const newHours = [
-                                    ...prevData.operating_hours,
-                                  ];
-                                  newHours[index].opening_time = e.target.value;
-                                  return {
-                                    ...prevData,
-                                    operating_hours: newHours,
-                                  };
-                                })
-                              }
-                            />
-                            <span> - </span>
-                            <input
-                              type="time"
-                              value={hours.closing_time}
-                              onChange={(e) =>
-                                setRestaurantData((prevData) => {
-                                  const newHours = [
-                                    ...prevData.operating_hours,
-                                  ];
-                                  newHours[index].closing_time = e.target.value;
-                                  return {
-                                    ...prevData,
-                                    operating_hours: newHours,
-                                  };
-                                })
-                              }
-                            />
-                          </div>
-                        ))}
-                      <div className="form-row operating-hours-input">
-                        <label>
-                          {t(
-                            `Days.${restaurantData.operating_hours[6].day_of_week}`
-                          )}
-                        </label>
-                        <input
-                          type="time"
-                          value={restaurantData.operating_hours[6].opening_time}
-                          onChange={(e) =>
-                            setRestaurantData((prevData) => {
-                              const newHours = [...prevData.operating_hours];
-                              newHours[6].opening_time = e.target.value;
-                              return {
-                                ...prevData,
-                                operating_hours: newHours,
-                              };
-                            })
-                          }
-                        />
-                        <span> - </span>
-                        <input
-                          type="time"
-                          value={restaurantData.operating_hours[6].closing_time}
-                          onChange={(e) =>
-                            setRestaurantData((prevData) => {
-                              const newHours = [...prevData.operating_hours];
-                              newHours[6].closing_time = e.target.value;
-                              return {
-                                ...prevData,
-                                operating_hours: newHours,
-                              };
-                            })
-                          }
-                        />
+                      <div className="select-day-row">
+                        <label>{t("Restaurant.selectDay")}</label>
+                        <select value={selectedDay} onChange={handleDayChange}>
+                          {daysOfWeek.map((day, index) => (
+                            <option key={index} value={index}>
+                              {day}
+                            </option>
+                          ))}
+                        </select>
                       </div>
+
+                      {restaurantData.operating_hours[selectedDay] && (
+                        <div className="form-row operating-hours-input">
+                          <label>{daysOfWeek[selectedDay]}</label>
+                          <input
+                            type="time"
+                            value={
+                              restaurantData.operating_hours[selectedDay]
+                                .opening_time
+                            }
+                            onChange={(e) =>
+                              setRestaurantData((prevData) => {
+                                const newHours = [...prevData.operating_hours];
+                                newHours[selectedDay].opening_time =
+                                  e.target.value;
+                                return {
+                                  ...prevData,
+                                  operating_hours: newHours,
+                                };
+                              })
+                            }
+                          />
+                          <span> - </span>
+                          <input
+                            type="time"
+                            value={
+                              restaurantData.operating_hours[selectedDay]
+                                .closing_time
+                            }
+                            onChange={(e) =>
+                              setRestaurantData((prevData) => {
+                                const newHours = [...prevData.operating_hours];
+                                newHours[selectedDay].closing_time =
+                                  e.target.value;
+                                return {
+                                  ...prevData,
+                                  operating_hours: newHours,
+                                };
+                              })
+                            }
+                          />
+                        </div>
+                      )}
                     </>
                   ) : (
                     <p>{t("Restaurant.noOperatingHours")}</p>
                   )}
                 </div>
 
-                {/* Galerija slika */}
                 <div className="restaurant-images-gallery">
                   {restaurantData.images.length > 0 && (
                     <>
@@ -978,46 +1041,17 @@ function Restaurant({ darkMode, toggleDarkMode }) {
         </div>
 
         {isImageGalleryOpen && currentGalleryItem && (
-          <div className="item-modal">
-            <div className="item-modal-content">
-              <span
-                className="item-close-button"
-                onClick={closeImageGalleryPopup}
-              >
-                &times;
-              </span>
-              <h2>{currentGalleryItem.name}</h2>
-              {currentGalleryItem.images &&
-              currentGalleryItem.images.length > 0 ? (
-                <div className="item-gallery">
-                  {currentGalleryItem.images.length > 1 && (
-                    <FaArrowLeft
-                      className="item-gallery-arrow left"
-                      onClick={handlePrevGalleryImage}
-                    />
-                  )}
-                  <img
-                    src={
-                      currentGalleryItem.images[currentGalleryImageIndex].image
-                    }
-                    alt={`Item ${currentGalleryImageIndex + 1}`}
-                    className="item-gallery-image"
-                  />
-                  {currentGalleryItem.images.length > 1 && (
-                    <FaArrowRight
-                      className="item-gallery-arrow right"
-                      onClick={handleNextGalleryImage}
-                    />
-                  )}
-                </div>
-              ) : (
-                <p>{t("Restaurant.noImages")}</p>
-              )}
-            </div>
-          </div>
+          <GalleryPopup
+            images={currentGalleryItem.images.map((image) =>
+              image.image.startsWith("data:image/jpeg;base64,")
+                ? image.image
+                : `data:image/jpeg;base64,${image.image}`
+            )}
+            initialIndex={currentGalleryImageIndex}
+            onClose={closeImageGalleryPopup}
+          />
         )}
 
-        {/* Popup za editovanje kategorije */}
         {isEditCategoryOpen && (
           <div className="modal">
             <div className="modal-content">
@@ -1040,6 +1074,20 @@ function Restaurant({ darkMode, toggleDarkMode }) {
                     required
                   />
                 </label>
+                <label>
+                  {t("Restaurant.categoryDescription")}
+                  <input
+                    type="text"
+                    value={currentCategory ? currentCategory.description : ""}
+                    onChange={(e) =>
+                      setCurrentCategory({
+                        ...currentCategory,
+                        description: e.target.value,
+                      })
+                    }
+                    required
+                  />
+                </label>
                 <button type="submit" className="save-button">
                   {t("Restaurant.save")}
                 </button>
@@ -1048,7 +1096,6 @@ function Restaurant({ darkMode, toggleDarkMode }) {
           </div>
         )}
 
-        {/* Popup za dodavanje kategorije */}
         {isAddCategoryOpen && (
           <div className="modal">
             <div className="modal-content">
@@ -1093,7 +1140,6 @@ function Restaurant({ darkMode, toggleDarkMode }) {
           </div>
         )}
 
-        {/* Editovanje Itema */}
         {isEditItemOpen && (
           <div className="modal">
             <div className="modal-content reduced-padding">
@@ -1101,7 +1147,7 @@ function Restaurant({ darkMode, toggleDarkMode }) {
                 &times;
               </span>
               <h2>{t("Restaurant.editItem")}</h2>
-              <form onSubmit={handleSaveItem}>
+              <form onSubmit={handleEditItem}>
                 <div className="form-row">
                   <label>
                     {t("Restaurant.itemName")}
@@ -1177,8 +1223,7 @@ function Restaurant({ darkMode, toggleDarkMode }) {
                   </label>
                   <label>
                     {t("Restaurant.menuCategory")}
-                    <input
-                      type="text"
+                    <select
                       value={currentItem ? currentItem.menuCategory : ""}
                       onChange={(e) =>
                         setCurrentItem({
@@ -1187,13 +1232,18 @@ function Restaurant({ darkMode, toggleDarkMode }) {
                         })
                       }
                       required
-                    />
+                    >
+                      {categories.map((category) => (
+                        <option key={category.id} value={category.name}>
+                          {category.name}
+                        </option>
+                      ))}
+                    </select>
                   </label>
                 </div>
                 <label>
                   {t("Restaurant.category")}
-                  <input
-                    type="text"
+                  <select
                     value={currentItem ? currentItem.category : ""}
                     onChange={(e) =>
                       setCurrentItem({
@@ -1202,10 +1252,14 @@ function Restaurant({ darkMode, toggleDarkMode }) {
                       })
                     }
                     required
-                  />
+                  >
+                    <option value="food">{t("Restaurant.food")}</option>
+                    <option value="drink">{t("Restaurant.drink")}</option>
+                    <option value="alcohol">{t("Restaurant.alcohol")}</option>
+                    <option value="other">{t("Restaurant.other")}</option>
+                  </select>
                 </label>
 
-                {/* Horizontalna galerija za uređivanje slika */}
                 {currentItem &&
                   currentItem.images &&
                   currentItem.images.length > 0 && (
@@ -1248,7 +1302,6 @@ function Restaurant({ darkMode, toggleDarkMode }) {
                     </div>
                   )}
 
-                {/* Polje za upload novih slika */}
                 <div className="image-upload-container">
                   <label className="image-upload-label">
                     {t("Restaurant.uploadImages")}
@@ -1256,7 +1309,7 @@ function Restaurant({ darkMode, toggleDarkMode }) {
                       type="file"
                       name="images"
                       multiple
-                      onChange={handleAddItemImage} // Funkcija za upload slika
+                      onChange={handleAddItemImage}
                       className="image-upload-input"
                     />
                   </label>
@@ -1270,7 +1323,6 @@ function Restaurant({ darkMode, toggleDarkMode }) {
           </div>
         )}
 
-        {/* Popup za dodavanje itema */}
         {isAddItemOpen && (
           <div className="modal">
             <div className="modal-content reduced-padding">
@@ -1278,7 +1330,7 @@ function Restaurant({ darkMode, toggleDarkMode }) {
                 &times;
               </span>
               <h2>{t("Restaurant.addItem")}</h2>
-              <form onSubmit={handleSaveItem}>
+              <form onSubmit={handleAddItem}>
                 <div className="form-row">
                   <label>
                     {t("Restaurant.itemName")}
@@ -1414,7 +1466,6 @@ function Restaurant({ darkMode, toggleDarkMode }) {
           </div>
         )}
 
-        {/* Confirm Delete Popup */}
         <ConfirmDelete
           isOpen={deletePopupOpen}
           message={
@@ -1426,11 +1477,12 @@ function Restaurant({ darkMode, toggleDarkMode }) {
           onCancel={closeDeletePopup}
         />
 
-        <NotificationPopup
-          message={notification.message}
-          type={notification.type}
-          visible={notification.visible}
-        />
+        {notification.message && (
+          <NotificationPopup
+            message={notification.message}
+            type={notification.type}
+          />
+        )}
       </div>
     </div>
   );

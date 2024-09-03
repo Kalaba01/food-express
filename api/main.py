@@ -540,7 +540,7 @@ async def add_item(restaurant_id: int, item: ItemCreate, db: Session = Depends(g
 async def edit_item(
     restaurant_id: int, item_id: int, item: ItemUpdate, db: Session = Depends(get_db)
 ):
-    updated_item = await update_item(db, restaurant_id, item_id, item)
+    updated_item = await update_item(db, item_id, item)
     return updated_item
 
 
