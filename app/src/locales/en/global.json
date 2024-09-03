@@ -250,6 +250,13 @@
       "restaurants": "Restaurants",
       "noRestaurants": "No Restaurants",
       "pendingOrders": "Pending Orders"
+    },
+    "customer": {
+      "trackOrders": "Track Orders",
+      "orderHistory": "Order History"
+    },
+    "courier": {
+      "deliverOrder": "Deliver Order"
     }
   },
   "Orders": {

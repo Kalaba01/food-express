@@ -66,8 +66,12 @@ function HamburgerMenu() {
           <>
             <a href="/admin/requests">{t("HamburgerMenu.admin.requests")}</a>
             <a href="/admin/users">{t("HamburgerMenu.admin.users")}</a>
-            <a href="/admin/delivery-zones">{t("HamburgerMenu.admin.deliveryZones")}</a>
-            <a href="/admin/restaurants">{t("HamburgerMenu.admin.restaurants")}</a>
+            <a href="/admin/delivery-zones">
+              {t("HamburgerMenu.admin.deliveryZones")}
+            </a>
+            <a href="/admin/restaurants">
+              {t("HamburgerMenu.admin.restaurants")}
+            </a>
             <a href="/admin/orders">{t("HamburgerMenu.admin.orders")}</a>
             <a href="/admin/couriers">{t("HamburgerMenu.admin.couriers")}</a>
           </>
@@ -75,19 +79,30 @@ function HamburgerMenu() {
       case "customer":
         return (
           <>
-             <a href="/customer/track-orders">Track Orders</a>
-             <a href="/customer/order-history">Order History</a>
+            <a href="/customer/track-orders">{t("HamburgerMenu.customer.trackOrders")}</a>
+            <a href="/customer/order-history">{t("HamburgerMenu.customer.orderHistory")}</a>
           </>
         );
       case "owner":
         return (
           <>
             <div className="hamburger-restaurants-dropdown">
-              <button className="hamburger-restaurants-button" onClick={toggleRestaurants}>
+              <button
+                className="hamburger-restaurants-button"
+                onClick={toggleRestaurants}
+              >
                 {t("HamburgerMenu.owner.restaurants")}
-                {restaurantsOpen ? <FaChevronUp className="arrow-icon" /> : <FaChevronDown className="arrow-icon" />}
+                {restaurantsOpen ? (
+                  <FaChevronUp className="arrow-icon" />
+                ) : (
+                  <FaChevronDown className="arrow-icon" />
+                )}
               </button>
-              <div className={`hamburger-restaurants-content ${restaurantsOpen ? "open" : ""}`}>
+              <div
+                className={`hamburger-restaurants-content ${
+                  restaurantsOpen ? "open" : ""
+                }`}
+              >
                 {restaurants.length > 0 ? (
                   restaurants.map((restaurant) => (
                     <a
@@ -110,7 +125,7 @@ function HamburgerMenu() {
       case "courier":
         return (
           <>
-            <a href="/courier/deliver-order">Deliver Order</a>
+            <a href="/courier/deliver-order">{t("HamburgerMenu.courier.deliverOrder")}</a>
           </>
         );
       default:

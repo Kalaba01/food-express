@@ -250,6 +250,13 @@
       "restaurants": "Restorani",
       "noRestaurants": "Nema Restorana",
       "pendingOrders": "Narudžbe na čekanju"
+    },
+    "customer": {
+      "trackOrders": "Prati narudžbe",
+      "orderHistory": "Istorija narudžbi"
+    },
+    "courier": {
+      "deliverOrder": "Dostavi narudžbu"
     }
   },
   "Orders": {
