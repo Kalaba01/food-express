@@ -526,11 +526,11 @@
   "Rating": {
     "title": "Ocijenite Vaše Iskustvo",
     "rateRestaurant": "Ocijenite Restoran",
-    "rateCourier": "Ocijenite Kurira",
-    "comment": "Komentar",
-    "finish": "Završi",
+    "rateCourier": "Ocijenite Dostavljača",
+    "comment": "Dodatni Komentari",
+    "finish": "Pošalji",
     "cancel": "Otkaži",
-    "successMessage": "Ocjena uspješno poslana",
-    "errorMessage": "Greška prilikom slanja ocjene"
+    "successMessage": "Hvala vam na povratnim informacijama!",
+    "errorMessage": "Neuspješno slanje ocjene. Molimo pokušajte ponovo."
   }
 }

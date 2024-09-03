@@ -1,16 +1,18 @@
 import React, { useState } from "react";
+import { NotificationPopup } from "../index";
 import { useTranslation } from "react-i18next";
 import ReactStars from "react-rating-stars-component";
 import axios from "axios";
 import "./Rating.css";
 
 function Rating({ orderId, onClose }) {
-  const { t } = useTranslation('global');
+  const { t } = useTranslation("global");
   const [restaurantRating, setRestaurantRating] = useState(0);
   const [courierRating, setCourierRating] = useState(0);
   const [comment, setComment] = useState("");
+  const [notification, setNotification] = useState({ message: "", type: "" });
 
-  const handleSubmit = async () => {  
+  const handleSubmit = async () => {
     try {
       const token = localStorage.getItem("token");
       const data = {
@@ -20,20 +22,19 @@ function Rating({ orderId, onClose }) {
         comments: comment,
       };
 
-      await axios.post(
-        "http://localhost:8000/rating/submit",
-        data,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      await axios.post("http://localhost:8000/rating/submit", data, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
 
-      console.log(t("Rating.successMessage"));
       onClose();
     } catch (error) {
+      setNotification({
+        message: t("Rating.errorMessage"),
+        type: "error",
+      });
       console.error(t("Rating.errorMessage"), error);
     }
   };
@@ -86,6 +87,13 @@ function Rating({ orderId, onClose }) {
           </button>
         </div>
       </div>
+
+      {notification.message && (
+        <NotificationPopup
+          message={notification.message}
+          type={notification.type}
+        />
+      )}
     </div>
   );
 }

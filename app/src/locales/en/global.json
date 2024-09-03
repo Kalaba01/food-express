@@ -525,12 +525,12 @@
   },
   "Rating": {
     "title": "Rate Your Experience",
-    "rateRestaurant": "Rate Restaurant",
-    "rateCourier": "Rate Courier",
-    "comment": "Comment",
-    "finish": "Finish",
+    "rateRestaurant": "Rate the Restaurant",
+    "rateCourier": "Rate the Courier",
+    "comment": "Additional Comments",
+    "finish": "Submit",
     "cancel": "Cancel",
-    "successMessage": "Rating submitted successfully",
-    "errorMessage": "Error submitting rating"
+    "successMessage": "Thank you for your feedback!",
+    "errorMessage": "Failed to submit your rating. Please try again."
   }
 }

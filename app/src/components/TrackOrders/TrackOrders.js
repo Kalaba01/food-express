@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Header, Rating } from "../index";
+import { Header, Rating, NotificationPopup } from "../index";
 import axios from "axios";
 import { useTranslation } from "react-i18next";
 import "./TrackOrders.css";
@@ -10,6 +10,7 @@ function TrackOrders({ darkMode, toggleDarkMode }) {
   const [statusTitle, setStatusTitle] = useState(t("TrackOrders.status"));
   const [showRating, setShowRating] = useState(false);
   const [selectedOrderId, setSelectedOrderId] = useState(null);
+  const [notification, setNotification] = useState({ message: "", type: "" });
 
   useEffect(() => {
     const fetchOrders = async () => {
@@ -102,7 +103,11 @@ function TrackOrders({ darkMode, toggleDarkMode }) {
   };
 
   const handleCloseRating = () => {
-    setShowRating(false); // Zatvori Rating popup
+    setShowRating(false);
+    setNotification({
+      message: t("Rating.successMessage"),
+      type: "success",
+    });
   };
 
   const getStatusColumn = (order) => {
@@ -168,6 +173,12 @@ function TrackOrders({ darkMode, toggleDarkMode }) {
         </table>
       </div>
       {showRating && <Rating orderId={selectedOrderId} onClose={handleCloseRating} />}
+      {notification.message && (
+        <NotificationPopup
+          message={notification.message}
+          type={notification.type}
+        />
+      )}
     </>
   );
 }
