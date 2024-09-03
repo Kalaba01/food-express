@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Header } from "../index";
+import { Header, NotificationPopup } from "../index";
 import axios from 'axios';
 import { useTranslation } from 'react-i18next';
 import './PendingOrders.css';
@@ -8,6 +8,7 @@ function PendingOrders({ darkMode, toggleDarkMode, openPopupModal, userType }) {
   const { t } = useTranslation('global');
   const [orders, setOrders] = useState([]);
   const [selectedOrder, setSelectedOrder] = useState(null);
+  const [notification, setNotification] = useState({ message: "", type: "" });
 
   const fetchPendingOrders = async () => {
     const token = localStorage.getItem('token');
@@ -31,9 +32,17 @@ function PendingOrders({ darkMode, toggleDarkMode, openPopupModal, userType }) {
         await axios.put(`http://localhost:8000/owner/orders/${orderId}/update`, null, {
             params: { status: 'preparing' },
         });
+        setNotification({
+          message: t('PendingOrders.acceptSuccess'),
+          type: 'success'
+        });
         fetchPendingOrders();
     } catch (error) {
         console.error(t('PendingOrders.acceptError'), error);
+        setNotification({
+          message: t('PendingOrders.acceptError'),
+          type: 'error'
+        });
     }
   };
 
@@ -43,9 +52,17 @@ function PendingOrders({ darkMode, toggleDarkMode, openPopupModal, userType }) {
         await axios.put(`http://localhost:8000/owner/orders/${orderId}/update`, null, {
             params: { status: 'cancelled' },
         });
+        setNotification({
+          message: t('PendingOrders.denySuccess'),
+          type: 'success'
+        });
         fetchPendingOrders();
     } catch (error) {
         console.error(t('PendingOrders.denyError'), error);
+        setNotification({
+          message: t('PendingOrders.denyError'),
+          type: 'error'
+        });
     }
   };
 
@@ -113,6 +130,10 @@ function PendingOrders({ darkMode, toggleDarkMode, openPopupModal, userType }) {
             ))}
             <button onClick={closePopup}>{t('PendingOrders.close')}</button>
           </div>
+        )}
+
+        {notification.message && (
+          <NotificationPopup message={notification.message} type={notification.type} />
         )}
       </div>
     </>
