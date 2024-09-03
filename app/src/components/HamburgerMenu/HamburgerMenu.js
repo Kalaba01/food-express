@@ -110,8 +110,7 @@ function HamburgerMenu() {
       case "courier":
         return (
           <>
-            <a href="/courier/route1">Item 1</a>
-            <a href="/courier/route2">Item 2</a>
+            <a href="/courier/deliver-order">Deliver Order</a>
           </>
         );
       default:

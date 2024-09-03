@@ -25,13 +25,11 @@ async def assign_orders_to_couriers(db: Session):
             print(f"Order with ID {order_queue.order_id} not found.")
             continue
 
-        # Provjeri da li narudžba sadrži alkohol
         contains_alcohol = db.query(Item.category).join(OrderItem, Item.id == OrderItem.item_id) \
             .filter(OrderItem.order_id == order.id, Item.category == ItemCategory.alcohol).count() > 0
         
         print(f"Order ID {order.id} contains alcohol: {contains_alcohol}")
 
-        # Filtriraj kurire koji su online i zadovoljavaju halal uslov, kao i kurire koji dostavljaju za taj restoran
         if contains_alcohol:
             couriers = db.query(Courier).filter(
                 Courier.status == CourierStatus.online,
@@ -46,7 +44,6 @@ async def assign_orders_to_couriers(db: Session):
             ).all()
             print(f"Found {len(couriers)} online couriers for restaurant ID {order.restaurant_id}.")
 
-        # Inicijalizuj liste za kurire po kriterijumima
         couriers_five_criteria = []
         couriers_four_criteria = []
         couriers_three_criteria = []
@@ -59,9 +56,9 @@ async def assign_orders_to_couriers(db: Session):
                 courier.vehicle_type.value
             )
 
-            meets_weight = (courier.vehicle_type == VehicleType.car or order_queue.weight <= 6000)  # 6 kg u gramima
+            meets_weight = (courier.vehicle_type == VehicleType.car or order_queue.weight <= 6000)
             meets_distance = (
-                (courier.vehicle_type == VehicleType.bike and distance <= 5000) or  # 5 km u metrima
+                (courier.vehicle_type == VehicleType.bike and distance <= 5000) or
                 (courier.vehicle_type == VehicleType.car and distance > 5000)
             )
 
@@ -83,7 +80,6 @@ async def assign_orders_to_couriers(db: Session):
 
             criteria_count = sum([meets_weight, meets_distance, meets_change])
 
-            # Dodavanje detaljnog ispisa kriterijuma
             print(f"Evaluating Courier ID {courier.id}:")
             print(f"  - Meets weight criteria: {meets_weight}")
             print(f"  - Meets distance criteria: {meets_distance}")
@@ -99,7 +95,6 @@ async def assign_orders_to_couriers(db: Session):
             else:
                 couriers_two_criteria.append(courier)
 
-        # Odaberi najboljeg kurira prema prioritetu kriterijuma
         assigned_courier = None
         if couriers_five_criteria:
             assigned_courier = couriers_five_criteria[0]
@@ -115,7 +110,6 @@ async def assign_orders_to_couriers(db: Session):
             print(f"Assigned courier ID {assigned_courier.id} meeting 2 criteria.")
 
         if assigned_courier:
-            # Konvertuj vreme putovanja iz minuta u timedelta
             travel_time = calculate_travel_time(
                 (order.restaurant.latitude, order.restaurant.longitude),
                 (order.delivery_latitude, order.delivery_longitude),
@@ -123,16 +117,16 @@ async def assign_orders_to_couriers(db: Session):
             )
             travel_time_delta = timedelta(minutes=travel_time)
 
-            # Kreiraj unos u order_assignments tabeli, sada sa optimalnim kusurom
             estimated_delivery_time = order_queue.estimated_preparation_time + travel_time_delta
             
             new_assignment = OrderAssignment(
                 order_id=order.id,
                 courier_id=assigned_courier.id,
-                status=OrderAssignmentStatus.in_delivery,  # Status postavljen na 'in_delivery'
+                status=OrderAssignmentStatus.in_delivery,
                 estimated_delivery_time=estimated_delivery_time,
-                optimal_change=json.dumps(optimal_change) if optimal_change else None  # Dodavanje optimalnog kusura
+                optimal_change=json.dumps(optimal_change) if optimal_change else None
             )
+
             db.add(new_assignment)
             order_queue.status = OrderQueueStatusEnum.assigned
             assigned_courier.status = CourierStatus.busy

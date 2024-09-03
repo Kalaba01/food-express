@@ -1,10 +1,10 @@
 from sqlalchemy.orm import Session
 from models.models import Order, Restaurant, OrderItem, Item
 
-def get_customer_order_history_with_items(db: Session, customer_id: int):
+async def get_customer_order_history_with_items(db: Session, customer_id: int):
     orders = db.query(
         Order.id,
-        Order.restaurant_id,  # Dodajemo restaurant_id
+        Order.restaurant_id,
         Order.total_price,
         Order.status,
         Restaurant.name.label('restaurant_name'),
@@ -14,11 +14,10 @@ def get_customer_order_history_with_items(db: Session, customer_id: int):
     ).filter(Order.customer_id == customer_id, Order.status == 'delivered'
     ).all()
 
-    # Map orders to their items
     order_details = []
     for order in orders:
         items = db.query(
-            Item.id.label('item_id'),  # Dodajemo item_id
+            Item.id.label('item_id'),
             Item.name,
             OrderItem.quantity,
             OrderItem.price,
@@ -27,9 +26,8 @@ def get_customer_order_history_with_items(db: Session, customer_id: int):
         ).filter(OrderItem.order_id == order.id
         ).all()
 
-        # Convert SQLAlchemy objects to dictionaries
         item_list = [{
-            "item_id": item.item_id,  # Uključujemo item_id
+            "item_id": item.item_id,
             "name": item.name,
             "quantity": item.quantity,
             "price": item.price,
@@ -38,12 +36,12 @@ def get_customer_order_history_with_items(db: Session, customer_id: int):
 
         order_details.append({
             "id": order.id,
-            "restaurant_id": order.restaurant_id,  # Uključujemo restaurant_id
+            "restaurant_id": order.restaurant_id,
             "restaurant_name": order.restaurant_name,
             "restaurant_category": order.restaurant_category,
             "restaurant_contact": order.restaurant_contact,
             "total_price": order.total_price,
-            "items": item_list  # items sada uključuje item_id za svaki artikl
+            "items": item_list
         })
     
     return order_details
