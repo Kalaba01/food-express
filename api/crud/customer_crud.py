@@ -14,6 +14,7 @@ async def search_restaurants(db: Session, query: str):
     for restaurant in results:
         avg_rating = calculate_average_rating(restaurant.total_rating, restaurant.rating_count)
         response.append({
+            "id": restaurant.id,
             "name": restaurant.name,
             "rating": avg_rating,
             "address": restaurant.address,

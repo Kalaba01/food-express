@@ -1,5 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { Header, LookupTable, ConfirmDelete } from "../index";
+import {
+  Header,
+  LookupTable,
+  ConfirmDelete,
+  NotificationPopup,
+} from "../index";
 import axios from "axios";
 import { useTranslation } from "react-i18next";
 import { FaEdit, FaTrash, FaPlus } from "react-icons/fa";
@@ -18,14 +23,22 @@ function Couriers({ darkMode, toggleDarkMode }) {
   const [courierToDelete, setCourierToDelete] = useState(null);
 
   const [newCourier, setNewCourier] = useState({
+    user_id: null,
     username: "",
+    restaurant_id: null,
     restaurant: "",
-    vehicle: "bike",
-    halal: false,
+    vehicle_type: "bike",
+    halal_mode: false,
   });
 
   const [userSearchResults, setUserSearchResults] = useState([]);
   const [restaurantSearchResults, setRestaurantSearchResults] = useState([]);
+
+  const [notification, setNotification] = useState({
+    message: "",
+    type: "", // 'success' or 'error'
+    isOpen: false,
+  });
 
   const fetchCouriers = async () => {
     try {
@@ -43,11 +56,16 @@ function Couriers({ darkMode, toggleDarkMode }) {
     fetchCouriers();
   }, []);
 
-  const handleUserSearch = async (query) => {
-    if (query.length >= 6) {
+  const handleCourierSearch = async (query) => {
+    if (query.trim() === "") {
+      setUserSearchResults([]);
+      return;
+    }
+    if (query.length >= 3) {
+      // Smanjen minimalni broj karaktera za bržu pretragu
       try {
         const response = await axios.get(
-          `http://localhost:8000/search-users/?username=${query}`
+          `http://localhost:8000/search-couriers/?username=${query}`
         );
         setUserSearchResults(response.data);
       } catch (error) {
@@ -59,6 +77,10 @@ function Couriers({ darkMode, toggleDarkMode }) {
   };
 
   const handleRestaurantSearch = async (query) => {
+    if (query.trim() === "") {
+      setRestaurantSearchResults([]); // Očisti listu ako je unos prazan
+      return;
+    }
     try {
       const response = await axios.get(
         `http://localhost:8000/search-restaurants/?name=${query}`
@@ -71,34 +93,56 @@ function Couriers({ darkMode, toggleDarkMode }) {
 
   const handleCreateCourier = () => {
     setNewCourier({
-      username: "",
-      restaurant: "",
+      user_id: null,
+      restaurant_id: null,
       vehicle_type: "bike",
       halal_mode: false,
-      wallet_amount: 0,
-      wallet_details: "",
     });
     setIsCreatePopupOpen(true);
   };
 
-  const handleSelectUser = (username, id) => {
-    setNewCourier({ ...newCourier, username, user_id: id });
+  const handleSelectUser = (id, username) => {
+    setNewCourier({ ...newCourier, user_id: id, username: username });
     setUserSearchResults([]);
   };
 
-  const handleSelectRestaurant = (restaurant, id) => {
-    setNewCourier({ ...newCourier, restaurant, restaurant_id: id });
+  const handleSelectRestaurant = (id, restaurantName) => {
+    setNewCourier({
+      ...newCourier,
+      restaurant_id: id,
+      restaurant: restaurantName,
+    });
     setRestaurantSearchResults([]);
   };
 
   const handleSaveCourier = async (event) => {
     event.preventDefault();
     try {
-      await axios.post("http://localhost:8000/couriers/", newCourier);
-      setCouriers([...couriers, newCourier]);
-      await fetchCouriers(); 
+      const response = await axios.post(
+        "http://localhost:8000/couriers/",
+        newCourier
+      );
+      setCouriers([...couriers, response.data]);
+      setNotification({
+        message: t("Couriers.courierCreated"),
+        type: "success",
+        isOpen: true,
+      });
       setIsCreatePopupOpen(false);
     } catch (error) {
+      if (error.response && error.response.status === 400) {
+        setNotification({
+          message: t("Couriers.courierAlreadyAssigned"),
+          type: "error",
+          isOpen: true,
+        });
+      } else {
+        setNotification({
+          message: t("Couriers.errorCreatingCourier"),
+          type: "error",
+          isOpen: true,
+        });
+      }
       console.error("Error creating courier:", error);
     }
   };
@@ -116,19 +160,37 @@ function Couriers({ darkMode, toggleDarkMode }) {
     const updateData = { [editField]: editValue };
 
     try {
-      await axios.put(
+      const response = await axios.put(
         `http://localhost:8000/couriers/${editCourier.id}`,
         updateData
       );
       setCouriers(
         couriers.map((courier) =>
           courier.id === editCourier.id
-            ? { ...courier, ...updateData }
+            ? { ...courier, ...response.data }
             : courier
         )
       );
+      setNotification({
+        message: t("Couriers.courierUpdated"),
+        type: "success",
+        isOpen: true,
+      });
       setIsEditPopupOpen(false);
     } catch (error) {
+      if (error.response && error.response.status === 400) {
+        setNotification({
+          message: t("Couriers.courierAlreadyAssigned"),
+          type: "error",
+          isOpen: true,
+        });
+      } else {
+        setNotification({
+          message: t("Couriers.errorUpdatingCourier"),
+          type: "error",
+          isOpen: true,
+        });
+      }
       console.error("Error updating courier:", error);
     }
   };
@@ -142,7 +204,17 @@ function Couriers({ darkMode, toggleDarkMode }) {
     try {
       await axios.delete(`http://localhost:8000/couriers/${courierToDelete}`);
       setCouriers(couriers.filter((courier) => courier.id !== courierToDelete));
+      setNotification({
+        message: t("Couriers.courierDeleted"),
+        type: "success",
+        isOpen: true,
+      });
     } catch (error) {
+      setNotification({
+        message: t("Couriers.errorDeletingCourier"),
+        type: "error",
+        isOpen: true,
+      });
       console.error("Error deleting courier:", error);
     } finally {
       setConfirmDeleteOpen(false);
@@ -229,7 +301,10 @@ function Couriers({ darkMode, toggleDarkMode }) {
       />
       <div className="couriers-container">
         <h1>{t("Couriers.title")}</h1>
-        <button className="create-button" onClick={handleCreateCourier}>
+        <button
+          className="couriers-create-button"
+          onClick={handleCreateCourier}
+        >
           <FaPlus /> {t("Couriers.create")}
         </button>
         <LookupTable
@@ -242,35 +317,33 @@ function Couriers({ darkMode, toggleDarkMode }) {
       </div>
 
       {isCreatePopupOpen && (
-        <div className="modal">
-          <div className="modal-content">
+        <div className="couriers-modal">
+          <div className="couriers-modal-content">
             <span
-              className="close-button"
+              className="couriers-close-button"
               onClick={() => setIsCreatePopupOpen(false)}
             >
               &times;
             </span>
             <h2>{t("Couriers.createCourier")}</h2>
-            <form onSubmit={handleSaveCourier} className="courier-form">
-              <div className="form-group">
+
+            <form onSubmit={handleSaveCourier} className="couriers-form">
+              <div className="couriers-form-group full-width">
                 <label htmlFor="username">{t("Couriers.name")}</label>
                 <input
                   id="username"
                   type="text"
                   value={newCourier.username}
-                  onChange={(e) => {
-                    setNewCourier({ ...newCourier, username: e.target.value });
-                    handleUserSearch(e.target.value);
-                  }}
-                  className="input-field"
+                  onChange={(e) => handleCourierSearch(e.target.value)}
+                  className="couriers-input-field"
                   required
                 />
                 {userSearchResults.length > 0 && (
-                  <ul className="search-results">
+                  <ul className="couriers-search-results">
                     {userSearchResults.map((user) => (
                       <li
                         key={user.id}
-                        onClick={() => handleSelectUser(user.username, user.id)}
+                        onClick={() => handleSelectUser(user.id, user.username)}
                       >
                         {user.username}
                       </li>
@@ -278,29 +351,24 @@ function Couriers({ darkMode, toggleDarkMode }) {
                   </ul>
                 )}
               </div>
-              <div className="form-group">
+
+              <div className="couriers-form-group full-width">
                 <label htmlFor="restaurant">{t("Couriers.restaurant")}</label>
                 <input
                   id="restaurant"
                   type="text"
                   value={newCourier.restaurant}
-                  onChange={(e) => {
-                    setNewCourier({
-                      ...newCourier,
-                      restaurant: e.target.value,
-                    });
-                    handleRestaurantSearch(e.target.value);
-                  }}
-                  className="input-field"
+                  onChange={(e) => handleRestaurantSearch(e.target.value)}
+                  className="couriers-input-field"
                   required
                 />
                 {restaurantSearchResults.length > 0 && (
-                  <ul className="search-results">
+                  <ul className="couriers-search-results">
                     {restaurantSearchResults.map((restaurant) => (
                       <li
                         key={restaurant.id}
                         onClick={() =>
-                          handleSelectRestaurant(restaurant.name, restaurant.id)
+                          handleSelectRestaurant(restaurant.id, restaurant.name)
                         }
                       >
                         {restaurant.name}
@@ -309,34 +377,43 @@ function Couriers({ darkMode, toggleDarkMode }) {
                   </ul>
                 )}
               </div>
-              <div className="form-group">
+
+              <div className="couriers-form-group full-width">
                 <label htmlFor="vehicle">{t("Couriers.vehicle")}</label>
                 <select
                   id="vehicle"
-                  value={newCourier.vehicle}
+                  value={newCourier.vehicle_type}
                   onChange={(e) =>
-                    setNewCourier({ ...newCourier, vehicle: e.target.value })
+                    setNewCourier({
+                      ...newCourier,
+                      vehicle_type: e.target.value,
+                    })
                   }
-                  className="input-field"
+                  className="couriers-input-field"
                   required
                 >
                   <option value="bike">{t("Couriers.bike")}</option>
                   <option value="car">{t("Couriers.car")}</option>
                 </select>
               </div>
-              <div className="form-group">
+
+              <div className="couriers-form-group full-width">
                 <label htmlFor="halal">{t("Couriers.halal")}</label>
                 <input
                   id="halal"
                   type="checkbox"
-                  checked={newCourier.halal}
+                  checked={newCourier.halal_mode}
                   onChange={(e) =>
-                    setNewCourier({ ...newCourier, halal: e.target.checked })
+                    setNewCourier({
+                      ...newCourier,
+                      halal_mode: e.target.checked,
+                    })
                   }
-                  className="checkbox-field"
+                  className="couriers-checkbox-field"
                 />
               </div>
-              <button type="submit" className="save-button">
+
+              <button type="submit" className="couriers-save-button">
                 {t("Couriers.save")}
               </button>
             </form>
@@ -345,23 +422,23 @@ function Couriers({ darkMode, toggleDarkMode }) {
       )}
 
       {isEditPopupOpen && (
-        <div className="modal">
-          <div className="modal-content">
+        <div className="couriers-modal">
+          <div className="couriers-modal-content">
             <span
-              className="close-button"
+              className="couriers-close-button"
               onClick={() => setIsEditPopupOpen(false)}
             >
               &times;
             </span>
             <h2>{t("Couriers.editCourier")}</h2>
-            <form onSubmit={handleSaveEdit} className="courier-form">
+            <form onSubmit={handleSaveEdit} className="couriers-form">
               <select
                 onChange={(e) => {
                   setEditField(e.target.value);
                   setEditValue(editCourier[e.target.value]);
                 }}
                 value={editField}
-                className="select-field"
+                className="couriers-select-field"
                 required
               >
                 <option value="">{t("Couriers.selectField")}</option>
@@ -378,7 +455,7 @@ function Couriers({ darkMode, toggleDarkMode }) {
                     <select
                       value={editValue}
                       onChange={(e) => setEditValue(e.target.value)}
-                      className="input-field"
+                      className="couriers-input-field"
                       required
                     >
                       <option value="bike">{t("Couriers.bike")}</option>
@@ -388,7 +465,7 @@ function Couriers({ darkMode, toggleDarkMode }) {
                     <select
                       value={editValue}
                       onChange={(e) => setEditValue(e.target.value)}
-                      className="input-field"
+                      className="couriers-input-field"
                       required
                     >
                       <option value="true">{t("Couriers.yes")}</option>
@@ -399,11 +476,11 @@ function Couriers({ darkMode, toggleDarkMode }) {
                       type="text"
                       value={editValue}
                       onChange={(e) => setEditValue(e.target.value)}
-                      className="input-field"
+                      className="couriers-input-field"
                       required
                     />
                   )}
-                  <button type="submit" className="save-button">
+                  <button type="submit" className="couriers-save-button">
                     {t("Couriers.save")}
                   </button>
                 </>
@@ -419,6 +496,14 @@ function Couriers({ darkMode, toggleDarkMode }) {
         onConfirm={confirmDelete}
         onCancel={cancelDelete}
       />
+
+      {notification.isOpen && (
+        <NotificationPopup
+          message={notification.message}
+          type={notification.type}
+          onClose={() => setNotification({ ...notification, isOpen: false })}
+        />
+      )}
     </div>
   );
 }

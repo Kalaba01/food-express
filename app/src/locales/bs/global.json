@@ -387,8 +387,17 @@
     "editCourier": "Uredi Dostavljača",
     "createCourier": "Kreiraj Dostavljača",
     "selectField": "Odaberite Polje",
+    "bike": "Biciklo",
+    "car": "Automobil",
     "loading": "Učitavanje...",
     "noData": "Nema dostupnih dostavljača.",
+    "courierCreated": "Dostavljač uspješno kreiran.",
+    "courierUpdated": "Dostavljač uspješno ažuriran.",
+    "courierDeleted": "Dostavljač uspješno obrisan.",
+    "errorCreatingCourier": "Greška prilikom kreiranja dostavljača.",
+    "errorUpdatingCourier": "Greška prilikom ažuriranja dostavljača.",
+    "errorDeletingCourier": "Greška prilikom brisanja dostavljača.",
+    "courierAlreadyAssigned": "Ovaj dostavljač je već dodijeljen.",
     "confirmDeleteMessage": "Jeste li sigurni da želite obrisati ovog dostavljača?"
   },
   "Profile": {

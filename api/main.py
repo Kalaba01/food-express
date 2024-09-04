@@ -144,7 +144,7 @@ from crud.couriers_crud import (
     update_courier,
     delete_courier,
     search_restaurants,
-    search_users,
+    search_couriers
 )
 from crud.chat_crud import (
     create_conversation,
@@ -224,9 +224,9 @@ scheduler.add_job(
 scheduler.add_job(
     lambda: asyncio.run(remind_pending_requests()), CronTrigger(hour=0, minute=1)
 )
-scheduler.add_job(
-    lambda: asyncio.run(schedule_assign_orders_to_couriers()), 'interval', seconds=15
-)
+# scheduler.add_job(
+#     lambda: asyncio.run(schedule_assign_orders_to_couriers()), 'interval', seconds=15
+# )
 scheduler.start()
 
 if __name__ == "__main__":
@@ -747,9 +747,9 @@ async def delete_existing_courier(courier_id: int, db: Session = Depends(get_db)
     return await delete_courier(db, courier_id)
 
 
-@app.get("/search-users/")
-async def users_search(username: str, db: Session = Depends(get_db)):
-    return await search_users(db, username)
+@app.get("/search-couriers/")
+async def couriers_search(username: str, db: Session = Depends(get_db)):
+    return await search_couriers(db, username)
 
 
 @app.get("/search-restaurants/")

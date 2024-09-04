@@ -6,9 +6,10 @@ async def search_restaurants(db: Session, name: str):
     restaurants = db.query(Restaurant).filter(Restaurant.name.ilike(f"%{name}%")).all()
     return [{"id": restaurant.id, "name": restaurant.name} for restaurant in restaurants]
 
-async def search_users(db: Session, username: str):
+async def search_couriers(db: Session, username: str):
     users = db.query(User).outerjoin(Courier, User.id == Courier.user_id).filter(
-        Courier.user_id == None,  # Filter koji omogućava prikaz samo korisnika koji nisu kuriri
+        # Courier.user_id == None,
+        User.role == 'courier',  # Filtriraj samo korisnike koji su kuriri
         User.username.ilike(f"%{username}%")
     ).all()
     return [{"id": user.id, "username": user.username} for user in users]
@@ -36,13 +37,20 @@ async def get_all_couriers(db: Session):
     return couriers_with_details
 
 # Funkcija za kreiranje novog kurira
+from fastapi import HTTPException
+
 async def create_courier(db: Session, courier: CourierCreate):
+    # Provera da li kurir već radi za neki restoran
+    existing_courier = db.query(Courier).filter(Courier.user_id == courier.user_id).first()
+    if existing_courier:
+        raise HTTPException(status_code=400, detail="Courier is already assigned to a restaurant.")
+    
     new_courier = Courier(
         user_id=courier.user_id,
         vehicle_type=courier.vehicle_type,
         halal_mode=courier.halal_mode,
-        wallet_amount=courier.wallet_amount,
-        wallet_details=courier.wallet_details,
+        wallet_amount=0,
+        wallet_details=None,
         restaurant_id=courier.restaurant_id,
     )
     db.add(new_courier)

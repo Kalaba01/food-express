@@ -387,8 +387,17 @@
     "editCourier": "Edit Courier",
     "createCourier": "Create Courier",
     "selectField": "Select Field",
+    "bike": "Bike",
+    "car": "Car",
     "loading": "Loading...",
     "noData": "No couriers available.",
+    "courierCreated": "Courier successfully created.",
+    "courierUpdated": "Courier updated successfully.",
+    "courierDeleted": "Courier deleted successfully.",
+    "errorCreatingCourier": "Error occurred while creating the courier.",
+    "errorUpdatingCourier": "Error occurred while updating the courier.",
+    "errorDeletingCourier": "Error occurred while deleting the courier.",
+    "courierAlreadyAssigned": "This courier is already assigned.",
     "confirmDeleteMessage": "Are you sure you want to delete this courier?"
   },
   "Profile": {

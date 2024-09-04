@@ -198,8 +198,6 @@ class CourierCreate(BaseModel):
     user_id: int
     vehicle_type: VehicleTypeEnum
     halal_mode: bool
-    wallet_amount: float
-    wallet_details: str
     restaurant_id: int
 
 class CourierUpdate(BaseModel):
