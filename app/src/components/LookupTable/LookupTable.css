@@ -563,20 +563,20 @@ body.dark-mode .order-details-modal {
     color: var(--text-color);
 }
 
-.order-row {
+.order-row-orders {
     cursor: pointer;
     color: #333;
 }
 
-body.dark-mode .order-row {
+body.dark-mode .order-row-orders {
     color: #fff;
 }
 
-.order-row.active {
+.order-row.active-orders {
     font-weight: bold;
 }
 
-.order-row:hover {
+.order-row-orders:hover {
     text-decoration: underline;
     text-decoration-color: #00bfff;
     text-decoration-thickness: 1.5px;

@@ -277,7 +277,7 @@
     "assigned": "Assigned",
     "status": "Status",
     "status_pending": "Pending",
-    "status_confirmed": "Confirmed",
+    "status_preparing": "Preparing",
     "status_in_delivery": "In Delivery",
     "status_delivered": "Delivered",
     "status_cancelled": "Cancelled",

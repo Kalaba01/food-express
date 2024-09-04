@@ -277,7 +277,7 @@
     "assigned": "Dodijeljeno",
     "status": "Status",
     "status_pending": "Na čekanju",
-    "status_confirmed": "Potvrđeno",
+    "status_preparing": "Priprema se",
     "status_in_delivery": "U Dostavi",
     "status_delivered": "Dostavljeno",
     "status_cancelled": "Otkazano",

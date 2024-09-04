@@ -26,7 +26,6 @@ function LookupTable({ columns, data, actions, showActions, customRenderers }) {
   const getCellValue = (col, item) => {
     const key = getColumnKey(col);
 
-    // Provera da li postoji custom renderer za ovu kolonu
     if (customRenderers && customRenderers[col]) {
       return customRenderers[col](item);
     }

@@ -54,28 +54,29 @@ function Orders({ darkMode, toggleDarkMode }) {
     [t("Orders.restaurant")]: (item) => (
       <div
         onClick={() => handleRestaurantClick(item)}
-        className={`order-row ${
+        className={`order-row-orders ${
           selectedOrder && selectedOrder.id === item.id ? "active" : ""
         }`}
       >
-        {item.restaurant_name}
+        {item.restaurant_name || "N/A"}
       </div>
     ),
-    [t("Orders.restaurantAddress")]: (item) => item.restaurant_address,
-    [t("Orders.customer")]: (item) => item.customer_name,
-    [t("Orders.customerAddress")]: (item) => item.customer_address,
+    [t("Orders.restaurantAddress")]: (item) => item.restaurant_address || "N/A",
+    [t("Orders.customer")]: (item) => item.customer_name || "N/A",
+    [t("Orders.customerAddress")]: (item) => item.customer_address || "N/A",
     [t("Orders.courier")]: (item) =>
       item.courier_name ? item.courier_name : t("Orders.pending"),
-    [t("Orders.price")]: (item) => `${item.total_price} BAM`,
+    [t("Orders.price")]: (item) =>
+      item.total_price ? `${item.total_price} BAM` : "N/A",
     [t("Orders.cutlery")]: (item) =>
       item.cutlery_included ? t("Orders.yes") : t("Orders.no"),
     [t("Orders.created")]: (item) =>
-      new Date(item.created_at).toLocaleString(),
+      item.created_at ? new Date(item.created_at).toLocaleString() : "N/A",
     [t("Orders.assigned")]: (item) =>
       item.assigned_at
         ? new Date(item.assigned_at).toLocaleString()
         : t("Orders.pending"),
-    [t("Orders.status")]: (item) => t(`Orders.status_${item.status}`),
+    [t("Orders.status")]: (item) => t(`Orders.status_${item.status}`) || "N/A",
   };
 
   const closePopup = () => {
@@ -93,22 +94,50 @@ function Orders({ darkMode, toggleDarkMode }) {
       <div className="orders-container">
         <h1>{t("Orders.title")}</h1>
         <div className="filter-buttons">
-          <button onClick={() => handleFilterClick("")} className={`filter-button ${filteredStatus === "" ? "active" : ""}`}>
+          <button
+            onClick={() => handleFilterClick("")}
+            className={`filter-button ${filteredStatus === "" ? "active" : ""}`}
+          >
             {t("Orders.all")}
           </button>
-          <button onClick={() => handleFilterClick("pending")} className={`filter-button ${filteredStatus === "pending" ? "active" : ""}`}>
+          <button
+            onClick={() => handleFilterClick("pending")}
+            className={`filter-button ${
+              filteredStatus === "pending" ? "active" : ""
+            }`}
+          >
             {t("Orders.status_pending")}
           </button>
-          <button onClick={() => handleFilterClick("confirmed")} className={`filter-button ${filteredStatus === "confirmed" ? "active" : ""}`}>
-            {t("Orders.status_confirmed")}
+          <button
+            onClick={() => handleFilterClick("preparing")}
+            className={`filter-button ${
+              filteredStatus === "preparing" ? "active" : ""
+            }`}
+          >
+            {t("Orders.status_preparing")}
           </button>
-          <button onClick={() => handleFilterClick("in_delivery")} className={`filter-button ${filteredStatus === "in_delivery" ? "active" : ""}`}>
+          <button
+            onClick={() => handleFilterClick("in_delivery")}
+            className={`filter-button ${
+              filteredStatus === "in_delivery" ? "active" : ""
+            }`}
+          >
             {t("Orders.status_in_delivery")}
           </button>
-          <button onClick={() => handleFilterClick("delivered")} className={`filter-button ${filteredStatus === "delivered" ? "active" : ""}`}>
+          <button
+            onClick={() => handleFilterClick("delivered")}
+            className={`filter-button ${
+              filteredStatus === "delivered" ? "active" : ""
+            }`}
+          >
             {t("Orders.status_delivered")}
           </button>
-          <button onClick={() => handleFilterClick("cancelled")} className={`filter-button ${filteredStatus === "cancelled" ? "active" : ""}`}>
+          <button
+            onClick={() => handleFilterClick("cancelled")}
+            className={`filter-button ${
+              filteredStatus === "cancelled" ? "active" : ""
+            }`}
+          >
             {t("Orders.status_cancelled")}
           </button>
         </div>
@@ -128,7 +157,8 @@ function Orders({ darkMode, toggleDarkMode }) {
               &times;
             </span>
             <h2>{t("Orders.orderDetails")}</h2>
-            {selectedOrder.order_items && selectedOrder.order_items.length > 0 ? (
+            {selectedOrder.order_items &&
+            selectedOrder.order_items.length > 0 ? (
               <ul>
                 {selectedOrder.order_items.map((item, index) => (
                   <li key={index}>
@@ -139,7 +169,9 @@ function Orders({ darkMode, toggleDarkMode }) {
             ) : (
               <p>{t("Orders.noItems")}</p>
             )}
-            <p>{t("Orders.totalPrice")}: {selectedOrder.total_price} BAM</p>
+            <p>
+              {t("Orders.totalPrice")}: {selectedOrder.total_price} BAM
+            </p>
           </div>
         </div>
       )}
