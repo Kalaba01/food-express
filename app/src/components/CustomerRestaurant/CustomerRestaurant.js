@@ -14,6 +14,7 @@ function CustomerRestaurant({ darkMode, toggleDarkMode }) {
   const [menu, setMenu] = useState([]);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [currentItemImages, setCurrentItemImages] = useState([]);
+  const [isOpen, setIsOpen] = useState(true);
   const { setBasket } = useContext(BasketContext);
 
   useEffect(() => {
@@ -25,6 +26,7 @@ function CustomerRestaurant({ darkMode, toggleDarkMode }) {
           )}/details`
         );
         setRestaurant(response.data);
+        checkOperatingHours(response.data.operating_hours);
       } catch (error) {
         console.error("Error fetching restaurant details:", error);
       }
@@ -46,6 +48,31 @@ function CustomerRestaurant({ darkMode, toggleDarkMode }) {
     fetchRestaurantDetails();
     fetchRestaurantMenu();
   }, [restaurantName]);
+
+  const checkOperatingHours = (operatingHours) => {
+    const currentDay = new Date().toLocaleString("en-US", { weekday: "long" });
+    const currentTime = new Date();
+    const todayHours = operatingHours.find(
+      (hours) => hours.day_of_week.toLowerCase() === currentDay.toLowerCase()
+    );
+
+    if (todayHours) {
+      const openingTime = new Date();
+      const closingTime = new Date();
+
+      const [openingHour, openingMinute] = todayHours.opening_time.split(":");
+      const [closingHour, closingMinute] = todayHours.closing_time.split(":");
+
+      openingTime.setHours(openingHour, openingMinute);
+      closingTime.setHours(closingHour, closingMinute);
+
+      if (currentTime < openingTime || currentTime > closingTime) {
+        setIsOpen(false);
+      } else {
+        setIsOpen(true);
+      }
+    }
+  };
 
   const setItemQuantity = (itemId, quantity) => {
     setMenu((prevState) =>
@@ -111,8 +138,10 @@ function CustomerRestaurant({ darkMode, toggleDarkMode }) {
   };
 
   const openGalleryPopup = (images) => {
-    setCurrentItemImages(images.map((img) => img.image));
-    setIsPopupOpen(true);
+    if (images.length > 0) {
+      setCurrentItemImages(images.map((img) => img.image));
+      setIsPopupOpen(true);
+    }
   };
 
   const closeGalleryPopup = () => {
@@ -134,7 +163,7 @@ function CustomerRestaurant({ darkMode, toggleDarkMode }) {
   };
 
   if (!restaurant) {
-    return <div>Loading...</div>;
+    return <div>{t("CustomerRestaurant.loading")}</div>;
   }
 
   return (
@@ -160,8 +189,10 @@ function CustomerRestaurant({ darkMode, toggleDarkMode }) {
         <p>
           {t("CustomerRestaurant.contact")}: {restaurant.contact}
         </p>
-        {restaurant.images && restaurant.images.length > 0 && (
+        {restaurant.images && restaurant.images.length > 0 ? (
           <Gallery images={restaurant.images.map((img) => img.image)} />
+        ) : (
+          <p>{t("CustomerRestaurant.noImagesAvailable")}</p>
         )}
         <div className="menu-categories">
           {menu.map((category) => (
@@ -197,8 +228,12 @@ function CustomerRestaurant({ darkMode, toggleDarkMode }) {
                       </button>
                     </div>
                     <button
-                      className="add-to-basket-button"
+                      className={`add-to-basket-button ${
+                        !isOpen ? "disabled-button" : ""
+                      }`}
                       onClick={() => addToBasket(item)}
+                      disabled={!isOpen}
+                      title={!isOpen ? t("CustomerRestaurant.outOfHours") : ""}
                     >
                       {t("CustomerRestaurant.add")}
                     </button>

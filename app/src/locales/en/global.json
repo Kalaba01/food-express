@@ -257,7 +257,7 @@
     },
     "courier": {
       "deliverOrder": "Deliver Order",
-       "deliveredOrders": "Delivered Orders"
+      "deliveredOrders": "Delivered Orders"
     }
   },
   "Orders": {
@@ -449,7 +449,10 @@
     "category": "Category",
     "contact": "Contact",
     "price": "Price",
-    "add": "Add"
+    "add": "Add",
+    "loading": "Loading...",
+    "outOfHours": "Restaurant is currently closed.",
+    "noImagesAvailable": "No images available."
   },
   "Basket": {
     "yourBasket": "Your Basket",

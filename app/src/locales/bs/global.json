@@ -449,7 +449,10 @@
     "category": "Kategorija",
     "contact": "Kontakt",
     "price": "Cijena",
-    "add": "Dodaj"
+    "add": "Dodaj",
+    "loading": "Učitavanje...",
+    "outOfHours": "Restoran je trenutno zatvoren.",
+    "noImagesAvailable": "Nema dostupnih slika."
   },
   "Basket": {
     "yourBasket": "Vaša Korpa",
