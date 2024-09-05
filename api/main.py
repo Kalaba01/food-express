@@ -192,6 +192,9 @@ from crud.deliver_order_crud import (
 from crud.courier_crud import (
     has_unfinished_orders
 )
+from crud.delivered_orders_crud import (
+    get_delivered_orders
+)
 
 async def schedule_assign_orders_to_couriers():
     print("Function for assigning orders to couriers start!")
@@ -224,9 +227,9 @@ scheduler.add_job(
 scheduler.add_job(
     lambda: asyncio.run(remind_pending_requests()), CronTrigger(hour=0, minute=1)
 )
-# scheduler.add_job(
-#     lambda: asyncio.run(schedule_assign_orders_to_couriers()), 'interval', seconds=15
-# )
+scheduler.add_job(
+    lambda: asyncio.run(schedule_assign_orders_to_couriers()), 'interval', seconds=15
+)
 scheduler.start()
 
 if __name__ == "__main__":
@@ -905,8 +908,15 @@ async def get_courier_orders(courier_id: int, db: Session = Depends(get_db)):
 async def order_finish(order_id: int, db: Session = Depends(get_db)):
     return await finish_order(db, order_id)
 
+#Ruta za provjeru da li kurir moze da se izloguje
 @app.get("/courier/{courier_id}/has-unfinished-orders")
 async def check_pending_orders(courier_id: int, db: Session = Depends(get_db)):
     if await has_unfinished_orders(db, courier_id):
         return {"has_unfinished_orders": True}
     return {"has_unfinished_orders": False}
+
+#Ruta za dohvacanje svih zavrsenih narudzbi za kurira
+@app.get("/delivered-orders")
+async def delivered_orders(user_id: int = Depends(get_current_user), db: Session = Depends(get_db)):
+    orders = await get_delivered_orders(db, user_id.id)
+    return orders

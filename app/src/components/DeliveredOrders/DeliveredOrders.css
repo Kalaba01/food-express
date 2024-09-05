@@ -1,0 +1,134 @@
+.delivered-orders-container {
+    padding: 20px;
+    text-align: center;
+}
+
+.delivered-orders-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.delivered-orders-table th,
+.delivered-orders-table td {
+    border: 1px solid #ccc;
+    padding: 10px;
+    text-align: center;
+}
+
+.delivered-orders-price-button {
+    background-color: #007bff;
+    color: white;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+}
+
+.delivered-orders-price-button:hover {
+    background-color: #0056b3;
+}
+
+.delivered-orders-popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.delivered-orders-popup-content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    width: 500px;
+    max-width: 100%;
+    position: relative;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    text-align: center;
+}
+
+.delivered-orders-close-popup {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.delivered-orders-popup-table-wrapper {
+    max-height: 300px; /* Maksimalna visina popupa */
+    overflow-y: auto; /* Dodavanje skrola za višak sadržaja */
+}
+
+.delivered-orders-popup-table-wrapper::-webkit-scrollbar {
+    width: 8px;
+}
+
+.delivered-orders-popup-table-wrapper::-webkit-scrollbar-thumb {
+    background-color: #007bff;
+    border-radius: 10px;
+}
+
+.delivered-orders-popup-table-wrapper::-webkit-scrollbar-thumb:hover {
+    background-color: #0056b3;
+}
+
+.delivered-orders-popup-content h2 {
+    margin-bottom: 20px;
+}
+
+.delivered-orders-popup-content table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.delivered-orders-popup-content th,
+.delivered-orders-popup-content td {
+    border: 1px solid #ccc;
+    padding: 10px;
+    text-align: center;
+}
+
+/* Dark mode stilovi */
+body.dark-mode .delivered-orders-container {
+    background-color: #2c2c2c;
+    color: #fff;
+}
+
+body.dark-mode .delivered-orders-table th,
+body.dark-mode .delivered-orders-table td {
+    border-color: #555;
+    background-color: #333;
+}
+
+body.dark-mode .delivered-orders-price-button {
+    background-color: #28a745;
+}
+
+body.dark-mode .delivered-orders-price-button:hover {
+    background-color: #218838;
+}
+
+body.dark-mode .delivered-orders-popup-content {
+    background-color: #444;
+    color: #fff;
+    border: 1px solid #666;
+}
+
+body.dark-mode .delivered-orders-popup-content th,
+body.dark-mode .delivered-orders-popup-content td {
+    border-color: #666;
+}
+
+body.dark-mode .delivered-orders-close-popup {
+    color: #fff;
+}

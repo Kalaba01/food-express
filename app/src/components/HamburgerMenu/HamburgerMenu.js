@@ -126,6 +126,7 @@ function HamburgerMenu() {
         return (
           <>
             <a href="/courier/deliver-order">{t("HamburgerMenu.courier.deliverOrder")}</a>
+            <a href="/courier/delivered-orders">{t("HamburgerMenu.courier.deliveredOrders")}</a>
           </>
         );
       default:

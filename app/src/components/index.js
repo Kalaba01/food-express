@@ -41,5 +41,6 @@ import TrackOrders from "./TrackOrders/TrackOrders";
 import Rating from "./Rating/Rating";
 import OrderHistory from "./OrderHistory/OrderHistory";
 import DeliverOrder from "./DeliverOrder/DeliverOrder";
+import DeliveredOrders from "./DeliveredOrders/DeliveredOrders";
 
-export  { Admin, Captcha, Courier, Customer, Footer, FormPopup, GoTop, Header, Language, LoginRegister, NotificationPopup, Owner, Theme, LandingPage, Unauthorized, Logout, ForgotPassword, ResetPassword, HamburgerMenu, Requests, Users, NotFound, LookupTable, DeliveryZones, Restaurants, ConfirmDelete, Orders, Restaurant, Couriers, Profile, Chat, SearchBar, CustomerRestaurant, Basket, Gallery, GalleryPopup, Order, Status, PendingOrders, TrackOrders, Rating, OrderHistory, DeliverOrder }
+export  { Admin, Captcha, Courier, Customer, Footer, FormPopup, GoTop, Header, Language, LoginRegister, NotificationPopup, Owner, Theme, LandingPage, Unauthorized, Logout, ForgotPassword, ResetPassword, HamburgerMenu, Requests, Users, NotFound, LookupTable, DeliveryZones, Restaurants, ConfirmDelete, Orders, Restaurant, Couriers, Profile, Chat, SearchBar, CustomerRestaurant, Basket, Gallery, GalleryPopup, Order, Status, PendingOrders, TrackOrders, Rating, OrderHistory, DeliverOrder, DeliveredOrders }

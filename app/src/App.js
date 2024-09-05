@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Routes, Route } from 'react-router-dom';
-import { FormPopup, NotificationPopup, Customer, Owner, Courier, Admin, LandingPage, Unauthorized, ForgotPassword, ResetPassword, Requests, Users, NotFound, Footer, GoTop, DeliveryZones, Restaurants, Orders, Restaurant, CustomerRestaurant, Couriers, Profile, PendingOrders, TrackOrders, OrderHistory, DeliverOrder } from './components/index';
+import { FormPopup, NotificationPopup, Customer, Owner, Courier, Admin, LandingPage, Unauthorized, ForgotPassword, ResetPassword, Requests, Users, NotFound, Footer, GoTop, DeliveryZones, Restaurants, Orders, Restaurant, CustomerRestaurant, Couriers, Profile, PendingOrders, TrackOrders, OrderHistory, DeliverOrder, DeliveredOrders } from './components/index';
 import { BasketProvider } from './BasketContext';
 import { jwtDecode } from 'jwt-decode';
 import ProtectedRoute from './components/ProtectedRoute';
@@ -127,6 +127,7 @@ function App() {
             <Route path="/owner/orders" element={<ProtectedRoute allowedRoles={['owner']}><PendingOrders darkMode={darkMode} toggleDarkMode={toggleDarkMode} /></ProtectedRoute>} />
             <Route path="/courier" element={<ProtectedRoute allowedRoles={['courier']}><Courier darkMode={darkMode} toggleDarkMode={toggleDarkMode} /></ProtectedRoute>} />
             <Route path="/courier/deliver-order" element={<ProtectedRoute allowedRoles={['courier']}><DeliverOrder darkMode={darkMode} toggleDarkMode={toggleDarkMode} /></ProtectedRoute>} />
+            <Route path="/courier/delivered-orders" element={<ProtectedRoute allowedRoles={['courier']}><DeliveredOrders darkMode={darkMode} toggleDarkMode={toggleDarkMode} /> </ProtectedRoute>}/>
             <Route path="/admin" element={<ProtectedRoute allowedRoles={['administrator']}><Admin darkMode={darkMode} toggleDarkMode={toggleDarkMode} /></ProtectedRoute>} />
             <Route path="/admin/requests" element={<ProtectedRoute allowedRoles={['administrator']}><Requests darkMode={darkMode} toggleDarkMode={toggleDarkMode} /></ProtectedRoute>} />
             <Route path="/admin/users" element={<ProtectedRoute allowedRoles={['administrator']}><Users darkMode={darkMode} toggleDarkMode={toggleDarkMode} /></ProtectedRoute>} />

@@ -256,7 +256,8 @@
       "orderHistory": "Istorija narudžbi"
     },
     "courier": {
-      "deliverOrder": "Dostavi narudžbu"
+      "deliverOrder": "Dostavi narudžbu",
+      "deliveredOrders": "Dostavljene Narudžbe"
     }
   },
   "Orders": {

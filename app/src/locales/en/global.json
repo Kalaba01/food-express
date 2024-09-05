@@ -256,7 +256,8 @@
       "orderHistory": "Order History"
     },
     "courier": {
-      "deliverOrder": "Deliver Order"
+      "deliverOrder": "Deliver Order",
+       "deliveredOrders": "Delivered Orders"
     }
   },
   "Orders": {
