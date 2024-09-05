@@ -2,9 +2,11 @@ import React, { useState, useEffect } from "react";
 import { Header, NotificationPopup } from "../index";
 import { FaDollarSign } from "react-icons/fa";
 import axios from "axios";
+import { useTranslation } from "react-i18next";  // Importing the translation hook
 import "../DeliveredOrders/DeliveredOrders.css";
 
 function DeliveredOrders({ darkMode, toggleDarkMode }) {
+  const { t } = useTranslation("global");  // Hook to access translations
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedOrder, setSelectedOrder] = useState(null);
@@ -23,7 +25,7 @@ function DeliveredOrders({ darkMode, toggleDarkMode }) {
     const token = getToken();
     if (!token) {
       setNotification({
-        message: "You are not authenticated. Please log in.",
+        message: t("DeliveredOrders.notAuthenticated"),
         type: "error",
         isOpen: true,
       });
@@ -41,9 +43,9 @@ function DeliveredOrders({ darkMode, toggleDarkMode }) {
       );
       setOrders(response.data);
     } catch (error) {
-      console.error("Error fetching delivered orders:", error);
+      console.error(t("DeliveredOrders.fetchError"), error);
       setNotification({
-        message: "Error fetching delivered orders.",
+        message: t("DeliveredOrders.fetchError"),
         type: "error",
         isOpen: true,
       });
@@ -69,7 +71,7 @@ function DeliveredOrders({ darkMode, toggleDarkMode }) {
   if (loading) {
     return (
       <div className="delivered-orders-container">
-        <p>Loading...</p>
+        <p>{t("DeliveredOrders.loading")}</p>
       </div>
     );
   }
@@ -83,7 +85,7 @@ function DeliveredOrders({ darkMode, toggleDarkMode }) {
           userType="courier"
         />
         <div className="delivered-orders-container">
-          <p>No delivered orders found.</p>
+          <p>{t("DeliveredOrders.noOrders")}</p>
         </div>
       </>
     );
@@ -98,15 +100,15 @@ function DeliveredOrders({ darkMode, toggleDarkMode }) {
       />
       <div>
         <div className="delivered-orders-container">
-          <h1>Delivered Orders</h1>
+          <h1>{t("DeliveredOrders.title")}</h1>
           <table className="delivered-orders-table">
             <thead>
               <tr>
-                <th>Restaurant</th>
-                <th>Restaurant Address</th>
-                <th>Customer</th>
-                <th>Customer Address</th>
-                <th>Price</th>
+                <th>{t("DeliveredOrders.restaurant")}</th>
+                <th>{t("DeliveredOrders.restaurantAddress")}</th>
+                <th>{t("DeliveredOrders.customer")}</th>
+                <th>{t("DeliveredOrders.customerAddress")}</th>
+                <th>{t("DeliveredOrders.price")}</th>
               </tr>
             </thead>
             <tbody>
@@ -139,14 +141,14 @@ function DeliveredOrders({ darkMode, toggleDarkMode }) {
               >
                 &times;
               </span>
-              <h2>Order Details</h2>
+              <h2>{t("DeliveredOrders.orderDetails")}</h2>
               <div className="delivered-orders-popup-table-wrapper">
                 <table>
                   <thead>
                     <tr>
-                      <th>Item Name</th>
-                      <th>Quantity</th>
-                      <th>Price</th>
+                      <th>{t("DeliveredOrders.itemName")}</th>
+                      <th>{t("DeliveredOrders.quantity")}</th>
+                      <th>{t("DeliveredOrders.itemPrice")}</th>
                     </tr>
                   </thead>
                   <tbody>

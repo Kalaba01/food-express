@@ -542,5 +542,21 @@
     "cancel": "Cancel",
     "successMessage": "Thank you for your feedback!",
     "errorMessage": "Failed to submit your rating. Please try again."
+  },
+  "DeliveredOrders": {
+    "title": "Delivered Orders",
+    "restaurant": "Restaurant",
+    "restaurantAddress": "Restaurant Address",
+    "customer": "Customer",
+    "customerAddress": "Customer Address",
+    "price": "Price",
+    "itemName": "Item Name",
+    "quantity": "Quantity",
+    "itemPrice": "Price",
+    "orderDetails": "Order Details",
+    "loading": "Loading...",
+    "noOrders": "No delivered orders found.",
+    "notAuthenticated": "You are not authenticated. Please log in.",
+    "fetchError": "Error fetching delivered orders."
   }
 }

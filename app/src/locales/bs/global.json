@@ -542,5 +542,21 @@
     "cancel": "Otkaži",
     "successMessage": "Hvala vam na povratnim informacijama!",
     "errorMessage": "Neuspješno slanje ocjene. Molimo pokušajte ponovo."
+  },
+  "DeliveredOrders": {
+    "title": "Isporučene Narudžbe",
+    "restaurant": "Restoran",
+    "restaurantAddress": "Adresa Restorana",
+    "customer": "Kupac",
+    "customerAddress": "Adresa Kupca",
+    "price": "Cijena",
+    "itemName": "Naziv Artikla",
+    "quantity": "Količina",
+    "itemPrice": "Cijena Artikla",
+    "orderDetails": "Detalji Narudžbe",
+    "loading": "Učitavanje...",
+    "noOrders": "Nema isporučenih narudžbi.",
+    "notAuthenticated": "Niste prijavljeni. Molimo prijavite se.",
+    "fetchError": "Greška prilikom preuzimanja isporučenih narudžbi."
   }
 }
