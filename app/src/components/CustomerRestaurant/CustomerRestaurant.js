@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useContext } from "react";
+import { Header, Gallery, GalleryPopup, Map } from "../index";
 import { useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { BasketContext } from "../../BasketContext";
-import { Header, Gallery, GalleryPopup } from "../index";
 import { FaStar, FaStarHalfAlt } from "react-icons/fa";
 import axios from "axios";
 import "./CustomerRestaurant.css";
@@ -16,15 +16,23 @@ function CustomerRestaurant({ darkMode, toggleDarkMode }) {
   const [currentItemImages, setCurrentItemImages] = useState([]);
   const [isOpen, setIsOpen] = useState(true);
   const { setBasket } = useContext(BasketContext);
+  const [mapPopupOpen, setMapPopupOpen] = useState(false);
+  const [mapCoordinates, setMapCoordinates] = useState({
+    latitude: null,
+    longitude: null,
+    label: "",
+  });
 
   useEffect(() => {
     const fetchRestaurantDetails = async () => {
       try {
+        console.log("Fetching restaurant details for:", restaurantName);
         const response = await axios.get(
           `http://localhost:8000/api/restaurants/${encodeURIComponent(
             restaurantName
           )}/details`
         );
+        console.log("Restaurant details fetched:", response.data);
         setRestaurant(response.data);
         checkOperatingHours(response.data.operating_hours);
       } catch (error) {
@@ -34,11 +42,13 @@ function CustomerRestaurant({ darkMode, toggleDarkMode }) {
 
     const fetchRestaurantMenu = async () => {
       try {
+        console.log("Fetching restaurant menu for:", restaurantName);
         const response = await axios.get(
           `http://localhost:8000/api/restaurants/${encodeURIComponent(
             restaurantName
           )}/menu`
         );
+        console.log("Restaurant menu fetched:", response.data);
         setMenu(response.data);
       } catch (error) {
         console.error("Error fetching restaurant menu:", error);
@@ -48,6 +58,15 @@ function CustomerRestaurant({ darkMode, toggleDarkMode }) {
     fetchRestaurantDetails();
     fetchRestaurantMenu();
   }, [restaurantName]);
+
+  const openMapPopup = (latitude, longitude, label) => {
+    setMapCoordinates({ latitude, longitude, label });
+    setMapPopupOpen(true);
+  };
+
+  const closeMapPopup = () => {
+    setMapPopupOpen(false);
+  };
 
   const checkOperatingHours = (operatingHours) => {
     const currentDay = new Date().toLocaleString("en-US", { weekday: "long" });
@@ -66,8 +85,11 @@ function CustomerRestaurant({ darkMode, toggleDarkMode }) {
       openingTime.setHours(openingHour, openingMinute);
       closingTime.setHours(closingHour, closingMinute);
 
+      console.log("Operating hours check:", { openingTime, closingTime });
+
       if (currentTime < openingTime || currentTime > closingTime) {
         setIsOpen(false);
+        console.log("Restaurant is closed");
       } else {
         setIsOpen(true);
       }
@@ -163,6 +185,7 @@ function CustomerRestaurant({ darkMode, toggleDarkMode }) {
   };
 
   if (!restaurant) {
+    console.log("Restaurant not yet loaded");
     return <div>{t("CustomerRestaurant.loading")}</div>;
   }
 
@@ -180,7 +203,12 @@ function CustomerRestaurant({ darkMode, toggleDarkMode }) {
             {renderStars(restaurant.average_rating)}
           </div>
         )}
-        <p>
+        <p
+          className="clickable-restaurant-address"
+          onClick={() =>
+            openMapPopup(restaurant.latitude, restaurant.longitude, restaurant.name)
+          }
+        >
           {restaurant.address}, {restaurant.city}
         </p>
         <p>
@@ -243,6 +271,26 @@ function CustomerRestaurant({ darkMode, toggleDarkMode }) {
             </div>
           ))}
         </div>
+
+        {mapPopupOpen && mapCoordinates.latitude && mapCoordinates.longitude && (
+          <div className="modal">
+            <div className="modal-content">
+              <span
+                className="close-button"
+                onClick={closeMapPopup}
+              >
+                &times;
+              </span>
+              <h2>{mapCoordinates.label}</h2>
+              <Map
+                latitude={mapCoordinates.latitude}
+                longitude={mapCoordinates.longitude}
+                address={mapCoordinates.label}
+              />
+            </div>
+          </div>
+        )}
+
         {isPopupOpen && (
           <GalleryPopup
             images={currentItemImages}

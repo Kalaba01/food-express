@@ -4,6 +4,7 @@ import {
   LookupTable,
   ConfirmDelete,
   NotificationPopup,
+  Map,
 } from "../index";
 import axios from "axios";
 import { useTranslation } from "react-i18next";
@@ -36,9 +37,17 @@ function Couriers({ darkMode, toggleDarkMode }) {
 
   const [notification, setNotification] = useState({
     message: "",
-    type: "", // 'success' or 'error'
+    type: "",
     isOpen: false,
   });
+
+  const [isMapPopupOpen, setIsMapPopupOpen] = useState(false);
+  const [selectedRestaurant, setSelectedRestaurant] = useState(null);
+
+  const handleRestaurantClick = (restaurant) => {
+    setSelectedRestaurant(restaurant);
+    setIsMapPopupOpen(true);
+  };
 
   const fetchCouriers = async () => {
     try {
@@ -62,7 +71,6 @@ function Couriers({ darkMode, toggleDarkMode }) {
       return;
     }
     if (query.length >= 3) {
-      // Smanjen minimalni broj karaktera za bržu pretragu
       try {
         const response = await axios.get(
           `http://localhost:8000/search-couriers/?username=${query}`
@@ -78,7 +86,7 @@ function Couriers({ darkMode, toggleDarkMode }) {
 
   const handleRestaurantSearch = async (query) => {
     if (query.trim() === "") {
-      setRestaurantSearchResults([]); // Očisti listu ako je unos prazan
+      setRestaurantSearchResults([]);
       return;
     }
     try {
@@ -250,7 +258,14 @@ function Couriers({ darkMode, toggleDarkMode }) {
 
   const customRenderers = {
     [t("Couriers.name")]: (item) => item.user_name,
-    [t("Couriers.restaurant")]: (item) => item.restaurant_name,
+    [t("Couriers.restaurant")]: (item) => (
+      <span
+        className="restaurant-name-clickable"
+        onClick={() => handleRestaurantClick(item)}
+      >
+        {item.restaurant_name}
+      </span>
+    ),
     [t("Couriers.vehicle")]: (item) => item.vehicle_type,
     [t("Couriers.wallet")]: (item) => `${item.wallet_amount} BAM`,
     [t("Couriers.halal")]: (item) =>
@@ -486,6 +501,25 @@ function Couriers({ darkMode, toggleDarkMode }) {
                 </>
               )}
             </form>
+          </div>
+        </div>
+      )}
+
+      {isMapPopupOpen && selectedRestaurant && (
+        <div className="modal">
+          <div className="modal-content">
+            <span
+              className="close-button"
+              onClick={() => setIsMapPopupOpen(false)}
+            >
+              &times;
+            </span>
+            <h2>{t("Couriers.restaurantLocation")}</h2>
+            <Map
+              latitude={selectedRestaurant.latitude}
+              longitude={selectedRestaurant.longitude}
+              address={selectedRestaurant.restaurant_name}
+            />
           </div>
         </div>
       )}

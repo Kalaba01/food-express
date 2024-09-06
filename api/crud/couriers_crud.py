@@ -29,9 +29,11 @@ async def get_all_couriers(db: Session):
             "id": courier.id,
             "user_name": courier.user.username,
             "restaurant_name": courier.restaurant.name,
+            "latitude": courier.restaurant.latitude,
+            "longitude": courier.restaurant.longitude,
             "vehicle_type": courier.vehicle_type.value,
             "wallet_amount": courier.wallet_amount,
-            "halal_mode": courier.halal_mode,
+            "halal_mode": courier.halal_mode
         })
 
     return couriers_with_details

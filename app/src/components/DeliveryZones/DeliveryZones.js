@@ -1,37 +1,48 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Header, NotificationPopup, LookupTable, ConfirmDelete } from '../index';
-import { MapContainer, TileLayer, FeatureGroup, Rectangle } from 'react-leaflet';
-import { useTranslation } from 'react-i18next';
-import { FaMapPin, FaTrash } from 'react-icons/fa';
-import { EditControl } from 'react-leaflet-draw';
-import axios from 'axios';
-import L from 'leaflet';
-import 'leaflet/dist/leaflet.css';
-import 'leaflet-draw/dist/leaflet.draw.css';
-import '../LookupTable/LookupTable.css';
+import React, { useState, useEffect } from "react";
+import {
+  Header,
+  NotificationPopup,
+  LookupTable,
+  ConfirmDelete,
+  Map
+} from "../index";
+import {
+  MapContainer,
+  TileLayer,
+  FeatureGroup,
+} from "react-leaflet";
+import { useTranslation } from "react-i18next";
+import { FaMapPin, FaTrash } from "react-icons/fa";
+import { EditControl } from "react-leaflet-draw";
+import axios from "axios";
+import L from "leaflet";
+import "leaflet/dist/leaflet.css";
+import "leaflet-draw/dist/leaflet.draw.css";
+import "../LookupTable/LookupTable.css";
 
 function DeliveryZones({ darkMode, toggleDarkMode }) {
-  const { t } = useTranslation('global');
+  const { t } = useTranslation("global");
   const [zones, setZones] = useState([]);
   const [editZone, setEditZone] = useState(null);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [isMapPopupOpen, setIsMapPopupOpen] = useState(false);
   const [newZone, setNewZone] = useState({
-    name: '',
-    bounds: null
+    name: "",
+    bounds: null,
   });
-  const [notification, setNotification] = useState({ message: '', type: '' });
+  const [notification, setNotification] = useState({ message: "", type: "" });
   const [deletePopupOpen, setDeletePopupOpen] = useState(false);
   const [zoneToDelete, setZoneToDelete] = useState(null);
-  const editGroupRef = useRef(null);
 
   useEffect(() => {
     const fetchZones = async () => {
       try {
-        const response = await axios.get('http://localhost:8000/delivery-zones/');
+        const response = await axios.get(
+          "http://localhost:8000/delivery-zones/"
+        );
         setZones(response.data);
       } catch (error) {
-        console.error('Error fetching delivery zones:', error);
+        console.error("Error fetching delivery zones:", error);
       }
     };
 
@@ -55,11 +66,13 @@ function DeliveryZones({ darkMode, toggleDarkMode }) {
 
   const confirmDelete = async () => {
     try {
-      await axios.delete(`http://localhost:8000/delivery-zones/${zoneToDelete.id}`);
-      setZones(zones.filter(zone => zone.id !== zoneToDelete.id));
-      showNotification(t('DeliveryZones.success.delete'), 'success');
+      await axios.delete(
+        `http://localhost:8000/delivery-zones/${zoneToDelete.id}`
+      );
+      setZones(zones.filter((zone) => zone.id !== zoneToDelete.id));
+      showNotification(t("DeliveryZones.success.delete"), "success");
     } catch (error) {
-      showNotification(t('FormPopup.errors.requestFailed'), 'error');
+      showNotification(t("FormPopup.errors.requestFailed"), "error");
     } finally {
       setDeletePopupOpen(false);
       setZoneToDelete(null);
@@ -77,13 +90,18 @@ function DeliveryZones({ darkMode, toggleDarkMode }) {
     if (!editZone) return;
 
     try {
-      const response = await axios.put(`http://localhost:8000/delivery-zones/${editZone.id}`, editZone);
-      setZones(zones.map(zone => (zone.id === editZone.id ? response.data : zone)));
+      const response = await axios.put(
+        `http://localhost:8000/delivery-zones/${editZone.id}`,
+        editZone
+      );
+      setZones(
+        zones.map((zone) => (zone.id === editZone.id ? response.data : zone))
+      );
       setEditZone(null);
       resetPopup();
-      showNotification(t('FormPopup.common.success.edit'), 'success');
+      showNotification(t("FormPopup.common.success.edit"), "success");
     } catch (error) {
-      showNotification(t('FormPopup.common.errors.requestFailed'), 'error');
+      showNotification(t("FormPopup.common.errors.requestFailed"), "error");
     }
   };
 
@@ -91,17 +109,17 @@ function DeliveryZones({ darkMode, toggleDarkMode }) {
     event.preventDefault();
 
     if (!newZone.name) {
-      showNotification(t('DeliveryZones.enterName'), 'error');
+      showNotification(t("DeliveryZones.enterName"), "error");
       return;
     }
 
     if (!newZone.bounds) {
-      showNotification(t('DeliveryZones.selectArea'), 'error');
+      showNotification(t("DeliveryZones.selectArea"), "error");
       return;
     }
 
-    if (zones.some(zone => zone.name === newZone.name)) {
-      showNotification(t('DeliveryZones.duplicateName'), 'error');
+    if (zones.some((zone) => zone.name === newZone.name)) {
+      showNotification(t("DeliveryZones.duplicateName"), "error");
       return;
     }
 
@@ -119,18 +137,21 @@ function DeliveryZones({ darkMode, toggleDarkMode }) {
     };
 
     try {
-      const response = await axios.post('http://localhost:8000/delivery-zones/', zoneData);
+      const response = await axios.post(
+        "http://localhost:8000/delivery-zones/",
+        zoneData
+      );
       setZones([...zones, response.data]);
       resetPopup();
-      showNotification(t('FormPopup.common.success.create'), 'success');
+      showNotification(t("FormPopup.common.success.create"), "success");
     } catch (error) {
-      showNotification(t('FormPopup.common.errors.requestFailed'), 'error');
+      showNotification(t("FormPopup.common.errors.requestFailed"), "error");
     }
   };
 
   const showNotification = (message, type) => {
     setNotification({ message, type });
-    setTimeout(() => setNotification({ message: '', type: '' }), 3000);
+    setTimeout(() => setNotification({ message: "", type: "" }), 3000);
   };
 
   const handleCreated = (e) => {
@@ -138,7 +159,10 @@ function DeliveryZones({ darkMode, toggleDarkMode }) {
     const bounds = layer.getBounds();
     setNewZone({
       ...newZone,
-      bounds: [[bounds.getSouthWest().lat, bounds.getSouthWest().lng], [bounds.getNorthEast().lat, bounds.getNorthEast().lng]]
+      bounds: [
+        [bounds.getSouthWest().lat, bounds.getSouthWest().lng],
+        [bounds.getNorthEast().lat, bounds.getNorthEast().lng],
+      ],
     });
   };
 
@@ -161,38 +185,49 @@ function DeliveryZones({ darkMode, toggleDarkMode }) {
   const resetPopup = () => {
     setIsPopupOpen(false);
     setIsMapPopupOpen(false);
-    setNewZone({ name: '', bounds: null });
+    setNewZone({ name: "", bounds: null });
     setEditZone(null);
   };
 
-  const columns = [t('DeliveryZones.name')];
+  const columns = [t("DeliveryZones.name")];
 
   return (
     <div>
-      <Header darkMode={darkMode} toggleDarkMode={toggleDarkMode} userType="administrator" />
-      {notification.message && <NotificationPopup message={notification.message} type={notification.type} />}
+      <Header
+        darkMode={darkMode}
+        toggleDarkMode={toggleDarkMode}
+        userType="administrator"
+      />
+      {notification.message && (
+        <NotificationPopup
+          message={notification.message}
+          type={notification.type}
+        />
+      )}
       <div className="zones-container">
-        <h1>{t('DeliveryZones.title')}</h1>
-        <button className="create-button" onClick={() => setIsPopupOpen(true)}>{t('DeliveryZones.create')}</button>
+        <h1>{t("DeliveryZones.title")}</h1>
+        <button className="create-button" onClick={() => setIsPopupOpen(true)}>
+          {t("DeliveryZones.create")}
+        </button>
         <LookupTable
           columns={columns}
           data={zones}
           actions={[
             {
-              label: t('DeliveryZones.edit'),
-              className: 'edit-button',
+              label: t("DeliveryZones.edit"),
+              className: "edit-button",
               handler: handleEditClick,
             },
             {
               label: <FaMapPin />,
-              className: 'map-icon',
+              className: "map-icon",
               handler: handleMapClick,
             },
             {
               label: <FaTrash />,
-              className: 'delete-button',
+              className: "delete-button",
               handler: handleDeleteClick,
-            }
+            },
           ]}
           showActions
         />
@@ -201,30 +236,42 @@ function DeliveryZones({ darkMode, toggleDarkMode }) {
       {isPopupOpen && (
         <div className="modal">
           <div className="modal-content">
-            <span className="close-button" onClick={resetPopup}>&times;</span>
-            <h2>{editZone ? t('DeliveryZones.editZone') : t('DeliveryZones.createZone')}</h2>
+            <span className="close-button" onClick={resetPopup}>
+              &times;
+            </span>
+            <h2>
+              {editZone
+                ? t("DeliveryZones.editZone")
+                : t("DeliveryZones.createZone")}
+            </h2>
             <form onSubmit={editZone ? handleSaveClick : handleNewZoneSave}>
               <input
                 type="text"
                 value={editZone ? editZone.name : newZone.name}
-                onChange={(e) => editZone ? setEditZone({ ...editZone, name: e.target.value }) : setNewZone({ ...newZone, name: e.target.value })}
-                placeholder={t('DeliveryZones.name')}
+                onChange={(e) =>
+                  editZone
+                    ? setEditZone({ ...editZone, name: e.target.value })
+                    : setNewZone({ ...newZone, name: e.target.value })
+                }
+                placeholder={t("DeliveryZones.name")}
                 className="input-field"
                 required
               />
               <MapContainer
-                style={{ height: '400px', width: '100%' }}
-                center={[51.505, -0.09]}
-                zoom={13}
+                style={{ height: "400px", width: "100%" }}
+                center={[editZone.point1_latitude, editZone.point1_longitude]}
+                zoom={15}
                 whenCreated={(map) => {
                   if (editZone) {
                     const bounds = [
                       [editZone.point1_latitude, editZone.point1_longitude],
-                      [editZone.point3_latitude, editZone.point3_longitude]
+                      [editZone.point3_latitude, editZone.point3_longitude],
                     ];
-                    const rectangle = new L.Rectangle(bounds, { draggable: true });
+                    const rectangle = new L.Rectangle(bounds, {
+                      draggable: true,
+                    });
                     rectangle.addTo(map);
-                    rectangle.on('edit', () => {
+                    rectangle.on("edit", () => {
                       handleEditBoundsChange({ target: rectangle });
                     });
                   }
@@ -244,18 +291,20 @@ function DeliveryZones({ darkMode, toggleDarkMode }) {
                       polygon: false,
                       circle: false,
                       circlemarker: false,
-                      marker: false
+                      marker: false,
                     }}
                   />
                 </FeatureGroup>
               </MapContainer>
-              <button type="submit" className="save-button">{editZone ? t('DeliveryZones.save') : t('DeliveryZones.create')}</button>
+              <button type="submit" className="save-button">
+                {editZone ? t("DeliveryZones.save") : t("DeliveryZones.create")}
+              </button>
             </form>
           </div>
         </div>
       )}
 
-      {isMapPopupOpen && (
+      {/* {isMapPopupOpen && (
         <div className="modal">
           <div className="modal-content">
             <span className="close-button" onClick={resetPopup}>&times;</span>
@@ -283,13 +332,30 @@ function DeliveryZones({ darkMode, toggleDarkMode }) {
             </MapContainer>
           </div>
         </div>
+      )} */}
+
+      {isMapPopupOpen && editZone && (
+        <div className="modal">
+          <div className="modal-content map-popup">
+            <span className="close-button" onClick={resetPopup}>
+              &times;
+            </span>
+            <h2>{t("DeliveryZones.viewZone")}</h2>
+            <Map
+              bounds={[
+                [editZone.point1_latitude, editZone.point1_longitude],
+                [editZone.point3_latitude, editZone.point3_longitude],
+              ]}
+            />
+          </div>
+        </div>
       )}
 
-      <ConfirmDelete 
-        isOpen={deletePopupOpen} 
-        message={t('DeliveryZones.confirmDeleteMessage')} 
-        onConfirm={confirmDelete} 
-        onCancel={cancelDelete} 
+      <ConfirmDelete
+        isOpen={deletePopupOpen}
+        message={t("DeliveryZones.confirmDeleteMessage")}
+        onConfirm={confirmDelete}
+        onCancel={cancelDelete}
       />
     </div>
   );

@@ -63,7 +63,7 @@
     border-radius: 8px;
     max-width: 500px;
     width: 90%;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
     position: relative;
 }
 
@@ -89,4 +89,14 @@
 .modal-content ul li {
     margin-bottom: 8px;
     text-align: center;
+}
+
+.clickable-address {
+    color: #007bff;
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+.clickable-address:hover {
+    color: #0056b3;
 }

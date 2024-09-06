@@ -63,6 +63,16 @@
     background-color: #4cae4c;
 }
 
+.clickable-address {
+    color: #007bff;
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+.clickable-address:hover {
+    color: #0056b3;
+}
+
 /* Dark Mode Styles */
 body.dark-mode .track-orders h2 {
     color: #f8f8f8;

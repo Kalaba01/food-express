@@ -33,8 +33,12 @@ async def get_delivered_orders(db: Session, user_id: int):
             "id": order.id,
             "restaurant_name": restaurant.name,
             "restaurant_address": restaurant.address,
+            "restaurant_latitude": restaurant.latitude,
+            "restaurant_longitude": restaurant.longitude,
             "customer_username": customer.username,
             "customer_address": order.delivery_address,
+            "customer_latitude": order.delivery_latitude,
+            "customer_longitude": order.delivery_longitude,
             "total_price": order.total_price,
             "items": items_data
         })

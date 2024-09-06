@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Header, Order } from "../index";
+import { Header, Order, Map } from "../index";  // Dodali smo Map komponentu
 import { jwtDecode } from 'jwt-decode';
 import { BasketContext } from '../../BasketContext';
 import { useTranslation } from 'react-i18next';
@@ -13,6 +13,7 @@ function OrderHistory({ darkMode, toggleDarkMode }) {
   const [selectedOrderItems, setSelectedOrderItems] = useState([]);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [isOrderPopupOpen, setIsOrderPopupOpen] = useState(false);
+  const [mapCoordinates, setMapCoordinates] = useState(null); // Dodali smo stanje za mapu
 
   useEffect(() => {
     const fetchOrderHistory = async () => {
@@ -53,6 +54,10 @@ function OrderHistory({ darkMode, toggleDarkMode }) {
     setIsPopupOpen(true);
   };
 
+  const handleOpenMap = (latitude, longitude, address) => {
+    setMapCoordinates({ latitude, longitude, address });
+  };
+
   const handleClosePopup = () => {
     setIsPopupOpen(false);
     setSelectedOrderItems([]);
@@ -60,6 +65,10 @@ function OrderHistory({ darkMode, toggleDarkMode }) {
 
   const handleCloseOrderPopup = () => {
     setIsOrderPopupOpen(false);
+  };
+
+  const handleCloseMap = () => {
+    setMapCoordinates(null);
   };
 
   return (
@@ -85,7 +94,12 @@ function OrderHistory({ darkMode, toggleDarkMode }) {
             <tbody>
               {orders.map(order => (
                 <tr key={order.id}>
-                  <td>{order.restaurant_name}</td>
+                  <td
+                    className="clickable-restaurant-name"
+                    onClick={() => handleOpenMap(order.latitude, order.longitude, order.restaurant_name)}
+                  >
+                    {order.restaurant_name}
+                  </td>
                   <td>{order.restaurant_category}</td>
                   <td>{order.restaurant_contact}</td>
                   <td 
@@ -118,6 +132,21 @@ function OrderHistory({ darkMode, toggleDarkMode }) {
                 </li>
               ))}
             </ul>
+          </div>
+        </div>
+      )}
+
+      {mapCoordinates && (
+        <div className="modal-overlay">
+          <div className="modal-content">
+            <span className="close-popup" onClick={handleCloseMap}>
+              &times;
+            </span>
+            <Map
+              latitude={mapCoordinates.latitude}
+              longitude={mapCoordinates.longitude}
+              address={mapCoordinates.address}
+            />
           </div>
         </div>
       )}

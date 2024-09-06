@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Header, Rating, NotificationPopup } from "../index";
+import { Header, Rating, NotificationPopup, Map } from "../index";
 import axios from "axios";
 import { useTranslation } from "react-i18next";
 import "./TrackOrders.css";
@@ -11,6 +11,7 @@ function TrackOrders({ darkMode, toggleDarkMode }) {
   const [showRating, setShowRating] = useState(false);
   const [selectedOrderId, setSelectedOrderId] = useState(null);
   const [notification, setNotification] = useState({ message: "", type: "" });
+  const [mapCoordinates, setMapCoordinates] = useState(null); // State for map
 
   useEffect(() => {
     const fetchOrders = async () => {
@@ -97,6 +98,14 @@ function TrackOrders({ darkMode, toggleDarkMode }) {
     return () => clearInterval(intervalId);
   }, [orders]);  
 
+  const handleOpenMap = (latitude, longitude, address) => {
+    setMapCoordinates({ latitude, longitude, address });
+  };
+
+  const handleCloseMap = () => {
+    setMapCoordinates(null);
+  };
+
   const handleFinish = (orderId) => {
     setSelectedOrderId(orderId);
     setShowRating(true);
@@ -154,7 +163,12 @@ function TrackOrders({ darkMode, toggleDarkMode }) {
               <tr key={order.id}>
                 <td>{order.courierUsername || t("TrackOrders.notAssigned")}</td>
                 <td>{order.restaurantName || "N/A"}</td>
-                <td>{order.restaurantAddress || "N/A"}</td>
+                <td
+                  className="clickable-address"
+                  onClick={() => handleOpenMap(order.latitude, order.longitude, order.restaurantAddress)}
+                >
+                  {order.restaurantAddress || "N/A"}
+                </td>
                 <td>{order.restaurantContact || "N/A"}</td>
                 <td>{order.price} BAM</td>
                 <td>{order.paymentMethod}</td>
@@ -172,6 +186,22 @@ function TrackOrders({ darkMode, toggleDarkMode }) {
           </tbody>
         </table>
       </div>
+
+      {mapCoordinates && (
+        <div className="modal-overlay">
+          <div className="modal-content">
+            <span className="close-popup" onClick={handleCloseMap}>
+              &times;
+            </span>
+            <Map
+              latitude={mapCoordinates.latitude}
+              longitude={mapCoordinates.longitude}
+              address={mapCoordinates.address}
+            />
+          </div>
+        </div>
+      )}
+
       {showRating && <Rating orderId={selectedOrderId} onClose={handleCloseRating} />}
       {notification.message && (
         <NotificationPopup

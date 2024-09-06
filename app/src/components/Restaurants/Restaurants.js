@@ -4,6 +4,7 @@ import {
   NotificationPopup,
   LookupTable,
   ConfirmDelete,
+  Map
 } from "../index";
 import {
   FaStar,
@@ -16,13 +17,8 @@ import {
   FaCaretDown,
   FaCaretUp,
 } from "react-icons/fa";
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import { useTranslation } from "react-i18next";
 import axios from "axios";
-import L from "leaflet";
-import markerIcon from "leaflet/dist/images/marker-icon.png";
-import markerShadow from "leaflet/dist/images/marker-shadow.png";
-import "leaflet/dist/leaflet.css";
 import "../LookupTable/LookupTable.css";
 
 function Restaurants({ darkMode, toggleDarkMode }) {
@@ -44,15 +40,6 @@ function Restaurants({ darkMode, toggleDarkMode }) {
   const [selectedOwner, setSelectedOwner] = useState(null);
   const [selectedZones, setSelectedZones] = useState([]);
   const [zonesDropdownOpen, setZonesDropdownOpen] = useState(false);
-
-  const customMarkerIcon = L.icon({
-    iconUrl: markerIcon,
-    shadowUrl: markerShadow,
-    iconSize: [25, 41],
-    iconAnchor: [12, 41],
-    popupAnchor: [1, -34],
-    shadowSize: [41, 41],
-  });
 
   useEffect(() => {
     const fetchRestaurants = async () => {
@@ -460,22 +447,11 @@ function Restaurants({ darkMode, toggleDarkMode }) {
               &times;
             </span>
             <h2>{t("Restaurants.viewLocation")}</h2>
-            <MapContainer
-              style={{ height: "400px", width: "100%" }}
-              center={[editRestaurant.latitude, editRestaurant.longitude]}
-              zoom={15}
-            >
-              <TileLayer
-                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-              />
-              <Marker
-                position={[editRestaurant.latitude, editRestaurant.longitude]}
-                icon={customMarkerIcon}
-              >
-                <Popup>{editRestaurant.address}</Popup>
-              </Marker>
-            </MapContainer>
+            <Map
+              latitude={editRestaurant.latitude}
+              longitude={editRestaurant.longitude}
+              address={editRestaurant.address}
+            />
           </div>
         </div>
       )}

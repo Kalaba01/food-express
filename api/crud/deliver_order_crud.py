@@ -15,6 +15,7 @@ from models.models import (
     CourierStatus,
 )
 
+
 async def get_orders_for_courier(db: Session, user_id: int):
     courier = db.query(Courier.id).filter(Courier.user_id == user_id).first()
     if not courier:
@@ -31,9 +32,13 @@ async def get_orders_for_courier(db: Session, user_id: int):
             Restaurant.name.label("restaurant_name"),
             Restaurant.address.label("restaurant_address"),
             Restaurant.contact.label("restaurant_contact"),
+            Restaurant.latitude.label("restaurant_latitude"),
+            Restaurant.longitude.label("restaurant_longitude"),
             User.username.label("customer_username"),
             Order.delivery_address,
             Order.contact.label("customer_contact"),
+            Order.delivery_latitude.label("customer_latitude"),
+            Order.delivery_longitude.label("customer_longitude"),
             Order.id.label("order_id"),
         )
         .join(Order, OrderAssignment.order_id == Order.id)
@@ -64,9 +69,13 @@ async def get_orders_for_courier(db: Session, user_id: int):
                 "restaurant_name": assignment.restaurant_name,
                 "restaurant_address": assignment.restaurant_address,
                 "restaurant_contact": assignment.restaurant_contact,
+                "restaurant_latitude": assignment.restaurant_latitude,
+                "restaurant_longitude": assignment.restaurant_longitude,
                 "customer_username": assignment.customer_username,
                 "customer_address": assignment.delivery_address,
                 "customer_contact": assignment.customer_contact,
+                "customer_latitude": assignment.customer_latitude,
+                "customer_longitude": assignment.customer_longitude,
                 "total_price": assignment.total_price,
                 "payment_method": assignment.payment_method,
                 "optimal_change": assignment.optimal_change,
@@ -110,7 +119,9 @@ async def finish_order(db: Session, order_id: int):
         raise HTTPException(status_code=404, detail="Courier not found")
 
     if order.payment_method == PaymentMethod.cash:
-        print(f"Payment method is cash for order ID {order_id}. Updating courier wallet.")
+        print(
+            f"Payment method is cash for order ID {order_id}. Updating courier wallet."
+        )
         money_data = json.loads(order.money)
         wallet = json.loads(courier.wallet_details)
 
@@ -125,7 +136,9 @@ async def finish_order(db: Session, order_id: int):
                 denomination, qty = change.split(" x ")
                 qty = int(qty)
                 denomination_key = f"{denomination}"
-                print(f"Removing {qty} of {denomination_key} from courier wallet as change.")
+                print(
+                    f"Removing {qty} of {denomination_key} from courier wallet as change."
+                )
 
                 if wallet.get(denomination_key, 0) >= qty:
                     if wallet[denomination_key] == qty:
@@ -133,15 +146,18 @@ async def finish_order(db: Session, order_id: int):
                         del wallet[denomination_key]
                     else:
                         wallet[denomination_key] -= qty
-                        print(f"Updated {denomination_key} in courier wallet, new quantity: {wallet[denomination_key]}")
+                        print(
+                            f"Updated {denomination_key} in courier wallet, new quantity: {wallet[denomination_key]}"
+                        )
                 else:
-                    print(f"Not enough {denomination_key} in wallet to return as change. Current quantity: {wallet.get(denomination_key, 0)}")
+                    print(
+                        f"Not enough {denomination_key} in wallet to return as change. Current quantity: {wallet.get(denomination_key, 0)}"
+                    )
 
         print(f"Final courier wallet state before saving: {wallet}")
 
         courier.wallet_details = json.dumps(wallet)
         print(f"Courier wallet updated successfully for courier ID {courier.id}.")
-
 
     order.status = OrderStatus.delivered
     assignment.status = OrderAssignmentStatus.delivered

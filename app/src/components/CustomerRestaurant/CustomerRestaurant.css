@@ -5,11 +5,6 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-body.dark-mode .restaurant-details {
-    background-color: #2c3e50;
-    color: #ecf0f1;
-}
-
 .clickable-item-name {
     color: #3498db;
     cursor: pointer;
@@ -103,4 +98,72 @@ body.dark-mode .restaurant-details {
 
 .add-to-basket-button.disabled-button:hover {
     background-color: #ccc;
+}
+
+.clickable-restaurant-address {
+    color: #007bff;
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+.clickable-restaurant-address:hover {
+    color: #0056b3;
+}
+
+/* Dark mode stilovi */
+body.dark-mode .clickable-restaurant-address {
+    color: #66b3ff;
+}
+
+body.dark-mode .clickable-restaurant-address:hover {
+    color: #3399ff;
+}
+
+body.dark-mode .restaurant-details {
+    background-color: #2c3e50;
+    color: #ecf0f1;
+}
+
+body.dark-mode .menu-item {
+    border-bottom: 1.5px solid #333;
+}
+
+body.dark-mode .item-quantity-controls button {
+    border: 1px solid #555;
+    background-color: #34495e;
+    color: #ecf0f1;
+}
+
+body.dark-mode .item-quantity-controls input {
+    border: 1px solid #555;
+    background-color: #34495e;
+    color: #ecf0f1;
+}
+
+body.dark-mode .add-to-basket-button {
+    background-color: #2980b9;
+}
+
+body.dark-mode .add-to-basket-button:hover {
+    background-color: #1c6690;
+}
+
+body.dark-mode .add-to-basket-button.disabled-button {
+    background-color: #666;
+}
+
+body.dark-mode .add-to-basket-button.disabled-button:hover {
+    background-color: #666;
+}
+
+body.dark-mode .clickable-item-name {
+    color: #66b3ff;
+}
+
+body.dark-mode .clickable-item-name:hover {
+    color: #3399ff;
+}
+
+body.dark-mode .star {
+    color: #f1c40f;
 }

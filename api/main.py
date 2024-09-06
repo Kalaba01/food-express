@@ -900,8 +900,9 @@ async def order_history(customer_id: int, db: Session = Depends(get_db)):
 
 #Ruta za prikaz narudzbi koje kurir treba da dostavi
 @app.get("/courier/deliver-order/")
-async def get_courier_orders(courier_id: int, db: Session = Depends(get_db)):
-    return await get_orders_for_courier(db, courier_id)
+async def get_courier_orders(user_id: int, db: Session = Depends(get_db)):
+    print(user_id)
+    return await get_orders_for_courier(db, user_id)
 
 #Ruta za zavrsavanje narudzbe od strane kurira
 @app.post("/courier/finish-order/{order_id}")

@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { Header, NotificationPopup } from "../index";
+import { Header, NotificationPopup, Map } from "../index";
 import { FaDollarSign } from "react-icons/fa";
 import axios from "axios";
-import { useTranslation } from "react-i18next";  // Importing the translation hook
+import { useTranslation } from "react-i18next";
 import "../DeliveredOrders/DeliveredOrders.css";
 
 function DeliveredOrders({ darkMode, toggleDarkMode }) {
-  const { t } = useTranslation("global");  // Hook to access translations
+  const { t } = useTranslation("global");
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedOrder, setSelectedOrder] = useState(null);
@@ -16,6 +16,14 @@ function DeliveredOrders({ darkMode, toggleDarkMode }) {
     type: "",
     isOpen: false,
   });
+const [mapPopupOpen, setMapPopupOpen] = useState(false);
+const [mapCoordinates, setMapCoordinates] = useState({ latitude: null, longitude: null, label: "" });
+
+const handleAddressClick = (latitude, longitude, label) => {
+  setMapCoordinates({ latitude, longitude, label });
+  setMapPopupOpen(true);
+};
+
 
   const getToken = () => {
     return localStorage.getItem("token");
@@ -69,11 +77,18 @@ function DeliveredOrders({ darkMode, toggleDarkMode }) {
   };
 
   if (loading) {
-    return (
+    <>
+      <Header
+        darkMode={darkMode}
+        toggleDarkMode={toggleDarkMode}
+        userType="courier"
+      />
+      return (
       <div className="delivered-orders-container">
         <p>{t("DeliveredOrders.loading")}</p>
       </div>
-    );
+      );
+    </>;
   }
 
   if (!orders.length) {
@@ -112,23 +127,42 @@ function DeliveredOrders({ darkMode, toggleDarkMode }) {
               </tr>
             </thead>
             <tbody>
-              {orders.map((order) => (
-                <tr key={order.id}>
-                  <td>{order.restaurant_name}</td>
-                  <td>{order.restaurant_address}</td>
-                  <td>{order.customer_username}</td>
-                  <td>{order.customer_address}</td>
-                  <td>
-                    <button
-                      className="delivered-orders-price-button"
-                      onClick={() => handleOrderDetailsClick(order)}
-                    >
-                      <FaDollarSign /> {order.total_price} BAM
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
+  {orders.map((order) => (
+    <tr key={order.id}>
+      <td>{order.restaurant_name}</td>
+      <td>
+        <span
+          className="clickable-address"
+          onClick={() =>
+            handleAddressClick(order.restaurant_latitude, order.restaurant_longitude, order.restaurant_name)
+          }
+        >
+          {order.restaurant_address}
+        </span>
+      </td>
+      <td>{order.customer_username}</td>
+      <td>
+        <span
+          className="clickable-address"
+          onClick={() =>
+            handleAddressClick(order.customer_latitude, order.customer_longitude, order.customer_username)
+          }
+        >
+          {order.customer_address}
+        </span>
+      </td>
+      <td>
+        <button
+          className="delivered-orders-price-button"
+          onClick={() => handleOrderDetailsClick(order)}
+        >
+          <FaDollarSign /> {order.total_price} BAM
+        </button>
+      </td>
+    </tr>
+  ))}
+</tbody>
+
           </table>
         </div>
 
@@ -165,6 +199,17 @@ function DeliveredOrders({ darkMode, toggleDarkMode }) {
             </div>
           </div>
         )}
+
+{mapPopupOpen && mapCoordinates.latitude && mapCoordinates.longitude && (
+  <div className="modal">
+    <div className="modal-content">
+      <span className="close-button" onClick={() => setMapPopupOpen(false)}>&times;</span>
+      <h2>{mapCoordinates.label}</h2>
+      <Map latitude={mapCoordinates.latitude} longitude={mapCoordinates.longitude} address={mapCoordinates.label} />
+    </div>
+  </div>
+)}
+
 
         {notification.isOpen && (
           <NotificationPopup

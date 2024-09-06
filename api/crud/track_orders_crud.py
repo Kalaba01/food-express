@@ -53,6 +53,8 @@ async def get_customer_orders(user_id: int, db: Session):
                 "restaurantName": restaurant.name if restaurant else None,
                 "restaurantAddress": restaurant.address if restaurant else None,
                 "restaurantContact": restaurant.contact if restaurant else None,
+                "latitude": restaurant.latitude if restaurant else None,
+                "longitude": restaurant.longitude if restaurant else None,
                 "price": order.total_price,
                 "paymentMethod": order.payment_method.value,
                 "statusColumn": status_column,

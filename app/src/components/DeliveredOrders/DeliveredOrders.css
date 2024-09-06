@@ -65,8 +65,8 @@
 }
 
 .delivered-orders-popup-table-wrapper {
-    max-height: 300px; /* Maksimalna visina popupa */
-    overflow-y: auto; /* Dodavanje skrola za višak sadržaja */
+    max-height: 300px;
+    overflow-y: auto;
 }
 
 .delivered-orders-popup-table-wrapper::-webkit-scrollbar {
@@ -96,6 +96,16 @@
     border: 1px solid #ccc;
     padding: 10px;
     text-align: center;
+}
+
+.clickable-address {
+    color: #007bff;
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+.clickable-address:hover {
+    color: #0056b3;
 }
 
 /* Dark mode stilovi */

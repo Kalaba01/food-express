@@ -415,32 +415,6 @@ body.dark-mode .close-button:hover {
     background-color: #555;
 }
 
-/* Popup stilovi za mapu */
-.modal-content.map-popup {
-    max-width: 600px;
-    height: 400px;
-}
-
-.clickable-address {
-    cursor: pointer;
-    color: #4A90E2;
-    text-decoration: underline;
-}
-
-.clickable-address:hover {
-    color: #357ABD;
-}
-
-.custom-renderer td {
-    vertical-align: middle;
-    text-align: center;
-}
-
-.star-icon {
-    color: #FFD700;
-    font-size: 1.2em;
-}
-
 /* Dodatni stilovi za akciona dugmadi */
 .edit-button,
 .map-icon,
@@ -1257,6 +1231,16 @@ body.dark-mode .couriers-close-button {
 
 body.dark-mode .couriers-close-button:hover {
     color: #fff;
+}
+
+.restaurant-name-clickable {
+    color: #007bff;
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+.restaurant-name-clickable:hover {
+    color: #0056b3;
 }
 
 /* General Styles */

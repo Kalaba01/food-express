@@ -9,7 +9,9 @@ async def get_customer_order_history_with_items(db: Session, customer_id: int):
         Order.status,
         Restaurant.name.label('restaurant_name'),
         Restaurant.category.label('restaurant_category'),
-        Restaurant.contact.label('restaurant_contact')
+        Restaurant.contact.label('restaurant_contact'),
+        Restaurant.latitude,
+        Restaurant.longitude
     ).join(Restaurant, Order.restaurant_id == Restaurant.id
     ).filter(Order.customer_id == customer_id, Order.status == 'delivered'
     ).all()
@@ -40,6 +42,8 @@ async def get_customer_order_history_with_items(db: Session, customer_id: int):
             "restaurant_name": order.restaurant_name,
             "restaurant_category": order.restaurant_category,
             "restaurant_contact": order.restaurant_contact,
+            "latitude": order.latitude,
+            "longitude": order.longitude,
             "total_price": order.total_price,
             "items": item_list
         })

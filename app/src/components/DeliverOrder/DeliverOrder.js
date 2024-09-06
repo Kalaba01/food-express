@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { Header, NotificationPopup } from "../index";
-import { jwtDecode } from "jwt-decode";
+import { Header, NotificationPopup, Map } from "../index";
+import {jwtDecode} from "jwt-decode";
 import { useTranslation } from "react-i18next";
 import axios from "axios";
 import "./DeliverOrder.css";
@@ -11,6 +11,7 @@ function DeliverOrder({ darkMode, toggleDarkMode }) {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [popupContent, setPopupContent] = useState(null);
   const [notification, setNotification] = useState({ message: "", type: "" });
+  const [mapCoordinates, setMapCoordinates] = useState(null); // State to store map coordinates and address
 
   useEffect(() => {
     const fetchOrders = async () => {
@@ -25,7 +26,7 @@ function DeliverOrder({ darkMode, toggleDarkMode }) {
 
       try {
         const response = await axios.get(
-          `http://localhost:8000/courier/deliver-order/?courier_id=${courierId}`
+          `http://localhost:8000/courier/deliver-order/?user_id=${courierId}`
         );
         setOrders(response.data);
       } catch (error) {
@@ -76,12 +77,19 @@ function DeliverOrder({ darkMode, toggleDarkMode }) {
   const handleClosePopup = () => {
     setIsPopupOpen(false);
     setPopupContent(null);
+    setMapCoordinates(null); // Reset map coordinates
+  };
+
+  // Function to handle map opening for address
+  const handleShowMap = (latitude, longitude, address) => {
+    setMapCoordinates({ latitude, longitude, address });
+    setIsPopupOpen(true);
   };
 
   const handleFinishOrder = async (orderId) => {
     try {
       const token = localStorage.getItem("token");
-  
+
       await axios.post(
         `http://localhost:8000/courier/finish-order/${orderId}`,
         {},
@@ -93,12 +101,12 @@ function DeliverOrder({ darkMode, toggleDarkMode }) {
       );
 
       setNotification({ message: t("DeliverOrder.orderFinished"), type: "success" });
-      
+
       const decodedToken = jwtDecode(token);
       const courierId = decodedToken ? decodedToken.id : null;
-  
+
       const response = await axios.get(
-        `http://localhost:8000/courier/deliver-order/?courier_id=${courierId}`
+        `http://localhost:8000/courier/deliver-order/?user_id=${courierId}`
       );
       setOrders(response.data);
     } catch (error) {
@@ -137,10 +145,20 @@ function DeliverOrder({ darkMode, toggleDarkMode }) {
               {orders.map((order) => (
                 <tr key={order.id}>
                   <td>{order.restaurant_name}</td>
-                  <td>{order.restaurant_address}</td>
+                  <td
+                    className="clickable-address"
+                    onClick={() => handleShowMap(order.restaurant_latitude, order.restaurant_longitude, order.restaurant_address)}
+                  >
+                    {order.restaurant_address}
+                  </td>
                   <td>{order.restaurant_contact}</td>
                   <td>{order.customer_username}</td>
-                  <td>{order.customer_address}</td>
+                  <td
+                    className="clickable-address"
+                    onClick={() => handleShowMap(order.customer_latitude, order.customer_longitude, order.customer_address)}
+                  >
+                    {order.customer_address}
+                  </td>
                   <td>{order.customer_contact}</td>
                   <td
                     className="clickable-price"
@@ -175,7 +193,22 @@ function DeliverOrder({ darkMode, toggleDarkMode }) {
           <NotificationPopup message={notification.message} type={notification.type} />
         )}
 
-        {isPopupOpen && (
+        {isPopupOpen && mapCoordinates && (
+          <div className="modal-overlay">
+            <div className="modal-content">
+              <span className="close-popup" onClick={handleClosePopup}>
+                &times;
+              </span>
+              <Map
+                latitude={mapCoordinates.latitude}
+                longitude={mapCoordinates.longitude}
+                address={mapCoordinates.address}
+              />
+            </div>
+          </div>
+        )}
+
+        {isPopupOpen && popupContent && (
           <div className="modal-overlay">
             <div className="modal-content">
               <span className="close-popup" onClick={handleClosePopup}>
