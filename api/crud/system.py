@@ -1,22 +1,38 @@
 import json
-from datetime import timedelta
+from datetime import timedelta, datetime
 from sqlalchemy.orm import Session
 from sqlalchemy import func
 from models.models import (
-    OrderQueue, OrderQueueStatusEnum, Order, OrderItem, Item, 
-    Courier, CourierStatus, VehicleType, OrderAssignment, 
-    OrderAssignmentStatus, PaymentMethod, ItemCategory
+    OrderQueue,
+    OrderQueueStatusEnum,
+    Order,
+    OrderItem,
+    Item,
+    Courier,
+    CourierStatus,
+    VehicleType,
+    OrderAssignment,
+    OrderAssignmentStatus,
+    PaymentMethod,
+    ItemCategory,
+    Chat,
+    Conversation,
 )
 from utils.distance_utils import calculate_route_distance, calculate_travel_time
 from utils.change_utils import get_optimal_change, calculate_required_change
 
+
 async def assign_orders_to_couriers(db: Session):
-    orders = db.query(OrderQueue).filter(OrderQueue.status == OrderQueueStatusEnum.pending).all()
+    orders = (
+        db.query(OrderQueue)
+        .filter(OrderQueue.status == OrderQueueStatusEnum.pending)
+        .all()
+    )
 
     if not orders:
         print("No pending orders found.")
         return
-    
+
     print(f"Found {len(orders)} pending orders in the queue.")
 
     for order_queue in orders:
@@ -25,24 +41,43 @@ async def assign_orders_to_couriers(db: Session):
             print(f"Order with ID {order_queue.order_id} not found.")
             continue
 
-        contains_alcohol = db.query(Item.category).join(OrderItem, Item.id == OrderItem.item_id) \
-            .filter(OrderItem.order_id == order.id, Item.category == ItemCategory.alcohol).count() > 0
-        
+        contains_alcohol = (
+            db.query(Item.category)
+            .join(OrderItem, Item.id == OrderItem.item_id)
+            .filter(
+                OrderItem.order_id == order.id, Item.category == ItemCategory.alcohol
+            )
+            .count()
+            > 0
+        )
+
         print(f"Order ID {order.id} contains alcohol: {contains_alcohol}")
 
         if contains_alcohol:
-            couriers = db.query(Courier).filter(
-                Courier.status == CourierStatus.online,
-                Courier.halal_mode == False,
-                Courier.restaurant_id == order.restaurant_id
-            ).all()
-            print(f"Found {len(couriers)} online couriers not in halal mode for restaurant ID {order.restaurant_id}.")
+            couriers = (
+                db.query(Courier)
+                .filter(
+                    Courier.status == CourierStatus.online,
+                    Courier.halal_mode == False,
+                    Courier.restaurant_id == order.restaurant_id,
+                )
+                .all()
+            )
+            print(
+                f"Found {len(couriers)} online couriers not in halal mode for restaurant ID {order.restaurant_id}."
+            )
         else:
-            couriers = db.query(Courier).filter(
-                Courier.status == CourierStatus.online,
-                Courier.restaurant_id == order.restaurant_id
-            ).all()
-            print(f"Found {len(couriers)} online couriers for restaurant ID {order.restaurant_id}.")
+            couriers = (
+                db.query(Courier)
+                .filter(
+                    Courier.status == CourierStatus.online,
+                    Courier.restaurant_id == order.restaurant_id,
+                )
+                .all()
+            )
+            print(
+                f"Found {len(couriers)} online couriers for restaurant ID {order.restaurant_id}."
+            )
 
         couriers_five_criteria = []
         couriers_four_criteria = []
@@ -53,30 +88,42 @@ async def assign_orders_to_couriers(db: Session):
             distance = calculate_route_distance(
                 (order.restaurant.latitude, order.restaurant.longitude),
                 (order.delivery_latitude, order.delivery_longitude),
-                courier.vehicle_type.value
+                courier.vehicle_type.value,
             )
 
-            meets_weight = (courier.vehicle_type == VehicleType.car or order_queue.weight <= 6000)
-            meets_distance = (
-                (courier.vehicle_type == VehicleType.bike and distance <= 5000) or
-                (courier.vehicle_type == VehicleType.car and distance > 5000)
+            meets_weight = (
+                courier.vehicle_type == VehicleType.car or order_queue.weight <= 6000
             )
+            meets_distance = (
+                courier.vehicle_type == VehicleType.bike and distance <= 5000
+            ) or (courier.vehicle_type == VehicleType.car and distance > 5000)
 
             meets_change = True
             optimal_change = None
 
             if order.payment_method == PaymentMethod.cash:
-                print(f"Order {order.id} is paid in cash. Calculating if courier can return the exact change.")
+                print(
+                    f"Order {order.id} is paid in cash. Calculating if courier can return the exact change."
+                )
                 money_data = json.loads(order.money)
-                total_money = sum(float(denomination[:-3]) * quantity for denomination, quantity in money_data.items())
+                total_money = sum(
+                    float(denomination[:-3]) * quantity
+                    for denomination, quantity in money_data.items()
+                )
 
                 print(f"Total money given by customer: {total_money}")
 
-                required_change = calculate_required_change(order.total_price, total_money)
-                meets_change, optimal_change = get_optimal_change(required_change, courier.wallet_details)
+                required_change = calculate_required_change(
+                    order.total_price, total_money
+                )
+                meets_change, optimal_change = get_optimal_change(
+                    required_change, courier.wallet_details
+                )
                 print(f"Courier {courier.id} can return exact change: {meets_change}")
                 if meets_change:
-                    print(f"Optimal change for courier {courier.id} to return: {optimal_change}")
+                    print(
+                        f"Optimal change for courier {courier.id} to return: {optimal_change}"
+                    )
 
             criteria_count = sum([meets_weight, meets_distance, meets_change])
 
@@ -113,23 +160,51 @@ async def assign_orders_to_couriers(db: Session):
             travel_time = calculate_travel_time(
                 (order.restaurant.latitude, order.restaurant.longitude),
                 (order.delivery_latitude, order.delivery_longitude),
-                assigned_courier.vehicle_type.value
+                assigned_courier.vehicle_type.value,
             )
             travel_time_delta = timedelta(minutes=travel_time)
 
-            estimated_delivery_time = order_queue.estimated_preparation_time + travel_time_delta
-            
+            estimated_delivery_time = (
+                order_queue.estimated_preparation_time + travel_time_delta
+            )
+
             new_assignment = OrderAssignment(
                 order_id=order.id,
                 courier_id=assigned_courier.id,
                 status=OrderAssignmentStatus.in_delivery,
                 estimated_delivery_time=estimated_delivery_time,
-                optimal_change=json.dumps(optimal_change) if optimal_change else None
+                optimal_change=json.dumps(optimal_change) if optimal_change else None,
             )
 
             db.add(new_assignment)
             order_queue.status = OrderQueueStatusEnum.assigned
             assigned_courier.status = CourierStatus.busy
+
+            # Kreiranje ili ažuriranje razgovora između kurira i kupca
+            conversation = db.query(Conversation).filter(
+                (Conversation.participant1_id == assigned_courier.user_id) &
+                (Conversation.participant2_id == order.customer_id)
+            ).first()
+
+            if not conversation:
+                conversation = Conversation(
+                    participant1_id=assigned_courier.user_id,
+                    participant2_id=order.customer_id
+                )
+                db.add(conversation)
+                db.flush()
+
+            # Dodavanje poruke u chat
+            message_content = "Dear customer, your order has been assigned to me, and I will be delivering it shortly. Thank you for your patience!"
+            new_chat = Chat(
+                sender_id=assigned_courier.user_id,
+                receiver_id=order.customer_id,
+                message=message_content,
+                conversation_id=conversation.id,
+                created_at=datetime.utcnow(),
+            )
+            db.add(new_chat)
+
             db.commit()
             print(f"Order ID {order.id} assigned to courier ID {assigned_courier.id} with optimal change: {optimal_change}.")
         else:

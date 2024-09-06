@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from models.models import Chat, Conversation, User
+from models.models import Chat, Conversation, User, OrderAssignment, OrderAssignmentStatus, Order, Courier
 
 async def get_user_chat_history(db: Session, user_id: int):
     conversations = db.query(Conversation).filter(
@@ -39,6 +39,25 @@ async def get_users_sorted_by_role(db: Session, role: str, current_user_id: int)
         return {"admins": users["admins"]}
     elif role == "courier":
         return {"owners": users["owners"]}
+    elif role == "customer":
+        in_delivery_couriers = (
+            db.query(User)
+            .join(Courier, Courier.user_id == User.id)
+            .join(OrderAssignment, OrderAssignment.courier_id == Courier.id)
+            .join(Order, Order.id == OrderAssignment.order_id)
+            .filter(
+                Order.customer_id == current_user_id,
+                OrderAssignment.status == OrderAssignmentStatus.in_delivery
+            )
+            .all()
+        )
+        
+        if not in_delivery_couriers:
+            print(f"No couriers currently delivering for customer ID {current_user_id}.")
+        else:
+            print(f"Found {len(in_delivery_couriers)} couriers currently delivering for customer ID {current_user_id}.")
+
+        return {"couriers": in_delivery_couriers}
     else:
         return {}
 

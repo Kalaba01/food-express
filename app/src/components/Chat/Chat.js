@@ -175,7 +175,7 @@ function Chat({ userType }) {
           <div key={role}>
             <div className="user-role-title">{roleTitles[role]}</div>
             {users[role]
-              .filter((user) => user.id !== userType.id) // Filtriranje trenutnog korisnika
+              .filter((user) => user.id !== userType.id)
               .map((user, index) => (
                 <div
                   key={index}
