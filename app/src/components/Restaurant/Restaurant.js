@@ -6,6 +6,11 @@ import {
   NotificationPopup,
   Gallery,
   GalleryPopup,
+  EditRestaurant,
+  AddCategoryRestaurant,
+  EditCategoryRestaurant,
+  AddItemRestaurant,
+  EditItemRestaurant,
 } from "../index";
 import {
   FaStar,
@@ -784,180 +789,22 @@ function Restaurant({ darkMode, toggleDarkMode }) {
         </button>
 
         {editingRestaurant && (
-          <div className="modal">
-            <div className="modal-content">
-              <span className="close-button" onClick={handleRestaurantEdit}>
-                &times;
-              </span>
-              <h2>{t("Restaurant.editRestaurant")}</h2>
-              <form onSubmit={handleSaveRestaurant}>
-                <div className="form-row">
-                  <label>
-                    {t("Restaurant.name")}
-                    <input
-                      type="text"
-                      name="name"
-                      value={restaurantData.name}
-                      onChange={handleRestaurantChange}
-                      required
-                    />
-                  </label>
-                  <label>
-                    {t("Restaurant.contact")}
-                    <input
-                      type="text"
-                      name="contact"
-                      value={restaurantData.contact}
-                      onChange={handleRestaurantChange}
-                      required
-                    />
-                  </label>
-                </div>
-
-                <div className="form-row">
-                  <label>
-                    {t("Restaurant.capacity")}
-                    <select
-                      name="capacity"
-                      value={restaurantData.capacity}
-                      onChange={handleRestaurantChange}
-                      required
-                    >
-                      <option value="normal">{t("Restaurant.normal")}</option>
-                      <option value="busy">{t("Restaurant.busy")}</option>
-                      <option value="crowded">{t("Restaurant.crowded")}</option>
-                    </select>
-                  </label>
-                  <label>
-                    {t("Restaurant.category")}
-                    <input
-                      type="text"
-                      name="category"
-                      value={restaurantData.category || ""}
-                      onChange={handleRestaurantChange}
-                      required
-                    />
-                  </label>
-                </div>
-
-                <div className="operating-hours-section">
-                  <h3>{t("Restaurant.operatingHours")}</h3>
-                  {restaurantData.operating_hours.length > 0 ? (
-                    <>
-                      <div className="select-day-row">
-                        <label>{t("Restaurant.selectDay")}</label>
-                        <select value={selectedDay} onChange={handleDayChange}>
-                          {daysOfWeek.map((day, index) => (
-                            <option key={index} value={index}>
-                              {day}
-                            </option>
-                          ))}
-                        </select>
-                      </div>
-
-                      {restaurantData.operating_hours[selectedDay] && (
-                        <div className="form-row operating-hours-input">
-                          <label>{daysOfWeek[selectedDay]}</label>
-                          <input
-                            type="time"
-                            value={
-                              restaurantData.operating_hours[selectedDay]
-                                .opening_time
-                            }
-                            onChange={(e) =>
-                              setRestaurantData((prevData) => {
-                                const newHours = [...prevData.operating_hours];
-                                newHours[selectedDay].opening_time =
-                                  e.target.value;
-                                return {
-                                  ...prevData,
-                                  operating_hours: newHours,
-                                };
-                              })
-                            }
-                          />
-                          <span> - </span>
-                          <input
-                            type="time"
-                            value={
-                              restaurantData.operating_hours[selectedDay]
-                                .closing_time
-                            }
-                            onChange={(e) =>
-                              setRestaurantData((prevData) => {
-                                const newHours = [...prevData.operating_hours];
-                                newHours[selectedDay].closing_time =
-                                  e.target.value;
-                                return {
-                                  ...prevData,
-                                  operating_hours: newHours,
-                                };
-                              })
-                            }
-                          />
-                        </div>
-                      )}
-                    </>
-                  ) : (
-                    <p>{t("Restaurant.noOperatingHours")}</p>
-                  )}
-                </div>
-
-                <div className="restaurant-images-gallery">
-                  {restaurantData.images.length > 0 && (
-                    <>
-                      {restaurantData.images.length > 1 && (
-                        <FaArrowLeft
-                          className="gallery-arrow left"
-                          onClick={handlePrevImage}
-                        />
-                      )}
-                      <div className="image-container">
-                        <img
-                          src={`data:image/jpeg;base64,${restaurantData.images[currentImageIndex].image}`}
-                          alt={`Restaurant ${currentImageIndex + 1}`}
-                          className="gallery-image"
-                        />
-                        <FaTrash
-                          className="delete-image-icon"
-                          onClick={() =>
-                            openDeletePopup(
-                              "restaurantImage",
-                              currentImageIndex
-                            )
-                          }
-                        />
-                      </div>
-                      {restaurantData.images.length > 1 && (
-                        <FaArrowRight
-                          className="gallery-arrow right"
-                          onClick={handleNextImage}
-                        />
-                      )}
-                    </>
-                  )}
-                </div>
-
-                {/* Upload slika */}
-                <div className="image-upload-container">
-                  <label className="image-upload-label">
-                    {t("Restaurant.images")}
-                    <input
-                      type="file"
-                      name="images"
-                      multiple
-                      onChange={handleAddRestaurantImage}
-                      className="image-upload-input"
-                    />
-                  </label>
-                </div>
-
-                <button type="submit" className="save-button">
-                  {t("Restaurant.save")}
-                </button>
-              </form>
-            </div>
-          </div>
+          <EditRestaurant
+            restaurantData={restaurantData}
+            handleRestaurantChange={handleRestaurantChange}
+            handleSaveRestaurant={handleSaveRestaurant}
+            handleAddRestaurantImage={handleAddRestaurantImage}
+            selectedDay={selectedDay}
+            setSelectedDay={setSelectedDay}
+            daysOfWeek={daysOfWeek}
+            setRestaurantData={setRestaurantData}
+            currentImageIndex={currentImageIndex}
+            setCurrentImageIndex={setCurrentImageIndex}
+            handlePrevImage={handlePrevImage}
+            handleNextImage={handleNextImage}
+            openDeletePopup={openDeletePopup}
+            handleRestaurantEdit={handleRestaurantEdit}
+          />
         )}
 
         <div className="restaurant-categories">
@@ -1053,417 +900,50 @@ function Restaurant({ darkMode, toggleDarkMode }) {
         )}
 
         {isEditCategoryOpen && (
-          <div className="modal">
-            <div className="modal-content">
-              <span className="close-button" onClick={closeEditCategoryPopup}>
-                &times;
-              </span>
-              <h2>{t("Restaurant.editCategory")}</h2>
-              <form onSubmit={handleSaveCategory}>
-                <label>
-                  {t("Restaurant.categoryName")}
-                  <input
-                    type="text"
-                    value={currentCategory ? currentCategory.name : ""}
-                    onChange={(e) =>
-                      setCurrentCategory({
-                        ...currentCategory,
-                        name: e.target.value,
-                      })
-                    }
-                    required
-                  />
-                </label>
-                <label>
-                  {t("Restaurant.categoryDescription")}
-                  <input
-                    type="text"
-                    value={currentCategory ? currentCategory.description : ""}
-                    onChange={(e) =>
-                      setCurrentCategory({
-                        ...currentCategory,
-                        description: e.target.value,
-                      })
-                    }
-                    required
-                  />
-                </label>
-                <button type="submit" className="save-button">
-                  {t("Restaurant.save")}
-                </button>
-              </form>
-            </div>
-          </div>
+          <EditCategoryRestaurant
+            currentCategory={currentCategory}
+            setCurrentCategory={setCurrentCategory}
+            handleSaveCategory={handleSaveCategory}
+            closeEditCategoryPopup={closeEditCategoryPopup}
+            t={t}
+          />
         )}
 
         {isAddCategoryOpen && (
-          <div className="modal">
-            <div className="modal-content">
-              <span className="close-button" onClick={closeAddCategoryPopup}>
-                &times;
-              </span>
-              <h2>{t("Restaurant.addCategory")}</h2>
-              <form onSubmit={handleSaveCategory}>
-                <label>
-                  {t("Restaurant.categoryName")}
-                  <input
-                    type="text"
-                    value={currentCategory ? currentCategory.name : ""}
-                    onChange={(e) =>
-                      setCurrentCategory({
-                        ...currentCategory,
-                        name: e.target.value,
-                      })
-                    }
-                    required
-                  />
-                </label>
-                <label>
-                  {t("Restaurant.categoryDescription")}
-                  <input
-                    type="text"
-                    value={currentCategory ? currentCategory.description : ""}
-                    onChange={(e) =>
-                      setCurrentCategory({
-                        ...currentCategory,
-                        description: e.target.value,
-                      })
-                    }
-                    required
-                  />
-                </label>
-                <button type="submit" className="save-button">
-                  {t("Restaurant.save")}
-                </button>
-              </form>
-            </div>
-          </div>
-        )}
-
-        {isEditItemOpen && (
-          <div className="modal">
-            <div className="modal-content reduced-padding">
-              <span className="close-button" onClick={closeEditItemPopup}>
-                &times;
-              </span>
-              <h2>{t("Restaurant.editItem")}</h2>
-              <form onSubmit={handleEditItem}>
-                <div className="form-row">
-                  <label>
-                    {t("Restaurant.itemName")}
-                    <input
-                      type="text"
-                      value={currentItem ? currentItem.name : ""}
-                      onChange={(e) =>
-                        setCurrentItem({ ...currentItem, name: e.target.value })
-                      }
-                      required
-                    />
-                  </label>
-                  <label>
-                    {t("Restaurant.itemDescription")}
-                    <input
-                      type="text"
-                      value={currentItem ? currentItem.description : ""}
-                      onChange={(e) =>
-                        setCurrentItem({
-                          ...currentItem,
-                          description: e.target.value,
-                        })
-                      }
-                      required
-                    />
-                  </label>
-                </div>
-                <div className="form-row">
-                  <label>
-                    {t("Restaurant.itemPrice")}
-                    <input
-                      type="number"
-                      step="0.01"
-                      value={currentItem ? currentItem.price : ""}
-                      onChange={(e) =>
-                        setCurrentItem({
-                          ...currentItem,
-                          price: e.target.value,
-                        })
-                      }
-                      required
-                    />
-                  </label>
-                  <label>
-                    {t("Restaurant.itemWeight")}
-                    <input
-                      type="number"
-                      value={currentItem ? currentItem.weight : ""}
-                      onChange={(e) =>
-                        setCurrentItem({
-                          ...currentItem,
-                          weight: e.target.value,
-                        })
-                      }
-                      required
-                    />
-                  </label>
-                </div>
-                <div className="form-row">
-                  <label>
-                    {t("Restaurant.itemPrepTime")}
-                    <input
-                      type="number"
-                      value={currentItem ? currentItem.preparation_time : ""}
-                      onChange={(e) =>
-                        setCurrentItem({
-                          ...currentItem,
-                          preparation_time: e.target.value,
-                        })
-                      }
-                      required
-                    />
-                  </label>
-                  <label>
-                    {t("Restaurant.menuCategory")}
-                    <select
-                      value={currentItem ? currentItem.menuCategory : ""}
-                      onChange={(e) =>
-                        setCurrentItem({
-                          ...currentItem,
-                          menuCategory: e.target.value,
-                        })
-                      }
-                      required
-                    >
-                      {categories.map((category) => (
-                        <option key={category.id} value={category.name}>
-                          {category.name}
-                        </option>
-                      ))}
-                    </select>
-                  </label>
-                </div>
-                <label>
-                  {t("Restaurant.category")}
-                  <select
-                    value={currentItem ? currentItem.category : ""}
-                    onChange={(e) =>
-                      setCurrentItem({
-                        ...currentItem,
-                        category: e.target.value,
-                      })
-                    }
-                    required
-                  >
-                    <option value="food">{t("Restaurant.food")}</option>
-                    <option value="drink">{t("Restaurant.drink")}</option>
-                    <option value="alcohol">{t("Restaurant.alcohol")}</option>
-                    <option value="other">{t("Restaurant.other")}</option>
-                  </select>
-                </label>
-
-                {currentItem &&
-                  currentItem.images &&
-                  currentItem.images.length > 0 && (
-                    <div className="horizontal-gallery">
-                      <FaArrowLeft
-                        className="gallery-arrow left"
-                        onClick={() =>
-                          setCurrentGalleryImageIndex((prevIndex) =>
-                            prevIndex === 0
-                              ? currentItem.images.length - 1
-                              : prevIndex - 1
-                          )
-                        }
-                      />
-                      <div className="image-container">
-                        <img
-                          src={
-                            currentItem.images[currentGalleryImageIndex].image
-                          }
-                          alt={`Item ${currentGalleryImageIndex + 1}`}
-                          className="horizontal-gallery-image"
-                        />
-                        <FaTrash
-                          className="delete-image-icon"
-                          onClick={() =>
-                            handleDeleteItemImage(currentGalleryImageIndex)
-                          }
-                        />
-                      </div>
-                      <FaArrowRight
-                        className="gallery-arrow right"
-                        onClick={() =>
-                          setCurrentGalleryImageIndex((prevIndex) =>
-                            prevIndex === currentItem.images.length - 1
-                              ? 0
-                              : prevIndex + 1
-                          )
-                        }
-                      />
-                    </div>
-                  )}
-
-                <div className="image-upload-container">
-                  <label className="image-upload-label">
-                    {t("Restaurant.uploadImages")}
-                    <input
-                      type="file"
-                      name="images"
-                      multiple
-                      onChange={handleAddItemImage}
-                      className="image-upload-input"
-                    />
-                  </label>
-                </div>
-
-                <button type="submit" className="save-button">
-                  {t("Restaurant.save")}
-                </button>
-              </form>
-            </div>
-          </div>
+          <AddCategoryRestaurant
+            currentCategory={currentCategory}
+            setCurrentCategory={setCurrentCategory}
+            handleSaveCategory={handleSaveCategory}
+            closeAddCategoryPopup={closeAddCategoryPopup}
+            t={t}
+          />
         )}
 
         {isAddItemOpen && (
-          <div className="modal">
-            <div className="modal-content reduced-padding">
-              <span className="close-button" onClick={closeAddItemPopup}>
-                &times;
-              </span>
-              <h2>{t("Restaurant.addItem")}</h2>
-              <form onSubmit={handleAddItem}>
-                <div className="form-row">
-                  <label>
-                    {t("Restaurant.itemName")}
-                    <input
-                      type="text"
-                      value={currentItem ? currentItem.name : ""}
-                      onChange={(e) => setCurrentItem({ name: e.target.value })}
-                      required
-                    />
-                  </label>
-                  <label>
-                    {t("Restaurant.itemDescription")}
-                    <input
-                      type="text"
-                      value={currentItem ? currentItem.description : ""}
-                      onChange={(e) =>
-                        setCurrentItem({
-                          ...currentItem,
-                          description: e.target.value,
-                        })
-                      }
-                      required
-                    />
-                  </label>
-                </div>
-                <div className="form-row">
-                  <label>
-                    {t("Restaurant.itemPrice")}
-                    <input
-                      type="number"
-                      step="0.01"
-                      value={currentItem ? currentItem.price : ""}
-                      onChange={(e) =>
-                        setCurrentItem({
-                          ...currentItem,
-                          price: e.target.value,
-                        })
-                      }
-                      required
-                    />
-                  </label>
-                  <label>
-                    {t("Restaurant.itemWeight")}
-                    <input
-                      type="number"
-                      value={currentItem ? currentItem.weight : ""}
-                      onChange={(e) =>
-                        setCurrentItem({
-                          ...currentItem,
-                          weight: e.target.value,
-                        })
-                      }
-                      required
-                    />
-                  </label>
-                </div>
-                <div className="form-row">
-                  <label>
-                    {t("Restaurant.itemPrepTime")}
-                    <input
-                      type="number"
-                      value={currentItem ? currentItem.preparation_time : ""}
-                      onChange={(e) =>
-                        setCurrentItem({
-                          ...currentItem,
-                          preparation_time: e.target.value,
-                        })
-                      }
-                      required
-                    />
-                  </label>
-                  <label>
-                    {t("Restaurant.menuCategory")}
-                    <select
-                      value={currentItem ? currentItem.menuCategory : ""}
-                      onChange={(e) =>
-                        setCurrentItem({
-                          ...currentItem,
-                          menuCategory: e.target.value,
-                        })
-                      }
-                      required
-                    >
-                      <option value="">{t("Restaurant.selectCategory")}</option>
-                      {categories.map((category) => (
-                        <option key={category.id} value={category.name}>
-                          {category.name}
-                        </option>
-                      ))}
-                    </select>
-                  </label>
-                </div>
-                <div className="form-row">
-                  <label>
-                    {t("Restaurant.category")}
-                    <select
-                      value={currentItem ? currentItem.category : ""}
-                      onChange={(e) =>
-                        setCurrentItem({
-                          ...currentItem,
-                          category: e.target.value,
-                        })
-                      }
-                      required
-                    >
-                      <option value="">{t("Restaurant.selectCategory")}</option>
-                      <option value="food">{t("Restaurant.food")}</option>
-                      <option value="drink">{t("Restaurant.drink")}</option>
-                      <option value="alcohol">{t("Restaurant.alcohol")}</option>
-                      <option value="other">{t("Restaurant.other")}</option>
-                    </select>
-                  </label>
-                </div>
-                <div className="form-row full-width">
-                  <div className="image-upload-container">
-                    <label className="image-upload-label">
-                      {t("Restaurant.uploadImages")}
-                      <input
-                        type="file"
-                        name="images"
-                        multiple
-                        onChange={handleAddItemImage}
-                        className="image-upload-input"
-                      />
-                    </label>
-                  </div>
-                </div>
-                <button type="submit" className="save-button">
-                  {t("Restaurant.save")}
-                </button>
-              </form>
-            </div>
-          </div>
+          <AddItemRestaurant
+            currentItem={currentItem}
+            setCurrentItem={setCurrentItem}
+            categories={categories}
+            handleAddItem={handleAddItem}
+            handleAddItemImage={handleAddItemImage}
+            closeAddItemPopup={closeAddItemPopup}
+            t={t}
+          />
+        )}
+
+        {isEditItemOpen && (
+          <EditItemRestaurant
+            currentItem={currentItem}
+            setCurrentItem={setCurrentItem}
+            categories={categories}
+            currentGalleryImageIndex={currentGalleryImageIndex}
+            setCurrentGalleryImageIndex={setCurrentGalleryImageIndex}
+            handleDeleteItemImage={handleDeleteItemImage}
+            handleAddItemImage={handleAddItemImage}
+            handleEditItem={handleEditItem}
+            closeEditItemPopup={closeEditItemPopup}
+            t={t}
+          />
         )}
 
         <ConfirmDelete

@@ -43,5 +43,10 @@ import OrderHistory from "./OrderHistory/OrderHistory";
 import DeliverOrder from "./DeliverOrder/DeliverOrder";
 import DeliveredOrders from "./DeliveredOrders/DeliveredOrders";
 import Map from "./Map/Map";
+import EditRestaurant from "./EditRestaurant/EditRestaurant";
+import AddCategoryRestaurant from "./AddCategoryRestaurant/AddCategoryRestaurant";
+import EditCategoryRestaurant from "./EditCategoryRestaurant/EditCategoryRestaurant";
+import AddItemRestaurant from "./AddItemRestaurant/AddItemRestaurant";
+import EditItemRestaurant from "./EditItemRestaurant/EditItemRestaurant";
 
-export  { Admin, Captcha, Courier, Customer, Footer, FormPopup, GoTop, Header, Language, LoginRegister, NotificationPopup, Owner, Theme, LandingPage, Unauthorized, Logout, ForgotPassword, ResetPassword, HamburgerMenu, Requests, Users, NotFound, LookupTable, DeliveryZones, Restaurants, ConfirmDelete, Orders, Restaurant, Couriers, Profile, Chat, SearchBar, CustomerRestaurant, Basket, Gallery, GalleryPopup, Order, Status, PendingOrders, TrackOrders, Rating, OrderHistory, DeliverOrder, DeliveredOrders, Map }
+export  { Admin, Captcha, Courier, Customer, Footer, FormPopup, GoTop, Header, Language, LoginRegister, NotificationPopup, Owner, Theme, LandingPage, Unauthorized, Logout, ForgotPassword, ResetPassword, HamburgerMenu, Requests, Users, NotFound, LookupTable, DeliveryZones, Restaurants, ConfirmDelete, Orders, Restaurant, Couriers, Profile, Chat, SearchBar, CustomerRestaurant, Basket, Gallery, GalleryPopup, Order, Status, PendingOrders, TrackOrders, Rating, OrderHistory, DeliverOrder, DeliveredOrders, Map, EditRestaurant, AddCategoryRestaurant, EditCategoryRestaurant, AddItemRestaurant, EditItemRestaurant }
