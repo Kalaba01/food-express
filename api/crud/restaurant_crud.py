@@ -1,6 +1,6 @@
 import base64
 from typing import List
-from datetime import datetime
+from datetime import datetime, time
 from sqlalchemy.orm import Session
 from fastapi import HTTPException
 from models.models import (
@@ -109,6 +109,19 @@ async def create_new_restaurant(db: Session, restaurant: RestaurantCreate):
     db.add(new_restaurant)
     db.commit()
     db.refresh(new_restaurant)
+
+    days_of_week = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+    opening_time = time(9, 0)
+    closing_time = time(21, 0)
+
+    for day in days_of_week:
+        operating_hours = OperatingHours(
+            restaurant_id=new_restaurant.id,
+            day_of_week=day,
+            opening_time=opening_time,
+            closing_time=closing_time
+        )
+        db.add(operating_hours)
 
     zones = (
         db.query(DeliveryZone)
