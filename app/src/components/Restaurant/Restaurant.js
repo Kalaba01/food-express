@@ -11,6 +11,7 @@ import {
   EditCategoryRestaurant,
   AddItemRestaurant,
   EditItemRestaurant,
+  Loading
 } from "../index";
 import {
   FaStar,
@@ -62,6 +63,7 @@ function Restaurant({ darkMode, toggleDarkMode }) {
   const [deleteType, setDeleteType] = useState(null);
   const [notification, setNotification] = useState({ message: "", type: "" });
   const [selectedDay, setSelectedDay] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
 
   const daysOfWeek = [
     t("Restaurant.days.Monday"),
@@ -101,8 +103,10 @@ function Restaurant({ darkMode, toggleDarkMode }) {
         operating_hours: response.data.operating_hours || [],
         category: response.data.category || "",
       });
+      setIsLoading(false);
     } catch (error) {
       console.error("Error fetching restaurant:", error);
+      setIsLoading(false);
     }
   };
 
@@ -728,8 +732,17 @@ function Restaurant({ darkMode, toggleDarkMode }) {
     }
   };
 
-  if (!restaurant) {
-    return <p>{t("Restaurant.loading")}</p>;
+  if (isLoading) {
+    return (
+      <>
+        <Header
+          darkMode={darkMode}
+          toggleDarkMode={toggleDarkMode}
+          userType="owner"
+        />
+        <Loading />
+      </>
+    );
   }
 
   return (

@@ -1,0 +1,121 @@
+/* General Styles for Light Mode */
+.dashboard-container {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    background: linear-gradient(to bottom, #fff, #f4f4f9);
+    min-height: 100vh;
+}
+
+/* Summary Row for Orders */
+.summary-row {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+}
+
+.summary-card {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    width: 100%;
+    max-width: 25%;
+    transition: all 0.3s ease;
+    text-align: center;
+}
+
+.summary-card:hover {
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+}
+
+.summary-card h3 {
+    color: #333333;
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+.summary-card p {
+    color: #556ee6;
+    font-size: 24px;
+    margin: 0;
+}
+
+.dashboard-row {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+}
+
+.dashboard-card {
+    display: flex;
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    width: 100%;
+    max-width: 50%;
+    transition: all 0.3s ease;
+    text-align: center;
+    flex-direction: column;
+    align-items: center;
+}
+
+.dashboard-card:hover {
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+}
+
+.dashboard-card h3 {
+    text-align: center;
+    color: #333333;
+    margin-bottom: 20px;
+    font-size: 24px;
+    font-weight: 500;
+}
+
+body {
+    background-color: #f4f4f9;
+    color: #333333;
+    font-family: 'Roboto', sans-serif;
+}
+
+/* Dark Mode Styles */
+body.dark-mode {
+    background-color: #2b2e4a;
+    color: #ffffff;
+}
+
+body.dark-mode .dashboard-container {
+    background: linear-gradient(to bottom, #2b2e4a, #2b2e4a);
+}
+
+body.dark-mode .summary-card {
+    background-color: #1f2235;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+}
+
+body.dark-mode .summary-card:hover {
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.6);
+}
+
+body.dark-mode .summary-card h3 {
+    color: #ffffff;
+}
+
+body.dark-mode .summary-card p {
+    color: #34c38f;
+}
+
+body.dark-mode .dashboard-card {
+    background-color: #1f2235;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+}
+
+body.dark-mode .dashboard-card:hover {
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.6);
+}
+
+body.dark-mode .dashboard-card h3 {
+    color: #ffffff;
+}

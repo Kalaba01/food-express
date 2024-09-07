@@ -12,7 +12,7 @@ from fastapi import (
     UploadFile,
     Form,
     WebSocket,
-    WebSocketDisconnect
+    WebSocketDisconnect,
 )
 from fastapi.websockets import WebSocket
 from fastapi.security import OAuth2PasswordRequestForm
@@ -60,7 +60,7 @@ from schemas.schemas import (
     SearchQuery,
     StatusUpdateRequest,
     UpdateOrderStatusSchema,
-    RatingCreate
+    RatingCreate,
 )
 
 from auth.auth import create_access_token, get_current_user
@@ -144,7 +144,7 @@ from crud.couriers_crud import (
     update_courier,
     delete_courier,
     search_restaurants,
-    search_couriers
+    search_couriers,
 )
 from crud.chat_crud import (
     create_conversation,
@@ -160,46 +160,36 @@ from crud.customer_crud import (
     search_restaurants,
     search_items,
     get_restaurant_details,
-    get_restaurant_menu
+    get_restaurant_menu,
 )
-from crud.order_crud import (
-    create_order
+from crud.order_crud import create_order
+from crud.status_crud import get_courier_status, update_courier_status
+from crud.pending_crud import get_pending_orders_for_owner, update_order_status
+from crud.system import assign_orders_to_couriers
+from crud.track_orders_crud import get_customer_orders
+from crud.rating_crud import submit_rating
+from crud.order_history import get_customer_order_history_with_items
+from crud.deliver_order_crud import get_orders_for_courier, finish_order
+from crud.courier_crud import has_unfinished_orders
+from crud.delivered_orders_crud import get_delivered_orders
+from crud.admin_statistic_crud import (
+    s_get_pending_orders,
+    s_get_preparing_orders,
+    s_get_in_delivery_orders,
+    s_get_online_couriers,
+    s_get_busy_couriers,
+    s_get_offline_couriers,
+    s_get_open_restaurants,
+    s_get_closing_soon_restaurants,
+    s_get_closed_restaurants,
 )
-from crud.status_crud import (
-    get_courier_status,
-    update_courier_status
-)
-from crud.pending_crud import (
-    get_pending_orders_for_owner,
-    update_order_status
-)
-from crud.system import (
-    assign_orders_to_couriers
-)
-from crud.track_orders_crud import (
-    get_customer_orders
-)
-from crud.rating_crud import (
-    submit_rating
-)
-from crud.order_history import (
-    get_customer_order_history_with_items
-)
-from crud.deliver_order_crud import (
-    get_orders_for_courier,
-    finish_order
-)
-from crud.courier_crud import (
-    has_unfinished_orders
-)
-from crud.delivered_orders_crud import (
-    get_delivered_orders
-)
+
 
 async def schedule_assign_orders_to_couriers():
     print("Function for assigning orders to couriers start!")
     db: Session = next(get_db())
     await assign_orders_to_couriers(db)
+
 
 def start_application():
     app = FastAPI()
@@ -227,9 +217,9 @@ scheduler.add_job(
 scheduler.add_job(
     lambda: asyncio.run(remind_pending_requests()), CronTrigger(hour=0, minute=1)
 )
-scheduler.add_job(
-    lambda: asyncio.run(schedule_assign_orders_to_couriers()), 'interval', seconds=15
-)
+# scheduler.add_job(
+#     lambda: asyncio.run(schedule_assign_orders_to_couriers()), 'interval', seconds=15
+# )
 scheduler.start()
 
 if __name__ == "__main__":
@@ -238,6 +228,7 @@ if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000)
 
 connections = {}
+
 
 @app.websocket("/ws/chat/{conversation_id}")
 async def websocket_endpoint(websocket: WebSocket, conversation_id: int):
@@ -265,6 +256,35 @@ async def websocket_endpoint(websocket: WebSocket, conversation_id: int):
         connections[conversation_id].remove(websocket)
         if len(connections[conversation_id]) == 0:
             del connections[conversation_id]
+
+
+@app.websocket("/ws/stats")
+async def websocket_stats(websocket: WebSocket):
+    await websocket.accept()
+    db = SessionLocal()
+    try:
+        while True:
+            stats_data = {
+                "pendingOrders": s_get_pending_orders(db),
+                "preparingOrders": s_get_preparing_orders(db),
+                "inDeliveryOrders": s_get_in_delivery_orders(db),
+                "onlineCouriers": s_get_online_couriers(db),
+                "busyCouriers": s_get_busy_couriers(db),
+                "offlineCouriers": s_get_offline_couriers(db),
+                "openRestaurants": s_get_open_restaurants(db),
+                "closingSoonRestaurants": s_get_closing_soon_restaurants(db),
+                "closedRestaurants": s_get_closed_restaurants(db),
+            }
+            try:
+                await websocket.send_json(stats_data)
+            except WebSocketDisconnect:
+                print("WebSocket disconnected")
+                break
+            await asyncio.sleep(5)
+    except Exception as e:
+        print(f"Error: {e}")
+    finally:
+        db.close()
 
 @app.post("/upload-image/")
 async def upload_image(
@@ -807,7 +827,9 @@ async def get_user_chat_history_route(user_id: int, db: Session = Depends(get_db
 
 
 @app.get("/api/chat/users")
-async def get_users_by_role(role: str, current_user_id: int, db: Session = Depends(get_db)):
+async def get_users_by_role(
+    role: str, current_user_id: int, db: Session = Depends(get_db)
+):
     return await get_users_sorted_by_role(db, role, current_user_id)
 
 
@@ -845,79 +867,111 @@ async def get_last_conversation_message(
 ):
     return await get_last_message(db, conversation_id)
 
+
 @app.get("/api/search/restaurants")
-async def search_restaurants_route(query: SearchQuery = Depends(), db: Session = Depends(get_db)):
+async def search_restaurants_route(
+    query: SearchQuery = Depends(), db: Session = Depends(get_db)
+):
     return await search_restaurants(db, query.query)
 
+
 @app.get("/api/search/items")
-async def search_items_route(query: SearchQuery = Depends(), db: Session = Depends(get_db)):
+async def search_items_route(
+    query: SearchQuery = Depends(), db: Session = Depends(get_db)
+):
     return await search_items(db, query.query)
 
+
 @app.get("/api/restaurants/{restaurant_name}/details")
-async def get_restaurant_details_route(restaurant_name: str, db: Session = Depends(get_db)):
+async def get_restaurant_details_route(
+    restaurant_name: str, db: Session = Depends(get_db)
+):
     return await get_restaurant_details(db, restaurant_name)
 
+
 @app.get("/api/restaurants/{restaurant_name}/menu")
-async def get_restaurant_menu_route(restaurant_name: str, db: Session = Depends(get_db)):
+async def get_restaurant_menu_route(
+    restaurant_name: str, db: Session = Depends(get_db)
+):
     return await get_restaurant_menu(db, restaurant_name)
+
 
 @app.post("/order/")
 async def create_order_route(order: OrderCreate, db: Session = Depends(get_db)):
     return await create_order(db, order)
 
+
 @app.get("/courier/status/{id}")
 async def get_status(id: int, db: Session = Depends(get_db)):
     return await get_courier_status(db, id)
+
 
 @app.put("/courier/status")
 async def update_status(request: StatusUpdateRequest, db: Session = Depends(get_db)):
     return await update_courier_status(db, request.id, request.status)
 
+
 @app.get("/owner/orders")
-async def get_pending_orders(current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+async def get_pending_orders(
+    current_user: User = Depends(get_current_user), db: Session = Depends(get_db)
+):
     owner_id = current_user.id
     return await get_pending_orders_for_owner(db, owner_id)
 
+
 @app.put("/owner/orders/{order_id}/update")
-async def update_order_status_route(order_id: int, status: str, db: Session = Depends(get_db)):
+async def update_order_status_route(
+    order_id: int, status: str, db: Session = Depends(get_db)
+):
     return await update_order_status(db, order_id, status)
+
 
 # Ruta za praćenje narudžbi
 @app.get("/customer/track-orders")
-async def track_orders(current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+async def track_orders(
+    current_user: User = Depends(get_current_user), db: Session = Depends(get_db)
+):
     return await get_customer_orders(current_user.id, db)
 
-#Ruta za ocjenjivanje narudzbe od strane kupca
+
+# Ruta za ocjenjivanje narudzbe od strane kupca
 @app.post("/rating/submit")
 async def rate_order(rating_data: RatingCreate, db: Session = Depends(get_db)):
     return await submit_rating(rating_data, db)
 
-#Ruta za vracanje istorije narudzbi zajedno sa itemima
+
+# Ruta za vracanje istorije narudzbi zajedno sa itemima
 @app.get("/order-history/")
 async def order_history(customer_id: int, db: Session = Depends(get_db)):
     orders = await get_customer_order_history_with_items(db, customer_id)
     return orders
 
-#Ruta za prikaz narudzbi koje kurir treba da dostavi
+
+# Ruta za prikaz narudzbi koje kurir treba da dostavi
 @app.get("/courier/deliver-order/")
 async def get_courier_orders(user_id: int, db: Session = Depends(get_db)):
     print(user_id)
     return await get_orders_for_courier(db, user_id)
 
-#Ruta za zavrsavanje narudzbe od strane kurira
+
+# Ruta za zavrsavanje narudzbe od strane kurira
 @app.post("/courier/finish-order/{order_id}")
 async def order_finish(order_id: int, db: Session = Depends(get_db)):
     return await finish_order(db, order_id)
 
-#Ruta za provjeru da li kurir moze da se izloguje
+
+# Ruta za provjeru da li kurir moze da se izloguje
 @app.get("/courier/{courier_id}/has-unfinished-orders")
 async def check_pending_orders(courier_id: int, db: Session = Depends(get_db)):
     if await has_unfinished_orders(db, courier_id):
         return {"has_unfinished_orders": True}
     return {"has_unfinished_orders": False}
 
-#Ruta za dohvacanje svih zavrsenih narudzbi za kurira
+
+# Ruta za dohvacanje svih zavrsenih narudzbi za kurira
 @app.get("/delivered-orders")
-async def delivered_orders(user_id: int = Depends(get_current_user), db: Session = Depends(get_db)):
+async def delivered_orders(
+    user_id: int = Depends(get_current_user), db: Session = Depends(get_db)
+):
     orders = await get_delivered_orders(db, user_id.id)
     return orders
