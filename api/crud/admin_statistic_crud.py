@@ -3,30 +3,30 @@ from models.models import Order, OrderAssignment, OrderAssignmentStatus, Courier
 from sqlalchemy import func, and_
 from datetime import datetime, timedelta
 
-async def s_get_pending_orders(db: Session):
+def a_get_pending_orders(db: Session):
     return db.query(func.count(Order.id)).filter(Order.status == OrderStatus.pending).scalar()
 
-async def s_get_preparing_orders(db: Session):
+def a_get_preparing_orders(db: Session):
     return db.query(func.count(Order.id)).join(OrderQueue, Order.id == OrderQueue.order_id).filter(
         Order.status == OrderStatus.preparing,
         OrderQueue.status == OrderQueueStatusEnum.pending
     ).scalar()
 
-async def s_get_in_delivery_orders(db: Session):
+def a_get_in_delivery_orders(db: Session):
     return db.query(func.count(Order.id)).join(OrderAssignment, Order.id == OrderAssignment.order_id).filter(
         OrderAssignment.status == OrderAssignmentStatus.in_delivery
     ).scalar()
 
-async def s_get_online_couriers(db: Session):
+def a_get_online_couriers(db: Session):
     return db.query(func.count(Courier.id)).filter(Courier.status == CourierStatus.online).scalar()
 
-async def s_get_busy_couriers(db: Session):
+def a_get_busy_couriers(db: Session):
     return db.query(func.count(Courier.id)).filter(Courier.status == CourierStatus.busy).scalar()
 
-async def s_get_offline_couriers(db: Session):
+def a_get_offline_couriers(db: Session):
     return db.query(func.count(Courier.id)).filter(Courier.status == CourierStatus.offline).scalar()
 
-async def s_get_open_restaurants(db: Session):
+def a_get_open_restaurants(db: Session):
     now = datetime.now().time()
     today = datetime.now().strftime("%A")
 
@@ -39,7 +39,7 @@ async def s_get_open_restaurants(db: Session):
         )
     ).scalar()
 
-async def s_get_closing_soon_restaurants(db: Session):
+def a_get_closing_soon_restaurants(db: Session):
     now = datetime.now().time()
     today = datetime.now().strftime("%A")
 
@@ -51,7 +51,7 @@ async def s_get_closing_soon_restaurants(db: Session):
         )
     ).scalar()
 
-async def s_get_closed_restaurants(db: Session):
+def a_get_closed_restaurants(db: Session):
     now = datetime.now().time()
     today = datetime.now().strftime("%A")
 

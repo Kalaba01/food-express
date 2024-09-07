@@ -14,7 +14,7 @@ function AdminStatistic() {
   const [closedRestaurants, setClosedRestaurants] = useState(0);
 
   useEffect(() => {
-    const ws = new WebSocket("ws://localhost:8000/ws/stats");
+    const ws = new WebSocket("ws://localhost:8000/ws/admin-stats");
 
     ws.onmessage = (event) => {
       const data = JSON.parse(event.data);

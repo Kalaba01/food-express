@@ -173,15 +173,24 @@ from crud.deliver_order_crud import get_orders_for_courier, finish_order
 from crud.courier_crud import has_unfinished_orders
 from crud.delivered_orders_crud import get_delivered_orders
 from crud.admin_statistic_crud import (
-    s_get_pending_orders,
-    s_get_preparing_orders,
-    s_get_in_delivery_orders,
-    s_get_online_couriers,
-    s_get_busy_couriers,
-    s_get_offline_couriers,
-    s_get_open_restaurants,
-    s_get_closing_soon_restaurants,
-    s_get_closed_restaurants,
+    a_get_pending_orders,
+    a_get_preparing_orders,
+    a_get_in_delivery_orders,
+    a_get_online_couriers,
+    a_get_busy_couriers,
+    a_get_offline_couriers,
+    a_get_open_restaurants,
+    a_get_closing_soon_restaurants,
+    a_get_closed_restaurants,
+)
+from crud.owner_statistic_crud import (
+    o_get_pending_orders_owner,
+    o_get_preparing_orders_owner,
+    o_get_online_couriers_owner,
+    o_get_busy_couriers_owner,
+    o_get_offline_couriers_owner,
+    o_get_earnings_owner,
+    o_get_ratings_owner,
 )
 
 
@@ -217,9 +226,9 @@ scheduler.add_job(
 scheduler.add_job(
     lambda: asyncio.run(remind_pending_requests()), CronTrigger(hour=0, minute=1)
 )
-# scheduler.add_job(
-#     lambda: asyncio.run(schedule_assign_orders_to_couriers()), 'interval', seconds=15
-# )
+scheduler.add_job(
+    lambda: asyncio.run(schedule_assign_orders_to_couriers()), 'interval', seconds=15
+)
 scheduler.start()
 
 if __name__ == "__main__":
@@ -258,22 +267,48 @@ async def websocket_endpoint(websocket: WebSocket, conversation_id: int):
             del connections[conversation_id]
 
 
-@app.websocket("/ws/stats")
+@app.websocket("/ws/admin-stats")
 async def websocket_stats(websocket: WebSocket):
     await websocket.accept()
     db = SessionLocal()
     try:
         while True:
             stats_data = {
-                "pendingOrders": s_get_pending_orders(db),
-                "preparingOrders": s_get_preparing_orders(db),
-                "inDeliveryOrders": s_get_in_delivery_orders(db),
-                "onlineCouriers": s_get_online_couriers(db),
-                "busyCouriers": s_get_busy_couriers(db),
-                "offlineCouriers": s_get_offline_couriers(db),
-                "openRestaurants": s_get_open_restaurants(db),
-                "closingSoonRestaurants": s_get_closing_soon_restaurants(db),
-                "closedRestaurants": s_get_closed_restaurants(db),
+                "pendingOrders": a_get_pending_orders(db),
+                "preparingOrders": a_get_preparing_orders(db),
+                "inDeliveryOrders": a_get_in_delivery_orders(db),
+                "onlineCouriers": a_get_online_couriers(db),
+                "busyCouriers": a_get_busy_couriers(db),
+                "offlineCouriers": a_get_offline_couriers(db),
+                "openRestaurants": a_get_open_restaurants(db),
+                "closingSoonRestaurants": a_get_closing_soon_restaurants(db),
+                "closedRestaurants": a_get_closed_restaurants(db),
+            }
+            try:
+                await websocket.send_json(stats_data)
+            except WebSocketDisconnect:
+                print("WebSocket disconnected")
+                break
+            await asyncio.sleep(5)
+    except Exception as e:
+        print(f"Error: {e}")
+    finally:
+        db.close()
+
+
+@app.websocket("/ws/owner-stats/{owner_id}")
+async def websocket_owner_stats(websocket: WebSocket, owner_id: int, db: Session = Depends(get_db)):
+    await websocket.accept()
+    try:
+        while True:
+            stats_data = {
+                "pendingOrders": o_get_pending_orders_owner(db, owner_id),
+                "preparingOrders": o_get_preparing_orders_owner(db, owner_id),
+                "onlineCouriers": o_get_online_couriers_owner(db, owner_id),
+                 "busyCouriers": o_get_busy_couriers_owner(db, owner_id),
+                "offlineCouriers": o_get_offline_couriers_owner(db, owner_id),
+                "earnings": o_get_earnings_owner(db, owner_id),
+                "ratings": o_get_ratings_owner(db, owner_id),
             }
             try:
                 await websocket.send_json(stats_data)

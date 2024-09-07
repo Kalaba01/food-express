@@ -1,0 +1,77 @@
+.owner-statistics-container {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    background: linear-gradient(to bottom, #fff, #f4f4f9);
+    min-height: 100vh;
+}
+
+.summary-row {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+}
+
+.summary-card {
+    background-color: #ffffff; /* White for light mode */
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 25%;
+    text-align: center;
+}
+
+.summary-card:hover {
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+.summary-card h3 {
+    color: #333333;
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+.summary-card p {
+    color: #34c38f;
+    font-size: 24px;
+    margin: 0;
+}
+
+.dashboard-row {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+}
+
+.dashboard-card {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 50%;
+    text-align: center;
+}
+
+.dashboard-card h3 {
+    text-align: center;
+    color: #333333;
+    margin-bottom: 20px;
+    font-size: 24px;
+    font-weight: 500;
+}
+
+body.dark-mode .owner-statistics-container {
+    background: linear-gradient(to bottom, #2b2e4a, #2b2e4a);
+}
+
+body.dark-mode .summary-card, body.dark-mode .dashboard-card {
+    background-color: #1f2235;
+    color: #ffffff;
+}
+
+body.dark-mode .summary-card h3, body.dark-mode .dashboard-card h3 {
+    color: #ffffff;
+}
