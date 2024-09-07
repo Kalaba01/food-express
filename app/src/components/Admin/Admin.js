@@ -6,7 +6,6 @@ function Admin({ darkMode, toggleDarkMode }) {
     <div>
       <Header darkMode={darkMode} toggleDarkMode={toggleDarkMode} userType="administrator" />
       <h2>Admin Dashboard</h2>
-      
     </div>
   );
 }

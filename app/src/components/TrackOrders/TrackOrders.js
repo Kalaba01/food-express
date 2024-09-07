@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { Header, Rating, NotificationPopup, Map } from "../index";
-import axios from "axios";
+import { Header, Rating, NotificationPopup, Map, Loading } from "../index";
 import { useTranslation } from "react-i18next";
+import axios from "axios";
 import "./TrackOrders.css";
 
 function TrackOrders({ darkMode, toggleDarkMode }) {
@@ -11,7 +11,8 @@ function TrackOrders({ darkMode, toggleDarkMode }) {
   const [showRating, setShowRating] = useState(false);
   const [selectedOrderId, setSelectedOrderId] = useState(null);
   const [notification, setNotification] = useState({ message: "", type: "" });
-  const [mapCoordinates, setMapCoordinates] = useState(null); // State for map
+  const [mapCoordinates, setMapCoordinates] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchOrders = async () => {
@@ -64,6 +65,8 @@ function TrackOrders({ darkMode, toggleDarkMode }) {
         }
       } catch (error) {
         console.error("Error fetching orders:", error);
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -135,6 +138,32 @@ function TrackOrders({ darkMode, toggleDarkMode }) {
     }
     return null;
   };
+
+  if (isLoading) {
+    return (
+      <>
+        <Header
+          darkMode={darkMode}
+          toggleDarkMode={toggleDarkMode}
+          userType="courier"
+        />
+        <Loading />;
+      </>
+    );
+  }
+
+  if(!(orders.length > 0)) {
+    return(
+      <>
+      <Header
+        darkMode={darkMode}
+        toggleDarkMode={toggleDarkMode}
+        userType="customer"
+      />
+      <p>{t("TrackOrders.noOrders")}</p>
+      </>
+    )
+  }
 
   return (
     <>

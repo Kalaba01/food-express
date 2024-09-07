@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Header, NotificationPopup } from "../index";
+import { Header, NotificationPopup, Loading } from "../index";
 import { useTranslation } from "react-i18next";
 import axios from "axios";
 import "./Profile.css";
@@ -143,7 +143,16 @@ function Profile({ darkMode, toggleDarkMode }) {
 
 
   if (loading) {
-    return <div>{t('Profile.loading')}</div>;
+    return (
+      <>
+        <Header
+          darkMode={darkMode}
+          toggleDarkMode={toggleDarkMode}
+          userType="courier"
+        />
+        <Loading />;
+      </>
+    );
   }
 
   return (

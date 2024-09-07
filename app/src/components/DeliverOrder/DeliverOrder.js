@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { Header, NotificationPopup, Map } from "../index";
-import {jwtDecode} from "jwt-decode";
+import { Header, NotificationPopup, Map, Loading } from "../index";
+import { jwtDecode } from "jwt-decode";
 import { useTranslation } from "react-i18next";
 import axios from "axios";
 import "./DeliverOrder.css";
@@ -11,7 +11,8 @@ function DeliverOrder({ darkMode, toggleDarkMode }) {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [popupContent, setPopupContent] = useState(null);
   const [notification, setNotification] = useState({ message: "", type: "" });
-  const [mapCoordinates, setMapCoordinates] = useState(null); // State to store map coordinates and address
+  const [mapCoordinates, setMapCoordinates] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchOrders = async () => {
@@ -29,8 +30,10 @@ function DeliverOrder({ darkMode, toggleDarkMode }) {
           `http://localhost:8000/courier/deliver-order/?user_id=${courierId}`
         );
         setOrders(response.data);
+        setIsLoading(false);
       } catch (error) {
         console.error("Error fetching orders:", error);
+        setIsLoading(false);
       }
     };
 
@@ -77,10 +80,9 @@ function DeliverOrder({ darkMode, toggleDarkMode }) {
   const handleClosePopup = () => {
     setIsPopupOpen(false);
     setPopupContent(null);
-    setMapCoordinates(null); // Reset map coordinates
+    setMapCoordinates(null);
   };
 
-  // Function to handle map opening for address
   const handleShowMap = (latitude, longitude, address) => {
     setMapCoordinates({ latitude, longitude, address });
     setIsPopupOpen(true);
@@ -100,7 +102,10 @@ function DeliverOrder({ darkMode, toggleDarkMode }) {
         }
       );
 
-      setNotification({ message: t("DeliverOrder.orderFinished"), type: "success" });
+      setNotification({
+        message: t("DeliverOrder.orderFinished"),
+        type: "success",
+      });
 
       const decodedToken = jwtDecode(token);
       const courierId = decodedToken ? decodedToken.id : null;
@@ -111,11 +116,25 @@ function DeliverOrder({ darkMode, toggleDarkMode }) {
       setOrders(response.data);
     } catch (error) {
       setNotification({
-        message: error.response?.data?.detail || t("DeliverOrder.errorFinishingOrder"),
-        type: "error"
+        message:
+          error.response?.data?.detail || t("DeliverOrder.errorFinishingOrder"),
+        type: "error",
       });
     }
   };
+
+  if (isLoading) {
+    return (
+      <>
+        <Header
+          darkMode={darkMode}
+          toggleDarkMode={toggleDarkMode}
+          userType="courier"
+        />
+        <Loading />;
+      </>
+    );
+  }
 
   return (
     <>
@@ -147,7 +166,13 @@ function DeliverOrder({ darkMode, toggleDarkMode }) {
                   <td>{order.restaurant_name}</td>
                   <td
                     className="clickable-address"
-                    onClick={() => handleShowMap(order.restaurant_latitude, order.restaurant_longitude, order.restaurant_address)}
+                    onClick={() =>
+                      handleShowMap(
+                        order.restaurant_latitude,
+                        order.restaurant_longitude,
+                        order.restaurant_address
+                      )
+                    }
                   >
                     {order.restaurant_address}
                   </td>
@@ -155,7 +180,13 @@ function DeliverOrder({ darkMode, toggleDarkMode }) {
                   <td>{order.customer_username}</td>
                   <td
                     className="clickable-address"
-                    onClick={() => handleShowMap(order.customer_latitude, order.customer_longitude, order.customer_address)}
+                    onClick={() =>
+                      handleShowMap(
+                        order.customer_latitude,
+                        order.customer_longitude,
+                        order.customer_address
+                      )
+                    }
                   >
                     {order.customer_address}
                   </td>
@@ -190,7 +221,10 @@ function DeliverOrder({ darkMode, toggleDarkMode }) {
         )}
 
         {notification.message && (
-          <NotificationPopup message={notification.message} type={notification.type} />
+          <NotificationPopup
+            message={notification.message}
+            type={notification.type}
+          />
         )}
 
         {isPopupOpen && mapCoordinates && (

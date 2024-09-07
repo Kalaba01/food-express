@@ -19,16 +19,24 @@ from schemas.schemas import (
     MenuCategoryUpdate,
     ItemCreate,
     ItemUpdate,
-    OperatingHoursUpdate
+    OperatingHoursUpdate,
 )
 
 
-async def update_operating_hours(db: Session, restaurant_id: int, operating_hours: List[OperatingHoursUpdate]):
-    existing_hours = db.query(OperatingHours).filter(OperatingHours.restaurant_id == restaurant_id).all()
+async def update_operating_hours(
+    db: Session, restaurant_id: int, operating_hours: List[OperatingHoursUpdate]
+):
+    existing_hours = (
+        db.query(OperatingHours)
+        .filter(OperatingHours.restaurant_id == restaurant_id)
+        .all()
+    )
 
     for hour in operating_hours:
         if hour.id:
-            db_hour = db.query(OperatingHours).filter(OperatingHours.id == hour.id).first()
+            db_hour = (
+                db.query(OperatingHours).filter(OperatingHours.id == hour.id).first()
+            )
             if db_hour:
                 db_hour.opening_time = hour.opening_time
                 db_hour.closing_time = hour.closing_time
@@ -110,7 +118,15 @@ async def create_new_restaurant(db: Session, restaurant: RestaurantCreate):
     db.commit()
     db.refresh(new_restaurant)
 
-    days_of_week = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+    days_of_week = [
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+        "Saturday",
+        "Sunday",
+    ]
     opening_time = time(9, 0)
     closing_time = time(21, 0)
 
@@ -119,7 +135,7 @@ async def create_new_restaurant(db: Session, restaurant: RestaurantCreate):
             restaurant_id=new_restaurant.id,
             day_of_week=day,
             opening_time=opening_time,
-            closing_time=closing_time
+            closing_time=closing_time,
         )
         db.add(operating_hours)
 
@@ -195,6 +211,10 @@ async def delete_restaurant_and_related_data(db: Session, restaurant_id: int):
     if not db_restaurant:
         raise HTTPException(status_code=404, detail="Restaurant not found")
 
+    db.query(RestaurantDeliveryZone).filter(
+        RestaurantDeliveryZone.restaurant_id == restaurant_id
+    ).delete()
+
     menu_categories = (
         db.query(MenuCategory).filter(MenuCategory.restaurant_id == restaurant_id).all()
     )
@@ -207,7 +227,7 @@ async def delete_restaurant_and_related_data(db: Session, restaurant_id: int):
     db.commit()
 
     return {
-        "message": "Restaurant and all associated menus and items deleted successfully"
+        "message": "Restaurant and all associated menus, items, and delivery zones deleted successfully"
     }
 
 

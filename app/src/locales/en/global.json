@@ -157,7 +157,8 @@
     "confirmDeleteTitle": "Confirm Deletion",
     "confirmDeleteMessage": "Are you sure you want to delete this user? This action cannot be undone.",
     "confirm": "Confirm",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "noUsers": "There are no users found."
   },
   "Requests": {
     "title": "Requests",
@@ -173,7 +174,8 @@
     "created": "Created",
     "actions": "Actions",
     "accept": "Accept",
-    "deny": "Deny"
+    "deny": "Deny",
+    "noRequests": "There are no requests."
   },
   "DeliveryZones": {
     "title": "Delivery Zones",
@@ -534,7 +536,8 @@
     "payment": "Payment",
     "actions": "Actions",
     "notAssigned": "Not assigned",
-    "finish": "Finish"
+    "finish": "Finish",
+    "noOrders": "You have no orders yet."
   },
   "Rating": {
     "title": "Rate Your Experience",

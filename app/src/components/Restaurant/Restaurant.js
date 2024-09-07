@@ -16,8 +16,6 @@ import {
   FaStar,
   FaStarHalfAlt,
   FaRegStar,
-  FaArrowLeft,
-  FaArrowRight,
   FaTrash,
   FaEdit,
 } from "react-icons/fa";

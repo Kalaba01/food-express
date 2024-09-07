@@ -5,6 +5,7 @@ import {
   ConfirmDelete,
   NotificationPopup,
   Map,
+  Loading
 } from "../index";
 import axios from "axios";
 import { useTranslation } from "react-i18next";
@@ -282,7 +283,7 @@ function Couriers({ darkMode, toggleDarkMode }) {
         />
         <div className="couriers-container">
           <h1>{t("Couriers.title")}</h1>
-          <p>{t("Couriers.loading")}</p>
+          <Loading />
         </div>
       </div>
     );

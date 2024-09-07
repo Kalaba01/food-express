@@ -4,13 +4,10 @@ import {
   NotificationPopup,
   LookupTable,
   ConfirmDelete,
-  Map
+  Map,
+  Loading,
 } from "../index";
-import {
-  MapContainer,
-  TileLayer,
-  FeatureGroup,
-} from "react-leaflet";
+import { MapContainer, TileLayer, FeatureGroup } from "react-leaflet";
 import { useTranslation } from "react-i18next";
 import { FaMapPin, FaTrash } from "react-icons/fa";
 import { EditControl } from "react-leaflet-draw";
@@ -33,6 +30,7 @@ function DeliveryZones({ darkMode, toggleDarkMode }) {
   const [notification, setNotification] = useState({ message: "", type: "" });
   const [deletePopupOpen, setDeletePopupOpen] = useState(false);
   const [zoneToDelete, setZoneToDelete] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchZones = async () => {
@@ -41,8 +39,10 @@ function DeliveryZones({ darkMode, toggleDarkMode }) {
           "http://localhost:8000/delivery-zones/"
         );
         setZones(response.data);
+        setIsLoading(false);
       } catch (error) {
         console.error("Error fetching delivery zones:", error);
+        setIsLoading(false);
       }
     };
 
@@ -191,6 +191,19 @@ function DeliveryZones({ darkMode, toggleDarkMode }) {
 
   const columns = [t("DeliveryZones.name")];
 
+  if (isLoading) {
+    return (
+      <>
+        <Header
+          darkMode={darkMode}
+          toggleDarkMode={toggleDarkMode}
+          userType="courier"
+        />
+        <Loading />;
+      </>
+    );
+  }
+
   return (
     <div>
       <Header
@@ -303,36 +316,6 @@ function DeliveryZones({ darkMode, toggleDarkMode }) {
           </div>
         </div>
       )}
-
-      {/* {isMapPopupOpen && (
-        <div className="modal">
-          <div className="modal-content">
-            <span className="close-button" onClick={resetPopup}>&times;</span>
-            <h2>{t('DeliveryZones.viewZone')}</h2>
-            <MapContainer
-              style={{ height: '400px', width: '100%' }}
-              center={[
-                (editZone.point1_latitude + editZone.point3_latitude) / 2,
-                (editZone.point1_longitude + editZone.point3_longitude) / 2
-              ]}
-              zoom={13}
-            >
-              <TileLayer
-                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-              />
-              <Rectangle
-                bounds={[
-                  [editZone.point1_latitude, editZone.point1_longitude],
-                  [editZone.point2_latitude, editZone.point2_longitude],
-                  [editZone.point3_latitude, editZone.point3_longitude],
-                  [editZone.point4_latitude, editZone.point4_longitude]
-                ]}
-              />
-            </MapContainer>
-          </div>
-        </div>
-      )} */}
 
       {isMapPopupOpen && editZone && (
         <div className="modal">

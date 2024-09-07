@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import { Header, Gallery, GalleryPopup, Map } from "../index";
+import { Header, Gallery, GalleryPopup, Map, Loading } from "../index";
 import { useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { BasketContext } from "../../BasketContext";
@@ -22,6 +22,7 @@ function CustomerRestaurant({ darkMode, toggleDarkMode }) {
     longitude: null,
     label: "",
   });
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchRestaurantDetails = async () => {
@@ -55,8 +56,13 @@ function CustomerRestaurant({ darkMode, toggleDarkMode }) {
       }
     };
 
-    fetchRestaurantDetails();
-    fetchRestaurantMenu();
+    const loadData = async () => {
+      await fetchRestaurantDetails();
+      await fetchRestaurantMenu();
+      setIsLoading(false);
+    };
+
+    loadData();
   }, [restaurantName]);
 
   const openMapPopup = (latitude, longitude, label) => {
@@ -184,9 +190,17 @@ function CustomerRestaurant({ darkMode, toggleDarkMode }) {
     );
   };
 
-  if (!restaurant) {
-    console.log("Restaurant not yet loaded");
-    return <div>{t("CustomerRestaurant.loading")}</div>;
+  if (isLoading) {
+    return (
+      <>
+        <Header
+          darkMode={darkMode}
+          toggleDarkMode={toggleDarkMode}
+          userType="customer"
+        />
+        <Loading />;
+      </>
+    );
   }
 
   return (
@@ -206,7 +220,11 @@ function CustomerRestaurant({ darkMode, toggleDarkMode }) {
         <p
           className="clickable-restaurant-address"
           onClick={() =>
-            openMapPopup(restaurant.latitude, restaurant.longitude, restaurant.name)
+            openMapPopup(
+              restaurant.latitude,
+              restaurant.longitude,
+              restaurant.name
+            )
           }
         >
           {restaurant.address}, {restaurant.city}
@@ -272,24 +290,23 @@ function CustomerRestaurant({ darkMode, toggleDarkMode }) {
           ))}
         </div>
 
-        {mapPopupOpen && mapCoordinates.latitude && mapCoordinates.longitude && (
-          <div className="modal">
-            <div className="modal-content">
-              <span
-                className="close-button"
-                onClick={closeMapPopup}
-              >
-                &times;
-              </span>
-              <h2>{mapCoordinates.label}</h2>
-              <Map
-                latitude={mapCoordinates.latitude}
-                longitude={mapCoordinates.longitude}
-                address={mapCoordinates.label}
-              />
+        {mapPopupOpen &&
+          mapCoordinates.latitude &&
+          mapCoordinates.longitude && (
+            <div className="modal">
+              <div className="modal-content">
+                <span className="close-button" onClick={closeMapPopup}>
+                  &times;
+                </span>
+                <h2>{mapCoordinates.label}</h2>
+                <Map
+                  latitude={mapCoordinates.latitude}
+                  longitude={mapCoordinates.longitude}
+                  address={mapCoordinates.label}
+                />
+              </div>
             </div>
-          </div>
-        )}
+          )}
 
         {isPopupOpen && (
           <GalleryPopup

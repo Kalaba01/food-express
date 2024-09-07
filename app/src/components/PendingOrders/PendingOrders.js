@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Header, NotificationPopup } from "../index";
+import { Header, NotificationPopup, Loading } from "../index";
 import axios from 'axios';
 import { useTranslation } from 'react-i18next';
 import './PendingOrders.css';
@@ -9,6 +9,7 @@ function PendingOrders({ darkMode, toggleDarkMode, openPopupModal, userType }) {
   const [orders, setOrders] = useState([]);
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [notification, setNotification] = useState({ message: "", type: "" });
+  const [isLoading, setIsLoading] = useState(true);
 
   const fetchPendingOrders = async () => {
     const token = localStorage.getItem('token');
@@ -17,8 +18,10 @@ function PendingOrders({ darkMode, toggleDarkMode, openPopupModal, userType }) {
         headers: { Authorization: `Bearer ${token}` }
       });
       setOrders(response.data);
+      setIsLoading(false);
     } catch (error) {
       console.error(t('PendingOrders.fetchError'), error);
+      setIsLoading(false);
     }
   };
 
@@ -73,6 +76,19 @@ function PendingOrders({ darkMode, toggleDarkMode, openPopupModal, userType }) {
   const closePopup = () => {
     setSelectedOrder(null);
   };
+
+  if (isLoading) {
+    return (
+      <>
+        <Header
+          darkMode={darkMode}
+          toggleDarkMode={toggleDarkMode}
+          userType="courier"
+        />
+        <Loading />;
+      </>
+    );
+  }
 
   return (
     <>

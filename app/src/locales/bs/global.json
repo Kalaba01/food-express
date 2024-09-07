@@ -157,7 +157,8 @@
     "confirmDeleteTitle": "Potvrda brisanja",
     "confirmDeleteMessage": "Da li ste sigurni da želite obrisati ovog korisnika? Ova akcija se ne može poništiti.",
     "confirm": "Potvrdi",
-    "cancel": "Otkaži"
+    "cancel": "Otkaži",
+    "noUsers": "Nema pronađenih korisnika."
   },
   "Requests": {
     "title": "Zahtjevi",
@@ -173,7 +174,8 @@
     "created": "Kreirano",
     "actions": "Akcije",
     "accept": "Prihvati",
-    "deny": "Odbij"
+    "deny": "Odbij",
+    "noRequests": "Nema zahtjeva."
   },
   "DeliveryZones": {
     "title": "Zone Dostave",
@@ -534,7 +536,8 @@
     "payment": "Plaćanje",
     "actions": "Akcije",
     "notAssigned": "Nije dodijeljen",
-    "finish": "Završi"
+    "finish": "Završi",
+    "noOrders": "Nemate još narudžbi."
   },
   "Rating": {
     "title": "Ocijenite Vaše Iskustvo",

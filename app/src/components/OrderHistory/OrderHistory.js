@@ -1,10 +1,10 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { Header, Order, Map } from "../index";  // Dodali smo Map komponentu
-import { jwtDecode } from 'jwt-decode';
-import { BasketContext } from '../../BasketContext';
-import { useTranslation } from 'react-i18next';
-import axios from 'axios';
-import './OrderHistory.css';
+import React, { useState, useEffect, useContext } from "react";
+import { Header, Order, Map, Loading } from "../index";
+import { jwtDecode } from "jwt-decode";
+import { BasketContext } from "../../BasketContext";
+import { useTranslation } from "react-i18next";
+import axios from "axios";
+import "./OrderHistory.css";
 
 function OrderHistory({ darkMode, toggleDarkMode }) {
   const { t } = useTranslation("global");
@@ -13,23 +13,29 @@ function OrderHistory({ darkMode, toggleDarkMode }) {
   const [selectedOrderItems, setSelectedOrderItems] = useState([]);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [isOrderPopupOpen, setIsOrderPopupOpen] = useState(false);
-  const [mapCoordinates, setMapCoordinates] = useState(null); // Dodali smo stanje za mapu
+  const [mapCoordinates, setMapCoordinates] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchOrderHistory = async () => {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem("token");
       const decodedToken = jwtDecode(token);
       const customerId = decodedToken ? decodedToken.id : null;
 
       try {
-        const response = await axios.get(`http://localhost:8000/order-history/?customer_id=${customerId}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const response = await axios.get(
+          `http://localhost:8000/order-history/?customer_id=${customerId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
         setOrders(response.data);
+        setIsLoading(false);
       } catch (error) {
-        console.error('Error fetching order history:', error);
+        console.error("Error fetching order history:", error);
+        setIsLoading(false);
       }
     };
 
@@ -37,13 +43,13 @@ function OrderHistory({ darkMode, toggleDarkMode }) {
   }, []);
 
   const handleOrderAgain = (order) => {
-    const basketItems = order.items.map(item => ({
+    const basketItems = order.items.map((item) => ({
       id: item.item_id,
       name: item.name,
       quantity: item.quantity,
       price: item.price,
       category: item.category,
-      restaurant_id: order.restaurant_id
+      restaurant_id: order.restaurant_id,
     }));
     setBasket(basketItems);
     setIsOrderPopupOpen(true);
@@ -71,6 +77,19 @@ function OrderHistory({ darkMode, toggleDarkMode }) {
     setMapCoordinates(null);
   };
 
+  if (isLoading) {
+    return (
+      <>
+        <Header
+          darkMode={darkMode}
+          toggleDarkMode={toggleDarkMode}
+          userType="courier"
+        />
+        <Loading />;
+      </>
+    );
+  }
+
   return (
     <>
       <Header
@@ -92,24 +111,32 @@ function OrderHistory({ darkMode, toggleDarkMode }) {
               </tr>
             </thead>
             <tbody>
-              {orders.map(order => (
+              {orders.map((order) => (
                 <tr key={order.id}>
                   <td
                     className="clickable-restaurant-name"
-                    onClick={() => handleOpenMap(order.latitude, order.longitude, order.restaurant_name)}
+                    onClick={() =>
+                      handleOpenMap(
+                        order.latitude,
+                        order.longitude,
+                        order.restaurant_name
+                      )
+                    }
                   >
                     {order.restaurant_name}
                   </td>
                   <td>{order.restaurant_category}</td>
                   <td>{order.restaurant_contact}</td>
-                  <td 
+                  <td
                     className="clickable-price"
                     onClick={() => handleShowItems(order.items)}
                   >
                     {order.total_price} BAM
                   </td>
                   <td>
-                    <button onClick={() => handleOrderAgain(order)}>{t("OrderHistory.orderAgain")}</button>
+                    <button onClick={() => handleOrderAgain(order)}>
+                      {t("OrderHistory.orderAgain")}
+                    </button>
                   </td>
                 </tr>
               ))}
@@ -123,7 +150,9 @@ function OrderHistory({ darkMode, toggleDarkMode }) {
       {isPopupOpen && (
         <div className="order-items-popup">
           <div className="popup-content">
-            <span className="close-popup" onClick={handleClosePopup}>&times;</span>
+            <span className="close-popup" onClick={handleClosePopup}>
+              &times;
+            </span>
             <h3>{t("OrderHistory.orderItems")}</h3>
             <ul>
               {selectedOrderItems.map((item, index) => (

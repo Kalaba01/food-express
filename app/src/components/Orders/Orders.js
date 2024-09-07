@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Header, LookupTable } from "../index";
+import { Header, LookupTable, Loading } from "../index";
 import axios from "axios";
 import { useTranslation } from "react-i18next";
 import "../LookupTable/LookupTable.css";
@@ -10,14 +10,17 @@ function Orders({ darkMode, toggleDarkMode }) {
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [filteredStatus, setFilteredStatus] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchOrders = async () => {
       try {
         const response = await axios.get("http://localhost:8000/orders/");
         setOrders(response.data);
+        setIsLoading(false);
       } catch (error) {
         console.error("Error fetching orders:", error);
+        setIsLoading(false);
       }
     };
 
@@ -83,6 +86,19 @@ function Orders({ darkMode, toggleDarkMode }) {
     setIsPopupOpen(false);
     setSelectedOrder(null);
   };
+
+  if (isLoading) {
+    return (
+      <>
+        <Header
+          darkMode={darkMode}
+          toggleDarkMode={toggleDarkMode}
+          userType="courier"
+        />
+        <Loading />;
+      </>
+    );
+  }
 
   return (
     <div>

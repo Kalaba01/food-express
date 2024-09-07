@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Header, NotificationPopup, Map } from "../index";
+import { Header, NotificationPopup, Map, Loading } from "../index";
 import { FaDollarSign } from "react-icons/fa";
 import axios from "axios";
 import { useTranslation } from "react-i18next";
@@ -16,14 +16,17 @@ function DeliveredOrders({ darkMode, toggleDarkMode }) {
     type: "",
     isOpen: false,
   });
-const [mapPopupOpen, setMapPopupOpen] = useState(false);
-const [mapCoordinates, setMapCoordinates] = useState({ latitude: null, longitude: null, label: "" });
+  const [mapPopupOpen, setMapPopupOpen] = useState(false);
+  const [mapCoordinates, setMapCoordinates] = useState({
+    latitude: null,
+    longitude: null,
+    label: "",
+  });
 
-const handleAddressClick = (latitude, longitude, label) => {
-  setMapCoordinates({ latitude, longitude, label });
-  setMapPopupOpen(true);
-};
-
+  const handleAddressClick = (latitude, longitude, label) => {
+    setMapCoordinates({ latitude, longitude, label });
+    setMapPopupOpen(true);
+  };
 
   const getToken = () => {
     return localStorage.getItem("token");
@@ -77,18 +80,16 @@ const handleAddressClick = (latitude, longitude, label) => {
   };
 
   if (loading) {
+    return (
     <>
       <Header
         darkMode={darkMode}
         toggleDarkMode={toggleDarkMode}
         userType="courier"
       />
-      return (
-      <div className="delivered-orders-container">
-        <p>{t("DeliveredOrders.loading")}</p>
-      </div>
-      );
-    </>;
+      <Loading />
+    </>
+    );
   }
 
   if (!orders.length) {
@@ -127,42 +128,49 @@ const handleAddressClick = (latitude, longitude, label) => {
               </tr>
             </thead>
             <tbody>
-  {orders.map((order) => (
-    <tr key={order.id}>
-      <td>{order.restaurant_name}</td>
-      <td>
-        <span
-          className="clickable-address"
-          onClick={() =>
-            handleAddressClick(order.restaurant_latitude, order.restaurant_longitude, order.restaurant_name)
-          }
-        >
-          {order.restaurant_address}
-        </span>
-      </td>
-      <td>{order.customer_username}</td>
-      <td>
-        <span
-          className="clickable-address"
-          onClick={() =>
-            handleAddressClick(order.customer_latitude, order.customer_longitude, order.customer_username)
-          }
-        >
-          {order.customer_address}
-        </span>
-      </td>
-      <td>
-        <button
-          className="delivered-orders-price-button"
-          onClick={() => handleOrderDetailsClick(order)}
-        >
-          <FaDollarSign /> {order.total_price} BAM
-        </button>
-      </td>
-    </tr>
-  ))}
-</tbody>
-
+              {orders.map((order) => (
+                <tr key={order.id}>
+                  <td>{order.restaurant_name}</td>
+                  <td>
+                    <span
+                      className="clickable-address"
+                      onClick={() =>
+                        handleAddressClick(
+                          order.restaurant_latitude,
+                          order.restaurant_longitude,
+                          order.restaurant_name
+                        )
+                      }
+                    >
+                      {order.restaurant_address}
+                    </span>
+                  </td>
+                  <td>{order.customer_username}</td>
+                  <td>
+                    <span
+                      className="clickable-address"
+                      onClick={() =>
+                        handleAddressClick(
+                          order.customer_latitude,
+                          order.customer_longitude,
+                          order.customer_username
+                        )
+                      }
+                    >
+                      {order.customer_address}
+                    </span>
+                  </td>
+                  <td>
+                    <button
+                      className="delivered-orders-price-button"
+                      onClick={() => handleOrderDetailsClick(order)}
+                    >
+                      <FaDollarSign /> {order.total_price} BAM
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
           </table>
         </div>
 
@@ -200,16 +208,26 @@ const handleAddressClick = (latitude, longitude, label) => {
           </div>
         )}
 
-{mapPopupOpen && mapCoordinates.latitude && mapCoordinates.longitude && (
-  <div className="modal">
-    <div className="modal-content">
-      <span className="close-button" onClick={() => setMapPopupOpen(false)}>&times;</span>
-      <h2>{mapCoordinates.label}</h2>
-      <Map latitude={mapCoordinates.latitude} longitude={mapCoordinates.longitude} address={mapCoordinates.label} />
-    </div>
-  </div>
-)}
-
+        {mapPopupOpen &&
+          mapCoordinates.latitude &&
+          mapCoordinates.longitude && (
+            <div className="modal">
+              <div className="modal-content">
+                <span
+                  className="close-button"
+                  onClick={() => setMapPopupOpen(false)}
+                >
+                  &times;
+                </span>
+                <h2>{mapCoordinates.label}</h2>
+                <Map
+                  latitude={mapCoordinates.latitude}
+                  longitude={mapCoordinates.longitude}
+                  address={mapCoordinates.label}
+                />
+              </div>
+            </div>
+          )}
 
         {notification.isOpen && (
           <NotificationPopup

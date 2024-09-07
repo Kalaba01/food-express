@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
+import { Header, NotificationPopup } from '../index';
+import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import axios from 'axios';
 import './ResetPassword.css';
-import { useNavigate } from 'react-router-dom';
-import { Header, NotificationPopup } from '../index';
-import { useTranslation } from 'react-i18next';
 
 function ResetPassword({ darkMode, toggleDarkMode }) {
   const { t } = useTranslation('global');

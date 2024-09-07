@@ -4,7 +4,8 @@ import {
   NotificationPopup,
   LookupTable,
   ConfirmDelete,
-  Map
+  Map,
+  Loading,
 } from "../index";
 import {
   FaStar,
@@ -40,6 +41,7 @@ function Restaurants({ darkMode, toggleDarkMode }) {
   const [selectedOwner, setSelectedOwner] = useState(null);
   const [selectedZones, setSelectedZones] = useState([]);
   const [zonesDropdownOpen, setZonesDropdownOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchRestaurants = async () => {
@@ -62,8 +64,13 @@ function Restaurants({ darkMode, toggleDarkMode }) {
       }
     };
 
-    fetchRestaurants();
-    fetchZones();
+    const loadData = async () => {
+      await fetchRestaurants();
+      await fetchZones();
+      setIsLoading(false);
+    };
+
+    loadData();
   }, []);
 
   const fetchCategories = async (restaurantId) => {
@@ -366,6 +373,19 @@ function Restaurants({ darkMode, toggleDarkMode }) {
     const container = document.querySelector(".categories-container");
     container.scrollBy({ left: container.offsetWidth / 2, behavior: "smooth" });
   };
+
+  if (isLoading) {
+    return (
+      <>
+        <Header
+          darkMode={darkMode}
+          toggleDarkMode={toggleDarkMode}
+          userType="courier"
+        />
+        <Loading />;
+      </>
+    );
+  }
 
   return (
     <div>
