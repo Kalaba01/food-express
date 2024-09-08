@@ -128,6 +128,9 @@
     "pageNotFound": "Stranica nije pronađena",
     "returnHome": "Vrati se na početnu"
   },
+  "Customer": {
+    "header": "Hrana Vas nikad neće razočarati"
+  },
   "Users": {
     "title": "Korisnici",
     "all": "Svi",

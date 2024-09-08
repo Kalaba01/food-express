@@ -128,6 +128,9 @@
     "pageNotFound": "Page Not Found",
     "returnHome": "Return Home"
   },
+  "Customer": {
+    "header": "Food will never disappoint you"
+  },
   "Users": {
     "title": "Users",
     "all": "All",

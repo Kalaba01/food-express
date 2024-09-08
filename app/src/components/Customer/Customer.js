@@ -1,7 +1,11 @@
 import React from "react";
 import { Header, SearchBar, TopRestaurants } from "../index";
+import { useTranslation } from 'react-i18next';
+import { ReactTyped } from "react-typed";
 
 function Customer({ darkMode, toggleDarkMode }) {
+  const { t } = useTranslation('global');
+
   return (
     <div>
       <Header
@@ -10,7 +14,13 @@ function Customer({ darkMode, toggleDarkMode }) {
         userType="customer"
       />
       <div className="customer-dashboard">
-        <h1>Welcome to Food Express</h1>
+        <h1>
+        <ReactTyped 
+          strings={[`${t('Customer.header')}`]}
+          typeSpeed={50}
+          loop={false}
+        />
+        </h1>
         <SearchBar />
         <TopRestaurants />
       </div>
