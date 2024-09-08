@@ -8,11 +8,11 @@
   "LandingPage": {
     "whoAreWe": {
       "header": "Who are we?",
-      "content": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam."
+      "content": "We are an online food ordering and delivery platform, specialized in providing efficient and optimized solutions for ordering and delivery. Our platform connects restaurants, couriers, and customers, offering a simple and enjoyable experience for all users. Our mission is to enhance the dining experience by bridging the gap between restaurants and their customers through innovative technology."
     },
     "cities": {
       "header": "In which cities we operate?",
-      "content": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam."
+      "content": "We are currently delivering in the Sarajevo area, but we are actively working on expanding our service to other cities. If you have suggestions about where you'd like us to start delivering, feel free to contact us and share your ideas. Your feedback is important to us and helps improve our service."
     },
     "partners": {
       "header": "Our partners"

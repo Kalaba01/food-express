@@ -25,6 +25,28 @@ section {
     justify-content: center;
 }
 
+.content-row p {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    color: #333333;
+    font-family: 'Open Sans', sans-serif;
+    margin-bottom: 1.5rem;
+    text-align: justify;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.cities p {
+    font-size: 1.2rem;
+    line-height: 1.7;
+    color: #222222;
+    font-family: 'Roboto', sans-serif;
+    text-align: center;
+    margin-bottom: 2rem;
+    font-weight: 400;
+}
+
 .content-row.reverse {
     flex-direction: row-reverse;
 }
@@ -127,10 +149,6 @@ button:hover {
     transition: all 0.3s ease-in-out;
 }
 
-body.dark-mode .faq-item h3::after {
-    background-color: var(--secondary-color);
-}
-
 .faq-item:hover h3::after,
 .faq-item.active h3::after {
     visibility: visible;
@@ -139,10 +157,6 @@ body.dark-mode .faq-item h3::after {
 
 .faq-item.active h3 {
     border-bottom: 2px solid var(--secondary-color-light);
-}
-
-body.dark-mode .faq-item.active h3 {
-    border-bottom: 2px solid var(--secondary-color);
 }
 
 .faq-answer {
@@ -154,6 +168,19 @@ body.dark-mode .faq-item.active h3 {
 .faq-answer.open {
     max-height: 200px;
     padding: 10px 0;
+}
+
+body.dark-mode .content-row p,
+body.dark-mode .cities p {
+    color: #fff;
+}
+
+body.dark-mode .faq-item.active h3 {
+    border-bottom: 2px solid var(--secondary-color);
+}
+
+body.dark-mode .faq-item h3::after {
+    background-color: var(--secondary-color);
 }
 
 @media only screen and (max-width: 850px) {
@@ -188,6 +215,15 @@ body.dark-mode .faq-item.active h3 {
         width: 50%;
         max-width: 350px;
         margin-bottom: 20px;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .content-row p, 
+    .cities p {
+        font-size: 1rem;
+        padding-left: 10px;
+        padding-right: 10px;
     }
 }
 

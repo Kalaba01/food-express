@@ -8,11 +8,11 @@
   "LandingPage": {
     "whoAreWe": {
       "header": "Ko smo mi?",
-      "content": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam."
+      "content": "Mi smo platforma za online naručivanje i dostavu hrane, specijalizovana za pružanje efikasnih i optimiziranih rješenja za naručivanje i dostavu. Naša platforma povezuje restorane, dostavljače i kupce, nudeći jednostavno i prijatno iskustvo za sve korisnike. Naša misija je unaprijediti iskustvo objedovanja, povezujući restorane i njihove kupce kroz inovativnu tehnologiju."
     },
     "cities": {
       "header": "U kojim gradovima poslujemo?",
-      "content": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam."
+      "content": "Trenutno vršimo dostavu na području Sarajeva, ali aktivno radimo na proširenju naše usluge na druge gradove. Ako imate prijedloge o tome u kojem gradu biste voljeli da počnemo dostavljati, slobodno nas kontaktirajte i podijelite svoje ideje. Vaše mišljenje nam je važno i pomaže nam da unaprijedimo našu uslugu."
     },
     "partners": {
       "header": "Naši partneri"
