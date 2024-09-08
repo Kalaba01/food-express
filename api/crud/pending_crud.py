@@ -1,9 +1,9 @@
-from datetime import datetime, timedelta
 import pytz
+from datetime import datetime, timedelta
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
 from sqlalchemy import func, DateTime
-from models.models import OrderStatus, Order, OrderItem, OrderQueue, Item, Restaurant, User, RestaurantCapacity
+from models.models import OrderStatus, Order, OrderItem, OrderQueue, Item, Restaurant, User, RestaurantCapacity, Notification
 from schemas.schemas import UpdateOrderStatusSchema, OrderQueueStatusEnum
 
 async def get_pending_orders_for_owner(db: Session, owner_id: int):
@@ -59,6 +59,8 @@ async def update_order_status(db: Session, order_id: int, status: str):
     db.commit()
     db.refresh(order)
 
+    restaurant = db.query(Restaurant).filter(Restaurant.id == order.restaurant_id).first()
+
     if status == OrderStatus.preparing.value:
         max_prep_time = max(
             db.query(Item.preparation_time)
@@ -75,21 +77,12 @@ async def update_order_status(db: Session, order_id: int, status: str):
 
         estimated_prep_time_minutes = int(max_prep_time * capacity_coefficient)
         
-        # Koristi lokalno vrijeme
         local_timezone = pytz.timezone("Europe/Sarajevo")
-        local_now = datetime.now(local_timezone)  # Trenutno lokalno vrijeme
+        local_now = datetime.now(local_timezone)
 
-        print("Vrijeme 1: ", local_now)
-        print("Vrijeme 2: ", timedelta(minutes=estimated_prep_time_minutes))
-        print("Ukupno: ", local_now + timedelta(minutes=estimated_prep_time_minutes))
-
-        # Dodaj minute pripreme
         estimated_prep_time = local_now + timedelta(minutes=estimated_prep_time_minutes)
 
-        # Ukloni informaciju o vremenskoj zoni za pohranu
         estimated_prep_time_no_zone = estimated_prep_time.replace(tzinfo=None)
-
-        print("Est prep bez vremenske zone: ", estimated_prep_time_no_zone)
 
         total_weight = db.query(
             func.sum(Item.weight * OrderItem.quantity)
@@ -108,4 +101,21 @@ async def update_order_status(db: Session, order_id: int, status: str):
         db.commit()
         db.refresh(new_queue_entry)
 
-    return {"message": "Order accepted"}
+        message = f"Your order from {restaurant.name} has been accepted and is being prepared."
+    
+    elif status == OrderStatus.cancelled.value:
+        message = f"Your order from {restaurant.name} has been declined."
+
+    local_timezone = pytz.timezone("Europe/Sarajevo")
+    local_now = datetime.now(local_timezone)
+
+    new_notification = Notification(
+        user_id=order.customer_id,
+        message=message,
+        read=False,
+        created_at=local_now.replace(tzinfo=None)
+    )
+    db.add(new_notification)
+    db.commit()
+
+    return {"message": "Order status updated"}

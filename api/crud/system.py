@@ -1,4 +1,5 @@
 import json
+import pytz
 from datetime import timedelta, datetime
 from sqlalchemy.orm import Session
 from sqlalchemy import func
@@ -17,6 +18,7 @@ from models.models import (
     ItemCategory,
     Chat,
     Conversation,
+    Notification
 )
 from utils.distance_utils import calculate_route_distance, calculate_travel_time
 from utils.change_utils import get_optimal_change, calculate_required_change
@@ -180,7 +182,18 @@ async def assign_orders_to_couriers(db: Session):
             order_queue.status = OrderQueueStatusEnum.assigned
             assigned_courier.status = CourierStatus.busy
 
-            # Kreiranje ili ažuriranje razgovora između kurira i kupca
+            local_timezone = pytz.timezone("Europe/Sarajevo")
+            local_now = datetime.now(local_timezone)
+
+            message = f"You have a new order to deliver from {order.restaurant.name}."
+            new_notification = Notification(
+                user_id=assigned_courier.user_id,
+                message=message,
+                read=False,
+                created_at=local_now.replace(tzinfo=None)
+            )
+            db.add(new_notification)
+
             conversation = db.query(Conversation).filter(
                 (Conversation.participant1_id == assigned_courier.user_id) &
                 (Conversation.participant2_id == order.customer_id)
@@ -194,7 +207,6 @@ async def assign_orders_to_couriers(db: Session):
                 db.add(conversation)
                 db.flush()
 
-            # Dodavanje poruke u chat
             message_content = "Dear customer, your order has been assigned to me, and I will be delivering it shortly. Thank you for your patience!"
             new_chat = Chat(
                 sender_id=assigned_courier.user_id,

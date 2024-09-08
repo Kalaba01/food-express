@@ -1,7 +1,9 @@
+import pytz
 from sqlalchemy.orm import Session
 from fastapi import HTTPException
+from datetime import datetime
 from geopy.geocoders import Nominatim
-from models.models import Order, OrderItem, Bank
+from models.models import Order, OrderItem, Bank, Notification, User, Restaurant
 from schemas.schemas import OrderCreate, OrderStatusEnum
 from utils.delivery_utils import is_in_delivery_zone
 from utils.card_utils import validate_card_payment
@@ -53,5 +55,20 @@ async def create_order(db: Session, order: OrderCreate):
         db.add(order_item)
 
     db.commit()
+
+    restaurant_owner = db.query(User).join(Restaurant).filter(Restaurant.id == order.restaurant_id).first()
+
+    local_timezone = pytz.timezone("Europe/Sarajevo")
+    local_now = datetime.now(local_timezone)
+
+    if restaurant_owner:
+        new_notification = Notification(
+            user_id=restaurant_owner.id,
+            message=f"New order has been placed for your restaurant {restaurant_owner.owned_restaurants[0].name}. Please confirm it.",
+            read=False,
+            created_at=local_now.replace(tzinfo=None)
+        )
+        db.add(new_notification)
+        db.commit()
 
     return new_order

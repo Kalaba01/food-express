@@ -3,13 +3,15 @@ from datetime import datetime
 from models.models import Order, OrderAssignment, Courier, Restaurant, OrderQueue, OrderStatus, OrderQueueStatusEnum, OrderAssignmentStatus, OrderAssignment
 
 async def get_customer_orders(user_id: int, db: Session):
-    # Dobavljanje narudžbi korisnika
-    orders = db.query(Order).filter(Order.customer_id == user_id).all()
+    orders = (
+        db.query(Order)
+        .filter(Order.customer_id == user_id, Order.status != OrderStatus.cancelled)
+        .all()
+    )
 
     order_details = []
 
     for order in orders:
-        # Pronalazak reda u order_queue tabeli i order_assignment tabeli
         order_queue_entry = (
             db.query(OrderQueue)
             .filter(OrderQueue.order_id == order.id)
@@ -21,9 +23,8 @@ async def get_customer_orders(user_id: int, db: Session):
             .first()
         )
         
-        # Ako postoji unosa u tabeli order_assignments, provjeravamo customer_finish
         if assignment and assignment.customer_finish:
-            continue  # Preskačemo narudžbu ako je customer_finish True
+            continue
 
         courier = (
             db.query(Courier).filter(Courier.id == assignment.courier_id).first()
@@ -37,7 +38,6 @@ async def get_customer_orders(user_id: int, db: Session):
         status_column = "Waiting"
         time_value = None
 
-        # Logika za status 'preparing' i 'delivering'
         if order.status == OrderStatus.preparing:
             if order_queue_entry and order_queue_entry.status == OrderQueueStatusEnum.pending:
                 status_column = "Preparing"

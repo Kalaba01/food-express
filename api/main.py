@@ -199,6 +199,10 @@ from crud.courier_statistic_crud import (
     c_get_average_rating,
 )
 from crud.top_restaurants_crud import get_top_restaurants
+from crud.notifications_crud import (
+    get_notifications,
+    mark_as_read
+)
 
 
 async def schedule_assign_orders_to_couriers():
@@ -353,6 +357,41 @@ async def websocket_courier_stats(websocket: WebSocket, user_id: int):
     finally:
         db.close()
 
+
+@app.websocket("/ws/notifications/{user_id}")
+async def websocket_notifications(websocket: WebSocket, user_id: int):
+    await websocket.accept()
+    db = SessionLocal()
+    try:
+        while True:
+            notifications_data = {
+                "notifications": [
+                    {
+                        "id": notification.id,
+                        "message": notification.message,
+                        "read": notification.read,
+                        "created_at": (
+                            notification.created_at.isoformat()
+                            if notification.created_at
+                            else None
+                        ),
+                    }
+                    for notification in get_notifications(db, user_id)
+                ]
+            }
+
+            try:
+                await websocket.send_json(notifications_data)
+            except WebSocketDisconnect:
+                print(f"WebSocket disconnected for user {user_id}")
+                break
+
+            await asyncio.sleep(5)
+
+    except Exception as e:
+        print(f"Error: {e}")
+    finally:
+        db.close()
 
 @app.post("/upload-image/")
 async def upload_image(
@@ -1049,3 +1088,8 @@ async def delivered_orders(
 @app.get("/api/top-restaurants")
 async def top_restaurants(db: Session = Depends(get_db)):
     return await get_top_restaurants(db)
+
+# Ruta za označavanje notifikacije kao pročitane
+@app.put("/notifications/{notification_id}/read")
+async def mark_notification_as_read(notification_id: int, db: Session = Depends(get_db)):
+    return await mark_as_read(db, notification_id)

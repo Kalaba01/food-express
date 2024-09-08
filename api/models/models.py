@@ -79,6 +79,7 @@ class User(Base):
     email_reports = relationship("EmailReport", back_populates="user")
     image = relationship("Image")
     password_reset_tokens = relationship("PasswordResetToken", back_populates="user")
+    notifications = relationship("Notification", back_populates="user")
 
 class Restaurant(Base):
     __tablename__ = "restaurants"
@@ -311,3 +312,13 @@ class Conversation(Base):
     participant2 = relationship("User", foreign_keys=[participant2_id], backref="conversations_participant2")
 
     messages = relationship("Chat", back_populates="conversation")
+
+class Notification(Base):
+    __tablename__ = "notifications"
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"))
+    message = Column(String, nullable=False)
+    read = Column(Boolean, default=False)
+    created_at = Column(DateTime, default=datetime.datetime.utcnow)
+
+    user = relationship("User", back_populates="notifications")

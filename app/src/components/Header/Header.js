@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { LoginRegister, Theme, Language, Logout, HamburgerMenu, Chat, Basket, Status } from "../index";
+import { LoginRegister, Theme, Language, Logout, HamburgerMenu, Chat, Basket, Status, Notification } from "../index";
 import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router-dom';
 import { BasketContext } from '../../BasketContext';
@@ -47,8 +47,11 @@ function Header({ darkMode, toggleDarkMode, openPopupModal, userType, showIcons 
           isLoggedIn ? (
             <>
               <Link to="/profile" className="profile-icon">
-                <FaUser size={24} />
+                <FaUser size={28} />
               </Link>
+              {currentUser.role ==="owner" && <Notification /> }
+              {currentUser.role ==="courier" && <Notification /> }
+              {currentUser.role ==="customer" && <Notification /> }
               {currentUser.role === 'courier' && <Status id={currentUser.id} />}
               {currentUser.role === 'customer' && isBasketVisible && <Basket items={basket} />}
               <Chat userType={currentUser} />
