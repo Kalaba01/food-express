@@ -198,6 +198,7 @@ from crud.courier_statistic_crud import (
     c_get_completed_orders,
     c_get_average_rating,
 )
+from crud.top_restaurants_crud import get_top_restaurants
 
 
 async def schedule_assign_orders_to_couriers():
@@ -303,8 +304,7 @@ async def websocket_stats(websocket: WebSocket):
 
 
 @app.websocket("/ws/owner-stats/{owner_id}")
-async def websocket_owner_stats(
-    websocket: WebSocket, owner_id: int):
+async def websocket_owner_stats(websocket: WebSocket, owner_id: int):
     db = SessionLocal()
     await websocket.accept()
     try:
@@ -1043,3 +1043,9 @@ async def delivered_orders(
 ):
     orders = await get_delivered_orders(db, user_id.id)
     return orders
+
+
+# Ruta za fetchanje top restorana
+@app.get("/api/top-restaurants")
+async def top_restaurants(db: Session = Depends(get_db)):
+    return await get_top_restaurants(db)

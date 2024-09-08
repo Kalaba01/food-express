@@ -1,5 +1,5 @@
 import React from "react";
-import { Header, SearchBar } from "../index";
+import { Header, SearchBar, TopRestaurants } from "../index";
 
 function Customer({ darkMode, toggleDarkMode }) {
   return (
@@ -12,6 +12,7 @@ function Customer({ darkMode, toggleDarkMode }) {
       <div className="customer-dashboard">
         <h1>Welcome to Food Express</h1>
         <SearchBar />
+        <TopRestaurants />
       </div>
     </div>
   );

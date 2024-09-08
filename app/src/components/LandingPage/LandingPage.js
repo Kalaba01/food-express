@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Header } from '../index';
+import { Header, TopRestaurants } from '../index';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { jwtDecode } from 'jwt-decode';
@@ -75,15 +75,7 @@ function LandingPage({ openPopupModal, darkMode, toggleDarkMode }) {
           </div>
         </section>
 
-        <section className="partners">
-          <h2>{t('LandingPage.partners.header')}</h2>
-          <div className="partner-logos">
-            <img src="https://placehold.co/600x600" alt="Partner 1" className="partner-logo" />
-            <img src="https://placehold.co/600x600" alt="Partner 2" className="partner-logo" />
-            <img src="https://placehold.co/600x600" alt="Partner 3" className="partner-logo" />
-            <img src="https://placehold.co/600x600" alt="Partner 4" className="partner-logo" />
-          </div>
-        </section>
+        <TopRestaurants openPopupModal={openPopupModal} />
 
         <section className="join-us">
           <h2>{t('LandingPage.joinUs.header')}</h2>
