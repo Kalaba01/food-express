@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Owner Report</title>
+</head>
+<body>
+    <h1>Daily Report for {{ owner_name }}</h1>
+    <p>Here is the summary for your restaurants:</p>
+    
+    {% for restaurant in restaurants %}
+        <h2>{{ restaurant.name }}</h2>
+        <p>Total Delivered Orders: {{ restaurant.delivered_orders }}</p>
+        <p>Total Cancelled Orders: {{ restaurant.cancelled_orders }}</p>
+        <p>Total Earnings: ${{ restaurant.total_earnings }}</p>
+    {% endfor %}
+    
+    <h3>Overall Summary</h3>
+    <p>Total Delivered Orders: {{ total_delivered_orders }}</p>
+    <p>Total Cancelled Orders: {{ total_cancelled_orders }}</p>
+    <p>Total Earnings: ${{ total_earnings }}</p>
+    
+    <p>Thank you for using our service!</p>
+</body>
+</html>

@@ -233,12 +233,6 @@ class ChatCreate(BaseModel):
     receiver_id: int
     message: str
 
-# Email Report schemas for managing email reports sent to users
-class EmailReportCreate(BaseModel):
-    user_id: int
-    report_type: str
-    report_content: str
-
 # Order Queue schemas for managing the queue of orders
 class OrderQueueCreate(BaseModel):
     order_id: int

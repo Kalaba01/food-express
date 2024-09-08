@@ -203,6 +203,8 @@ from crud.notifications_crud import (
     get_notifications,
     mark_as_read
 )
+from crud.owner_report_crud import owner_report
+from crud.courier_report_crud import courier_report
 
 
 async def schedule_assign_orders_to_couriers():
@@ -229,16 +231,31 @@ app = start_application()
 
 Base.metadata.create_all(bind=engine)
 
+async def schedule_owner_report():
+    db = SessionLocal()
+    try:
+        await owner_report(db)
+    finally:
+        db.close()
+async def schedule_courier_report():
+    db = SessionLocal()
+    try:
+        await courier_report(db)
+    finally:
+        db.close()
+
 # Dodavanje zadataka u APScheduler
 scheduler = BackgroundScheduler()
+scheduler.add_job(lambda: asyncio.run(schedule_owner_report()), CronTrigger(hour=0, minute=0))
+scheduler.add_job(lambda: asyncio.run(schedule_courier_report()), CronTrigger(hour=0, minute=1))
 scheduler.add_job(
-    lambda: asyncio.run(deny_requests_and_send_emails()), CronTrigger(hour=0, minute=0)
+    lambda: asyncio.run(deny_requests_and_send_emails()), CronTrigger(hour=0, minute=2)
 )
 scheduler.add_job(
-    lambda: asyncio.run(remind_pending_requests()), CronTrigger(hour=0, minute=1)
+    lambda: asyncio.run(remind_pending_requests()), CronTrigger(hour=0, minute=3)
 )
 scheduler.add_job(
-    lambda: asyncio.run(schedule_assign_orders_to_couriers()), 'interval', seconds=15
+    lambda: asyncio.run(schedule_assign_orders_to_couriers()), 'interval', minutes=1
 )
 scheduler.start()
 

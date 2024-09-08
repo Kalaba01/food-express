@@ -76,7 +76,6 @@ class User(Base):
     orders = relationship("Order", back_populates="customer")
     chat_sent = relationship("Chat", foreign_keys="[Chat.sender_id]", back_populates="sender")
     chat_received = relationship("Chat", foreign_keys="[Chat.receiver_id]", back_populates="receiver")
-    email_reports = relationship("EmailReport", back_populates="user")
     image = relationship("Image")
     password_reset_tokens = relationship("PasswordResetToken", back_populates="user")
     notifications = relationship("Notification", back_populates="user")
@@ -240,16 +239,6 @@ class Chat(Base):
     sender = relationship("User", foreign_keys=[sender_id], back_populates="chat_sent")
     receiver = relationship("User", foreign_keys=[receiver_id], back_populates="chat_received")
     conversation = relationship("Conversation", back_populates="messages")
-
-class EmailReport(Base):
-    __tablename__ = "email_reports"
-    id = Column(Integer, primary_key=True, index=True)
-    user_id = Column(Integer, ForeignKey("users.id"))
-    report_type = Column(String, nullable=False)
-    created_at = Column(DateTime, default=datetime.datetime.utcnow)
-    report_content = Column(Text, nullable=False)
-
-    user = relationship("User", back_populates="email_reports")
 
 class OrderQueue(Base):
     __tablename__ = "order_queue"

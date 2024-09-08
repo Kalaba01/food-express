@@ -99,9 +99,6 @@ async def delete_user(db: Session, user_id: int):
         Rating.order_id.in_([order.id for order in user.orders])
     ).delete()
 
-    # Brisanje email izvještaja
-    db.query(EmailReport).filter(EmailReport.user_id == user_id).delete()
-
     # Brisanje tokena za reset lozinke
     db.query(PasswordResetToken).filter(PasswordResetToken.user_id == user_id).delete()
 
