@@ -192,6 +192,12 @@ from crud.owner_statistic_crud import (
     o_get_earnings_owner,
     o_get_ratings_owner,
 )
+from crud.courier_statistic_crud import (
+    c_get_active_orders,
+    c_get_restaurant_count,
+    c_get_completed_orders,
+    c_get_average_rating,
+)
 
 
 async def schedule_assign_orders_to_couriers():
@@ -297,7 +303,9 @@ async def websocket_stats(websocket: WebSocket):
 
 
 @app.websocket("/ws/owner-stats/{owner_id}")
-async def websocket_owner_stats(websocket: WebSocket, owner_id: int, db: Session = Depends(get_db)):
+async def websocket_owner_stats(
+    websocket: WebSocket, owner_id: int):
+    db = SessionLocal()
     await websocket.accept()
     try:
         while True:
@@ -305,7 +313,7 @@ async def websocket_owner_stats(websocket: WebSocket, owner_id: int, db: Session
                 "pendingOrders": o_get_pending_orders_owner(db, owner_id),
                 "preparingOrders": o_get_preparing_orders_owner(db, owner_id),
                 "onlineCouriers": o_get_online_couriers_owner(db, owner_id),
-                 "busyCouriers": o_get_busy_couriers_owner(db, owner_id),
+                "busyCouriers": o_get_busy_couriers_owner(db, owner_id),
                 "offlineCouriers": o_get_offline_couriers_owner(db, owner_id),
                 "earnings": o_get_earnings_owner(db, owner_id),
                 "ratings": o_get_ratings_owner(db, owner_id),
@@ -320,6 +328,31 @@ async def websocket_owner_stats(websocket: WebSocket, owner_id: int, db: Session
         print(f"Error: {e}")
     finally:
         db.close()
+
+
+@app.websocket("/ws/courier-stats/{user_id}")
+async def websocket_courier_stats(websocket: WebSocket, user_id: int):
+    await websocket.accept()
+    db = SessionLocal()
+    try:
+        while True:
+            stats_data = {
+                "activeOrders": c_get_active_orders(db, user_id),
+                "restaurantCount": c_get_restaurant_count(db, user_id),
+                "completedOrders": c_get_completed_orders(db, user_id),
+                "averageRating": c_get_average_rating(db, user_id),
+            }
+            try:
+                await websocket.send_json(stats_data)
+            except WebSocketDisconnect:
+                print("WebSocket disconnected")
+                break
+            await asyncio.sleep(5)
+    except Exception as e:
+        print(f"Error: {e}")
+    finally:
+        db.close()
+
 
 @app.post("/upload-image/")
 async def upload_image(

@@ -37,7 +37,16 @@ function OwnerStatistic() {
         setRatings(data.ratings || 0);
       };
 
-      return () => ws.close();
+      const pingInterval = setInterval(() => {
+        if (ws.readyState === WebSocket.OPEN) {
+          ws.send(JSON.stringify({ type: "ping" }));
+        }
+      }, 30000);
+
+      return () => {
+        clearInterval(pingInterval);
+        ws.close();
+      };
     } catch (error) {
       console.error("Invalid JWT token", error);
     }
