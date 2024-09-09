@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { jwtDecode } from "jwt-decode";
 import ApexCharts from 'react-apexcharts';
-import { jwtDecode } from 'jwt-decode';
 import './CourierStatistic.css';
 
 function CourierStatistic() {
+  const { t } = useTranslation('global');
   const [activeOrders, setActiveOrders] = useState(0);
   const [restaurantCount, setRestaurantCount] = useState(0);
   const [completedOrders, setCompletedOrders] = useState([]);
@@ -57,14 +59,14 @@ function CourierStatistic() {
   const lineOptions = {
     chart: { type: 'line', height: 350, toolbar: { show: false }},
     stroke: { curve: 'smooth' },
-    xaxis: { categories: ['Completed Orders'] },
+    xaxis: { categories: [t('CourierStatistic.completedOrders')] },
     tooltip: { theme: 'dark' }
   };
 
   const barOptions = {
     chart: { type: 'bar', toolbar: { show: false }},
     plotOptions: { bar: { horizontal: false }},
-    xaxis: { categories: ['Rating'] },
+    xaxis: { categories: [t('CourierStatistic.averageRating')] },
     colors: ['#f7b84b'],
     tooltip: { theme: 'dark' },
     yaxis: {
@@ -76,32 +78,32 @@ function CourierStatistic() {
     },
   };
 
-  const lineSeries = [{ name: 'Completed Orders', data: [completedOrders] }];
-  const barSeries = [{ name: 'Average Rating', data: [averageRating] }];
+  const lineSeries = [{ name: t('CourierStatistic.completedOrders'), data: [completedOrders] }];
+  const barSeries = [{ name: t('CourierStatistic.averageRating'), data: [averageRating] }];
 
   return (
     <div className="courier-statistics-container">
       <div className="summary-row">
         <div className="summary-card">
-          <h3>Active Orders</h3>
+          <h3>{t('CourierStatistic.activeOrders')}</h3>
           <p>{activeOrders}</p>
         </div>
         <div className="summary-card">
-          <h3>Restaurant Count</h3>
+          <h3>{t('CourierStatistic.restaurantCount')}</h3>
           <p>{restaurantCount}</p>
         </div>
       </div>
 
       <div className="dashboard-row">
         <div className="dashboard-card">
-          <h3>Completed Orders Over Time</h3>
+          <h3>{t('CourierStatistic.completedOrdersOverTime')}</h3>
           <ApexCharts options={lineOptions} series={lineSeries} type="line" height={350} />
         </div>
       </div>
 
       <div className="dashboard-row">
         <div className="dashboard-card">
-          <h3>Average Rating</h3>
+          <h3>{t('CourierStatistic.averageRatingTitle')}</h3>
           <ApexCharts options={barOptions} series={barSeries} type="bar" height={350} />
         </div>
       </div>

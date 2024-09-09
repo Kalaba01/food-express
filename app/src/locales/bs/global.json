@@ -593,5 +593,14 @@
     "restaurantRatings": "Ocjene restorana",
     "earnings": "Zarada",
     "rating": "Ocjene"
+  },
+  "CourierStatistic": {
+    "activeOrders": "Aktivne narudžbe",
+    "restaurantCount": "Broj restorana",
+    "completedOrders": "Završene narudžbe",
+    "completedOrdersOverTime": "Završene narudžbe tokom vremena",
+    "averageRating": "Prosječna ocjena",
+    "averageRatingTitle": "Prosječna ocjena",
+    "rating": "Ocjena"
   }
 }

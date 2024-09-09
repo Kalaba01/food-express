@@ -593,5 +593,14 @@
     "restaurantRatings": "Restaurant Ratings",
     "earnings": "Earnings",
     "rating": "Ratings"
+  },
+  "CourierStatistic": {
+    "activeOrders": "Active Orders",
+    "restaurantCount": "Restaurant Count",
+    "completedOrders": "Completed Orders",
+    "completedOrdersOverTime": "Completed Orders Over Time",
+    "averageRating": "Average Rating",
+    "averageRatingTitle": "Average Rating",
+    "rating": "Rating"
   }
 }
