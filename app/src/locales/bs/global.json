@@ -608,5 +608,12 @@
     "order": "Naruči",
     "fetchError": "Greška prilikom dohvaćanja najboljih restorana",
     "invalidTokenError": "Nevažeći token"
+  },
+  "Notification": {
+    "tokenNotFound": "JWT token nije pronađen",
+    "invalidToken": "Nevažeći JWT token",
+    "connectionEstablished": "WebSocket veza uspostavljena",
+    "markAsReadError": "Greška prilikom označavanja obavijesti kao pročitane",
+    "noNotifications": "Nema obavijesti"
   }
 }

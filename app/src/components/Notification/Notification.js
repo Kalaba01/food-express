@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { FaBell } from "react-icons/fa";
+import { useTranslation } from "react-i18next";
 import { jwtDecode } from "jwt-decode";
 import axios from "axios";
 import moment from "moment";
 import "./Notification.css";
 
 function Notification() {
+  const { t } = useTranslation('global');
   const [notifications, setNotifications] = useState([]);
   const [hasUnread, setHasUnread] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
@@ -15,7 +17,7 @@ function Notification() {
     const token = localStorage.getItem("token");
 
     if (!token) {
-      console.error("JWT token not found");
+      console.error(t('Notification.tokenNotFound'));
       return;
     }
 
@@ -24,14 +26,14 @@ function Notification() {
       const decodedToken = jwtDecode(token);
       userId = decodedToken.id;
     } catch (error) {
-      console.error("Invalid JWT token", error);
+      console.error(t('Notification.invalidToken'), error);
       return;
     }
 
     const ws = new WebSocket(`ws://localhost:8000/ws/notifications/${userId}`);
 
     ws.onopen = () => {
-      console.log("WebSocket connection established");
+      console.log(t('Notification.connectionEstablished'));
 
       const pingInterval = setInterval(() => {
         if (ws.readyState === WebSocket.OPEN) {
@@ -57,7 +59,7 @@ function Notification() {
     return () => {
       ws.close();
     };
-  }, []);
+  }, [t]);
 
   const markAsRead = async (id) => {
     const notification = notifications.find((n) => n.id === id);
@@ -81,7 +83,7 @@ function Notification() {
         return updatedNotifications;
       });
     } catch (error) {
-      console.error("Error marking notification as read:", error);
+      console.error(t('Notification.markAsReadError'), error);
     }
   };  
 
@@ -119,7 +121,7 @@ function Notification() {
               </div>
             ))
           ) : (
-            <p className="no-notifications">No notifications</p>
+            <p className="no-notifications">{t('Notification.noNotifications')}</p>
           )}
         </div>
       )}
