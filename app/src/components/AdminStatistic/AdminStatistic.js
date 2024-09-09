@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import ApexCharts from "react-apexcharts";
 import "./AdminStatistic.css";
 
 function AdminStatistic() {
+  const { t } = useTranslation("global");
   const [pendingOrders, setPendingOrders] = useState(0);
   const [preparingOrders, setPreparingOrders] = useState(0);
   const [inDeliveryOrders, setInDeliveryOrders] = useState(0);
@@ -46,7 +48,7 @@ function AdminStatistic() {
       type: "donut",
       width: 380,
     },
-    labels: ["Online Couriers", "Busy Couriers", "Offline Couriers"],
+    labels: [t("AdminStatistic.onlineCouriers"), t("AdminStatistic.busyCouriers"), t("AdminStatistic.offlineCouriers")],
     colors: ["#34c38f", "#556ee6", "#f46a6a"],
     responsive: [
       {
@@ -76,7 +78,7 @@ function AdminStatistic() {
       },
     },
     xaxis: {
-      categories: ["Restaurants"],
+      categories: [t("AdminStatistic.restaurants")],
     },
     yaxis: {
       labels: {
@@ -90,9 +92,9 @@ function AdminStatistic() {
   };
 
   const stackedBarSeries = [
-    { name: "Open", data: [openRestaurants] },
-    { name: "Closing Soon", data: [closingSoonRestaurants] },
-    { name: "Closed", data: [closedRestaurants] },
+    { name: t("AdminStatistic.open"), data: [openRestaurants] },
+    { name: t("AdminStatistic.closingSoon"), data: [closingSoonRestaurants] },
+    { name: t("AdminStatistic.closed"), data: [closedRestaurants] },
   ];
 
   const donutSeries = [
@@ -105,22 +107,22 @@ function AdminStatistic() {
     <div className="dashboard-container">
       <div className="summary-row">
         <div className="summary-card">
-          <h3>Pending Orders</h3>
+          <h3>{t("AdminStatistic.pendingOrders")}</h3>
           <p>{pendingOrders}</p>
         </div>
         <div className="summary-card">
-          <h3>Preparing Orders</h3>
+          <h3>{t("AdminStatistic.preparingOrders")}</h3>
           <p>{preparingOrders}</p>
         </div>
         <div className="summary-card">
-          <h3>In Delivery</h3>
+          <h3>{t("AdminStatistic.inDelivery")}</h3>
           <p>{inDeliveryOrders}</p>
         </div>
       </div>
 
       <div className="dashboard-row">
         <div className="dashboard-card">
-          <h3>Courier Status</h3>
+          <h3>{t("AdminStatistic.courierStatus")}</h3>
           <ApexCharts
             options={donutOptions}
             series={donutSeries}
@@ -132,7 +134,7 @@ function AdminStatistic() {
 
       <div className="dashboard-row">
         <div className="dashboard-card">
-          <h3>Restaurant Status</h3>
+          <h3>{t("AdminStatistic.restaurantStatus")}</h3>
           <ApexCharts
             options={stackedBarOptions}
             series={stackedBarSeries}

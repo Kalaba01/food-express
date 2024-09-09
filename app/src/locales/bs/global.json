@@ -567,5 +567,19 @@
     "noOrders": "Nema isporučenih narudžbi.",
     "notAuthenticated": "Niste prijavljeni. Molimo prijavite se.",
     "fetchError": "Greška prilikom preuzimanja isporučenih narudžbi."
+  },
+  "AdminStatistic": {
+    "pendingOrders": "Narudžbe na čekanju",
+    "preparingOrders": "Narudžbe u pripremi",
+    "inDelivery": "U dostavi",
+    "courierStatus": "Status dostavljača",
+    "restaurantStatus": "Status restorana",
+    "onlineCouriers": "Dostavljači online",
+    "busyCouriers": "Zauzeti dostavljači",
+    "offlineCouriers": "Dostavljači offline",
+    "restaurants": "Restorani",
+    "open": "Otvoreni",
+    "closingSoon": "Zatvaraju se uskoro",
+    "closed": "Zatvoreni"
   }
 }

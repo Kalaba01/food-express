@@ -567,5 +567,19 @@
     "noOrders": "No delivered orders found.",
     "notAuthenticated": "You are not authenticated. Please log in.",
     "fetchError": "Error fetching delivered orders."
+  },
+  "AdminStatistic": {
+    "pendingOrders": "Pending Orders",
+    "preparingOrders": "Preparing Orders",
+    "inDelivery": "In Delivery",
+    "courierStatus": "Courier Status",
+    "restaurantStatus": "Restaurant Status",
+    "onlineCouriers": "Online Couriers",
+    "busyCouriers": "Busy Couriers",
+    "offlineCouriers": "Offline Couriers",
+    "restaurants": "Restaurants",
+    "open": "Open",
+    "closingSoon": "Closing Soon",
+    "closed": "Closed"
   }
 }
