@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 from models.models import Order, OrderAssignment, OrderAssignmentStatus, Courier, Restaurant, OrderStatus, CourierStatus, OperatingHours, OrderQueue, OrderQueueStatusEnum
-from sqlalchemy import func, and_
+from sqlalchemy import func, and_, or_
 from datetime import datetime, timedelta
 
 def a_get_pending_orders(db: Session):
@@ -54,10 +54,23 @@ def a_get_closing_soon_restaurants(db: Session):
 def a_get_closed_restaurants(db: Session):
     now = datetime.now().time()
     today = datetime.now().strftime("%A")
+    tomorrow = (datetime.now() + timedelta(days=1)).strftime("%A")
 
-    return db.query(func.count(Restaurant.id)).join(Restaurant.operating_hours).filter(
-        and_(
-            OperatingHours.day_of_week == today,
-            OperatingHours.closing_time <= now
+    closed_restaurants = db.query(func.count(Restaurant.id)).join(Restaurant.operating_hours).filter(
+        or_(
+            and_(
+                OperatingHours.day_of_week == today,
+                OperatingHours.opening_time > now
+            ),
+            and_(
+                OperatingHours.day_of_week == today,
+                OperatingHours.closing_time <= now
+            ),
+            and_(
+                OperatingHours.day_of_week == tomorrow,
+                OperatingHours.closing_time <= now
+            )
         )
     ).scalar()
+
+    return closed_restaurants

@@ -1,3 +1,4 @@
+from fastapi import HTTPException
 from sqlalchemy.orm import Session
 from models.models import Request
 from schemas.schemas import RequestCreate, RequestStatusUpdate

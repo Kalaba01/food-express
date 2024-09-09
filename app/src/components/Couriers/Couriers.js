@@ -5,7 +5,7 @@ import {
   ConfirmDelete,
   NotificationPopup,
   Map,
-  Loading
+  Loading,
 } from "../index";
 import axios from "axios";
 import { useTranslation } from "react-i18next";
@@ -137,6 +137,7 @@ function Couriers({ darkMode, toggleDarkMode }) {
         type: "success",
         isOpen: true,
       });
+      fetchCouriers();
       setIsCreatePopupOpen(false);
     } catch (error) {
       if (error.response && error.response.status === 400) {
@@ -289,7 +290,7 @@ function Couriers({ darkMode, toggleDarkMode }) {
     );
   }
 
-  if (!couriers || couriers.length === 0) {
+  if (!couriers) {
     return (
       <div>
         <Header

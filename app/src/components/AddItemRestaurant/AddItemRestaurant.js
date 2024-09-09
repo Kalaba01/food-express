@@ -22,8 +22,13 @@ function AddItemRestaurant({
               {t("Restaurant.itemName")}
               <input
                 type="text"
-                value={currentItem ? currentItem.name : ""}
-                onChange={(e) => setCurrentItem({ name: e.target.value })}
+                value={currentItem?.name || ""}
+                onChange={(e) =>
+                  setCurrentItem({
+                    ...currentItem,
+                    name: e.target.value,
+                  })
+                }
                 required
               />
             </label>
@@ -31,7 +36,7 @@ function AddItemRestaurant({
               {t("Restaurant.itemDescription")}
               <input
                 type="text"
-                value={currentItem ? currentItem.description : ""}
+                value={currentItem?.description || ""}
                 onChange={(e) =>
                   setCurrentItem({
                     ...currentItem,
@@ -48,7 +53,7 @@ function AddItemRestaurant({
               <input
                 type="number"
                 step="0.01"
-                value={currentItem ? currentItem.price : ""}
+                value={currentItem?.price || ""}
                 onChange={(e) =>
                   setCurrentItem({
                     ...currentItem,
@@ -62,7 +67,7 @@ function AddItemRestaurant({
               {t("Restaurant.itemWeight")}
               <input
                 type="number"
-                value={currentItem ? currentItem.weight : ""}
+                value={currentItem?.weight || ""}
                 onChange={(e) =>
                   setCurrentItem({
                     ...currentItem,
@@ -78,7 +83,7 @@ function AddItemRestaurant({
               {t("Restaurant.itemPrepTime")}
               <input
                 type="number"
-                value={currentItem ? currentItem.preparation_time : ""}
+                value={currentItem?.preparation_time || ""}
                 onChange={(e) =>
                   setCurrentItem({
                     ...currentItem,
@@ -91,7 +96,7 @@ function AddItemRestaurant({
             <label>
               {t("Restaurant.menuCategory")}
               <select
-                value={currentItem ? currentItem.menuCategory : ""}
+                value={currentItem?.menuCategory || ""}
                 onChange={(e) =>
                   setCurrentItem({
                     ...currentItem,
@@ -113,7 +118,7 @@ function AddItemRestaurant({
             <label>
               {t("Restaurant.category")}
               <select
-                value={currentItem ? currentItem.category : ""}
+                value={currentItem?.category || ""}
                 onChange={(e) =>
                   setCurrentItem({
                     ...currentItem,

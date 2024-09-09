@@ -1,3 +1,4 @@
+from fastapi import HTTPException
 from sqlalchemy.orm import Session
 from models.models import Courier, User, Restaurant
 from schemas.schemas import CourierCreate, CourierUpdate
@@ -8,8 +9,7 @@ async def search_restaurants(db: Session, name: str):
 
 async def search_couriers(db: Session, username: str):
     users = db.query(User).outerjoin(Courier, User.id == Courier.user_id).filter(
-        # Courier.user_id == None,
-        User.role == 'courier',  # Filtriraj samo korisnike koji su kuriri
+        User.role == 'courier',
         User.username.ilike(f"%{username}%")
     ).all()
     return [{"id": user.id, "username": user.username} for user in users]
@@ -38,21 +38,21 @@ async def get_all_couriers(db: Session):
 
     return couriers_with_details
 
-# Funkcija za kreiranje novog kurira
-from fastapi import HTTPException
-
 async def create_courier(db: Session, courier: CourierCreate):
-    # Provera da li kurir već radi za neki restoran
-    existing_courier = db.query(Courier).filter(Courier.user_id == courier.user_id).first()
+    existing_courier = db.query(Courier).filter(
+        Courier.user_id == courier.user_id,
+        Courier.restaurant_id == courier.restaurant_id
+    ).first()
+    
     if existing_courier:
-        raise HTTPException(status_code=400, detail="Courier is already assigned to a restaurant.")
+        raise HTTPException(status_code=400, detail="Courier is already assigned to this restaurant.")
     
     new_courier = Courier(
         user_id=courier.user_id,
         vehicle_type=courier.vehicle_type,
         halal_mode=courier.halal_mode,
         wallet_amount=0,
-        wallet_details=None,
+        wallet_details="{}",
         restaurant_id=courier.restaurant_id,
     )
     db.add(new_courier)

@@ -4,7 +4,7 @@ import { ReactTyped } from "react-typed";
 
 function Courier({ darkMode, toggleDarkMode }) {
   return (
-    <div>Courier Dashboard
+    <div>
       <Header darkMode={darkMode} toggleDarkMode={toggleDarkMode} userType="courier" />
       <h2>
       <ReactTyped 

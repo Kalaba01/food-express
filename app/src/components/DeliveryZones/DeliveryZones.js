@@ -271,8 +271,12 @@ function DeliveryZones({ darkMode, toggleDarkMode }) {
                 required
               />
               <MapContainer
-                style={{ height: "400px", width: "100%" }}
-                center={[editZone.point1_latitude, editZone.point1_longitude]}
+                style={{ height: "400px", width: "350px" }}
+                center={
+                  editZone && editZone.point1_latitude && editZone.point1_longitude
+                    ? [editZone.point1_latitude, editZone.point1_longitude]
+                    : [43.856746, 18.412669] // Dodajte default vrednosti da izbegnete grešku
+                }
                 zoom={15}
                 whenCreated={(map) => {
                   if (editZone) {
@@ -327,7 +331,9 @@ function DeliveryZones({ darkMode, toggleDarkMode }) {
             <Map
               bounds={[
                 [editZone.point1_latitude, editZone.point1_longitude],
+                [editZone.point2_latitude, editZone.point2_longitude],
                 [editZone.point3_latitude, editZone.point3_longitude],
+                [editZone.point4_latitude, editZone.point4_longitude]
               ]}
             />
           </div>

@@ -519,6 +519,17 @@ function Restaurant({ darkMode, toggleDarkMode }) {
 
       closeAddItemPopup();
 
+      setCurrentItem({
+        name: "",
+        description: "",
+        price: "",
+        weight: "",
+        preparation_time: "",
+        menuCategory: "",
+        category: "",
+        images: [],
+      });
+
       setNotification({
         message: t("Restaurant.itemAdded"),
         type: "success",

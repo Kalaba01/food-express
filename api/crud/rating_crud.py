@@ -1,6 +1,6 @@
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
-from models.models import Rating, Order, OrderAssignment
+from models.models import Rating, Order, OrderAssignment, Restaurant
 from schemas.schemas import RatingCreate
 
 async def submit_rating(rating_data: RatingCreate, db: Session):
@@ -16,6 +16,12 @@ async def submit_rating(rating_data: RatingCreate, db: Session):
         courier_rating=rating_data.courier_rating,
         comments=rating_data.comments,
     )
+
+    restaurant = db.query(Restaurant).filter(Restaurant.id == order.restaurant_id).first()
+    
+    if restaurant:
+        restaurant.rating_count += 1
+        restaurant.total_rating += rating_data.restaurant_rating
 
     db.add(new_rating)
 

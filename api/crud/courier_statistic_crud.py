@@ -25,8 +25,8 @@ def c_get_restaurant_count(db: Session, user_id: int):
     if not courier_id:
         return 0
     
-    return db.query(func.count(Courier.restaurant_id))\
-        .filter(Courier.id == courier_id).distinct().scalar()
+    return db.query(func.count(func.distinct(Courier.restaurant_id)))\
+        .filter(Courier.user_id == user_id).scalar()
 
 def c_get_completed_orders(db: Session, user_id: int):
     courier_id = get_courier_id(db, user_id)
