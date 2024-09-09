@@ -581,5 +581,17 @@
     "open": "Otvoreni",
     "closingSoon": "Zatvaraju se uskoro",
     "closed": "Zatvoreni"
+  },
+  "OwnerStatistic": {
+    "pendingOrders": "Narudžbe na čekanju",
+    "preparingOrders": "Narudžbe u pripremi",
+    "courierStatus": "Status kurira",
+    "onlineCouriers": "Kuriri online",
+    "busyCouriers": "Zauzeti kuriri",
+    "offlineCouriers": "Kuriri offline",
+    "earningsOverTime": "Zarada tokom vremena",
+    "restaurantRatings": "Ocjene restorana",
+    "earnings": "Zarada",
+    "rating": "Ocjene"
   }
 }

@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { jwtDecode } from "jwt-decode";
 import ApexCharts from 'react-apexcharts';
-import { jwtDecode } from 'jwt-decode';
 import './OwnerStatistic.css';
 
 function OwnerStatistic() {
+  const { t } = useTranslation('global');
   const [pendingOrders, setPendingOrders] = useState(0);
   const [preparingOrders, setPreparingOrders] = useState(0);
   const [onlineCouriers, setOnlineCouriers] = useState(0);
@@ -54,7 +56,7 @@ function OwnerStatistic() {
 
   const pieOptions = {
     chart: { type: 'pie', width: 380 },
-    labels: ['Online Couriers', 'Busy Couriers', 'Offline Couriers'],
+    labels: [t('OwnerStatistic.onlineCouriers'), t('OwnerStatistic.busyCouriers'), t('OwnerStatistic.offlineCouriers')],
     colors: ['#34c38f', '#f7b84b', '#f46a6a'],
     responsive: [{ breakpoint: 480, options: { chart: { width: 200 }, legend: { position: 'bottom' }}}],
     tooltip: { theme: 'dark' }
@@ -63,14 +65,14 @@ function OwnerStatistic() {
   const lineOptions = {
     chart: { type: 'line', height: 350, toolbar: { show: false }},
     stroke: { curve: 'smooth' },
-    xaxis: { categories: ['Earnings'] },
+    xaxis: { categories: [t('OwnerStatistic.earnings')] },
     tooltip: { theme: 'dark' }
   };
 
   const barOptions = {
     chart: { type: 'bar', toolbar: { show: false } },
     plotOptions: { bar: { horizontal: false } },
-    xaxis: { categories: ['Rating'] },
+    xaxis: { categories: [t('OwnerStatistic.rating')] },
     yaxis: {
       labels: {
         formatter: function (value) {
@@ -83,39 +85,39 @@ function OwnerStatistic() {
   };  
 
   const pieSeries = [onlineCouriers, busyCouriers, offlineCouriers];
-  const lineSeries = [{ name: 'Earnings', data: [earnings] }];
-  const barSeries = [{ name: 'Ratings', data: [ratings] }];
+  const lineSeries = [{ name: t('OwnerStatistic.earnings'), data: [earnings] }];
+  const barSeries = [{ name: t('OwnerStatistic.rating'), data: [ratings] }];
 
   return (
     <div className="owner-statistics-container">
       <div className="summary-row">
         <div className="summary-card">
-          <h3>Pending Orders</h3>
+          <h3>{t('OwnerStatistic.pendingOrders')}</h3>
           <p>{pendingOrders}</p>
         </div>
         <div className="summary-card">
-          <h3>Preparing Orders</h3>
+          <h3>{t('OwnerStatistic.preparingOrders')}</h3>
           <p>{preparingOrders}</p>
         </div>
       </div>
 
       <div className="dashboard-row">
         <div className="dashboard-card">
-          <h3>Courier Status</h3>
+          <h3>{t('OwnerStatistic.courierStatus')}</h3>
           <ApexCharts options={pieOptions} series={pieSeries} type="pie" width={380} />
         </div>
       </div>
 
       <div className="dashboard-row">
         <div className="dashboard-card">
-          <h3>Earnings Over Time</h3>
+          <h3>{t('OwnerStatistic.earningsOverTime')}</h3>
           <ApexCharts options={lineOptions} series={lineSeries} type="line" height={350} />
         </div>
       </div>
 
       <div className="dashboard-row">
         <div className="dashboard-card">
-          <h3>Restaurant Ratings</h3>
+          <h3>{t('OwnerStatistic.restaurantRatings')}</h3>
           <ApexCharts options={barOptions} series={barSeries} type="bar" height={350} />
         </div>
       </div>

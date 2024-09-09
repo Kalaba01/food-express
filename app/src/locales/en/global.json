@@ -581,5 +581,17 @@
     "open": "Open",
     "closingSoon": "Closing Soon",
     "closed": "Closed"
+  },
+  "OwnerStatistic": {
+    "pendingOrders": "Pending Orders",
+    "preparingOrders": "Preparing Orders",
+    "courierStatus": "Courier Status",
+    "onlineCouriers": "Online Couriers",
+    "busyCouriers": "Busy Couriers",
+    "offlineCouriers": "Offline Couriers",
+    "earningsOverTime": "Earnings Over Time",
+    "restaurantRatings": "Restaurant Ratings",
+    "earnings": "Earnings",
+    "rating": "Ratings"
   }
 }
