@@ -602,5 +602,11 @@
     "averageRating": "Prosječna ocjena",
     "averageRatingTitle": "Prosječna ocjena",
     "rating": "Ocjena"
+  },
+  "TopRestaurants": {
+    "title": "Najbolji restorani",
+    "order": "Naruči",
+    "fetchError": "Greška prilikom dohvaćanja najboljih restorana",
+    "invalidTokenError": "Nevažeći token"
   }
 }

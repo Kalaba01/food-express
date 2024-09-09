@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Loading } from "../index";
+import { useTranslation } from 'react-i18next';
 import { jwtDecode } from 'jwt-decode';
 import axios from 'axios';
 import './TopRestaurants.css';
 
 function TopRestaurants({ openPopupModal }) {
+  const { t } = useTranslation('global');
   const [restaurants, setRestaurants] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
@@ -17,13 +19,13 @@ function TopRestaurants({ openPopupModal }) {
         setRestaurants(response.data);
         setLoading(false);
       } catch (error) {
-        console.error('Error fetching top restaurants:', error);
+        console.error(t('TopRestaurants.fetchError'), error);
         setLoading(false);
       }
     };
 
     fetchTopRestaurants();
-  }, []);
+  }, [t]);
 
   const handleOrderClick = (restaurantName) => {
     const token = localStorage.getItem('token');
@@ -41,7 +43,7 @@ function TopRestaurants({ openPopupModal }) {
           openPopupModal('login');
         }
       } catch (error) {
-        console.error('Invalid token', error);
+        console.error(t('TopRestaurants.invalidTokenError'), error);
         openPopupModal('login');
       }
     }
@@ -57,13 +59,13 @@ function TopRestaurants({ openPopupModal }) {
     container.scrollLeft += 305;
   };
 
-  if(loading){
-    return <Loading />
+  if (loading) {
+    return <Loading />;
   }
 
   return (
     <div className="top-restaurants">
-      <h2>Top Restaurants</h2>
+      <h2>{t('TopRestaurants.title')}</h2>
       <div className="scroll-buttons">
         <button className="scroll-btn" onClick={scrollLeft}>&lt;</button>
         <div className="restaurant-cards-container">
@@ -71,7 +73,9 @@ function TopRestaurants({ openPopupModal }) {
             <div key={restaurant.id} className="restaurant-card">
               <h3>{restaurant.name}</h3>
               <img src={restaurant.image} alt={restaurant.name} />
-              <button className="order-btn" onClick={() => handleOrderClick(restaurant.name)}>Order</button>
+              <button className="order-btn" onClick={() => handleOrderClick(restaurant.name)}>
+                {t('TopRestaurants.order')}
+              </button>
             </div>
           ))}
         </div>

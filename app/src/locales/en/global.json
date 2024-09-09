@@ -602,5 +602,11 @@
     "averageRating": "Average Rating",
     "averageRatingTitle": "Average Rating",
     "rating": "Rating"
+  },
+  "TopRestaurants": {
+    "title": "Top Restaurants",
+    "order": "Order",
+    "fetchError": "Error fetching top restaurants",
+    "invalidTokenError": "Invalid token"
   }
 }
