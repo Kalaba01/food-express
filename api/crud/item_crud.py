@@ -74,9 +74,16 @@ async def delete_item(db: Session, item_id: int):
     db_item = db.query(Item).filter(Item.id == item_id).first()
     if not db_item:
         raise HTTPException(status_code=404, detail="Item not found")
+
+    images_to_delete = db.query(Image).filter(Image.item_id == item_id).all()
+
+    for image in images_to_delete:
+        db.delete(image)
+
     db.delete(db_item)
     db.commit()
-    return {"message": "Item deleted successfully"}
+    
+    return {"message": "Item and associated images deleted successfully"}
 
 
 async def add_image_to_item(db: Session, item_id: int, file: UploadFile):

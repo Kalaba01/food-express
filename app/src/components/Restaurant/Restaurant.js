@@ -612,7 +612,7 @@ function Restaurant({ darkMode, toggleDarkMode }) {
     try {
       if (deleteType === "item" && itemToDelete) {
         await axios.delete(
-          `http://localhost:8000/restaurants/${id}/items/${itemToDelete.id}`,
+          `http://localhost:8000/items/${itemToDelete.id}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,

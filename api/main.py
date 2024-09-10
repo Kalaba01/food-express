@@ -695,18 +695,9 @@ async def edit_item(
 
 
 # Brisanje artikala za restoran
-@app.delete("/restaurants/{restaurant_id}/items/{item_id}")
-async def delete_item(restaurant_id: int, item_id: int, db: Session = Depends(get_db)):
-    item = (
-        db.query(Item)
-        .filter(Item.id == item_id, Item.restaurant_id == restaurant_id)
-        .first()
-    )
-    if not item:
-        raise HTTPException(status_code=404, detail="Item not found")
-    db.delete(item)
-    db.commit()
-    return {"message": "Item deleted successfully"}
+@app.delete("/items/{item_id}")
+async def item_delete(item_id: int, db: Session = Depends(get_db)):
+    return await delete_item(db, item_id)
 
 
 # Dodavanje slika za restoran
