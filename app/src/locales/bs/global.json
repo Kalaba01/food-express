@@ -530,6 +530,7 @@
     "delivering": "Dostava",
     "waiting": "Čekanje",
     "minutes": "minuta",
+    "noCourierAssigned": "Kurir još nije dodijeljen ovoj narudžbi.",
     "trackOrders": "Praćenje narudžbi",
     "courier": "Kurir",
     "restaurant": "Restoran",

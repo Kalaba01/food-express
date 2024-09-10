@@ -109,10 +109,17 @@ function TrackOrders({ darkMode, toggleDarkMode }) {
     setMapCoordinates(null);
   };
 
-  const handleFinish = (orderId) => {
-    setSelectedOrderId(orderId);
-    setShowRating(true);
-  };
+  const handleFinish = (orderId, courierUsername) => {
+    if (!courierUsername) {
+      setNotification({
+        message: t("TrackOrders.noCourierAssigned"),
+        type: "error",
+      });
+    } else {
+      setSelectedOrderId(orderId);
+      setShowRating(true);
+    }
+  };  
 
   const handleCloseRating = () => {
     setShowRating(false);
@@ -204,7 +211,7 @@ function TrackOrders({ darkMode, toggleDarkMode }) {
                 <td>{getStatusColumn(order)}</td>
                 <td>
                   <button
-                    onClick={() => handleFinish(order.id)}
+                    onClick={() => handleFinish(order.id, order.courierUsername)}
                     className="finish-btn"
                   >
                     {t("TrackOrders.finish")}

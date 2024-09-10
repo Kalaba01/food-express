@@ -530,6 +530,7 @@
     "delivering": "Delivering",
     "waiting": "Waiting",
     "minutes": "min",
+    "noCourierAssigned": "No courier has been assigned to this order yet.",
     "trackOrders": "Track Orders",
     "courier": "Courier",
     "restaurant": "Restaurant",
