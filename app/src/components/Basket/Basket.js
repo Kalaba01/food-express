@@ -34,9 +34,19 @@ function Basket() {
 
   const totalPrice = basket.reduce((total, item) => total + item.price * item.quantity, 0);
 
+  const itemCount = basket.reduce((count, item) => count + item.quantity, 0);
+  const displayItemCount = itemCount > 9 ? '9+' : itemCount;
+
   return (
     <div className="basket-container">
-      <FaShoppingCart size={24} onClick={toggleBasket} className="basket-icon" />
+      <div className="basket-icon-container">
+        <FaShoppingCart size={28} onClick={toggleBasket} className="basket-icon" />
+        {itemCount > 0 && (
+          <div className="item-count-badge">
+            {displayItemCount}
+          </div>
+        )}
+      </div>
       {basketVisible && (
         <div className="basket-popup">
           <h2>{t('Basket.yourBasket')}</h2>

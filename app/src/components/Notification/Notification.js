@@ -94,7 +94,7 @@ function Notification() {
   return (
     <div className="notification-container">
       <div className="icon-container" onClick={togglePopup}>
-        <FaBell className="notification-icon" />
+        <FaBell size={28} className="notification-icon" />
         {unreadCount > 0 && (
           <span className="notification-count">
             {unreadCount > 9 ? "9+" : unreadCount}

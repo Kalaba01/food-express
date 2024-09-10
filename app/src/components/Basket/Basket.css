@@ -8,6 +8,21 @@
     color: #fff;
 }
 
+.item-count-badge {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background-color: #e74c3c;
+    color: white;
+    border-radius: 50%;
+    padding: 4px 6px;
+    font-size: 12px;
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 .basket-popup {
     position: absolute;
     top: 40px;
@@ -18,8 +33,8 @@
     padding: 20px;
     z-index: 1000;
     width: 450px;
-    max-height: 400px; /* Postavi maksimalnu visinu */
-    overflow-y: auto; /* Dodaj scroll */
+    max-height: 400px;
+    overflow-y: auto;
 }
 
 body.dark-mode .basket-popup {
