@@ -213,7 +213,7 @@ async def assign_orders_to_couriers(db: Session):
                 receiver_id=order.customer_id,
                 message=message_content,
                 conversation_id=conversation.id,
-                created_at=datetime.utcnow(),
+                created_at=local_now.replace(tzinfo=None)
             )
             db.add(new_chat)
 
