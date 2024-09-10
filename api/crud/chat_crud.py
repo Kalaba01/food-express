@@ -1,3 +1,5 @@
+import pytz
+import datetime
 from sqlalchemy.orm import Session
 from models.models import Chat, Conversation, User, OrderAssignment, OrderAssignmentStatus, Order, Courier
 
@@ -76,12 +78,17 @@ async def get_conversation(db: Session, user1_id: int, user2_id: int):
     ).first()
 
 async def create_message(db: Session, conversation_id: int, sender_id: int, receiver_id: int, message: str):
+    local_timezone = pytz.timezone("Europe/Sarajevo")
+    local_now = datetime.datetime.now(local_timezone)
+
     chat_message = Chat(
         conversation_id=conversation_id,
         sender_id=sender_id,
         receiver_id=receiver_id,
-        message=message
+        message=message,
+        created_at=local_now.replace(tzinfo=None)
     )
+    
     db.add(chat_message)
     db.commit()
     db.refresh(chat_message)
