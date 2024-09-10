@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Header, NotificationPopup, Map, Loading } from "../index";
 import { FaDollarSign } from "react-icons/fa";
-import axios from "axios";
 import { useTranslation } from "react-i18next";
+import axios from "axios";
 import "../DeliveredOrders/DeliveredOrders.css";
 
 function DeliveredOrders({ darkMode, toggleDarkMode }) {
@@ -138,7 +138,7 @@ function DeliveredOrders({ darkMode, toggleDarkMode }) {
                         handleAddressClick(
                           order.restaurant_latitude,
                           order.restaurant_longitude,
-                          order.restaurant_name
+                          order.restaurant_address
                         )
                       }
                     >
@@ -153,7 +153,7 @@ function DeliveredOrders({ darkMode, toggleDarkMode }) {
                         handleAddressClick(
                           order.customer_latitude,
                           order.customer_longitude,
-                          order.customer_username
+                          order.customer_address
                         )
                       }
                     >
