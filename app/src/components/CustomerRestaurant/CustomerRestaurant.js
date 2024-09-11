@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import { Header, Gallery, GalleryPopup, Map, Loading } from "../index";
+import { Header, Gallery, Map, Loading, ItemCard } from "../index";
 import { useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { BasketContext } from "../../BasketContext";
@@ -10,12 +10,10 @@ import "./CustomerRestaurant.css";
 function CustomerRestaurant({ darkMode, toggleDarkMode }) {
   const { t } = useTranslation("global");
   const { restaurantName } = useParams();
+  const { setBasket } = useContext(BasketContext);
   const [restaurant, setRestaurant] = useState(null);
   const [menu, setMenu] = useState([]);
-  const [isPopupOpen, setIsPopupOpen] = useState(false);
-  const [currentItemImages, setCurrentItemImages] = useState([]);
   const [isOpen, setIsOpen] = useState(true);
-  const { setBasket } = useContext(BasketContext);
   const [mapPopupOpen, setMapPopupOpen] = useState(false);
   const [mapCoordinates, setMapCoordinates] = useState({
     latitude: null,
@@ -165,17 +163,6 @@ function CustomerRestaurant({ darkMode, toggleDarkMode }) {
     });
   };
 
-  const openGalleryPopup = (images) => {
-    if (images.length > 0) {
-      setCurrentItemImages(images.map((img) => img.image));
-      setIsPopupOpen(true);
-    }
-  };
-
-  const closeGalleryPopup = () => {
-    setIsPopupOpen(false);
-  };
-
   const renderStars = (rating) => {
     const fullStars = Math.floor(rating);
     const halfStar = rating - fullStars >= 0.5;
@@ -246,44 +233,16 @@ function CustomerRestaurant({ darkMode, toggleDarkMode }) {
               <h2>{category.category_name}</h2>
               <div className="menu-items">
                 {category.items.map((item) => (
-                  <div key={item.id} className="menu-item">
-                    <h3
-                      className="clickable-item-name"
-                      onClick={() => openGalleryPopup(item.images)}
-                    >
-                      {item.name}
-                    </h3>
-                    <p className="item-description">{item.description}</p>
-                    <p className="item-price">
-                      {t("CustomerRestaurant.price")}: {item.price} BAM
-                    </p>
-                    <div className="item-quantity-controls">
-                      <button onClick={() => decrementQuantity(item.id)}>
-                        -
-                      </button>
-                      <input
-                        type="number"
-                        min="1"
-                        value={item.quantity || 1}
-                        onChange={(e) =>
-                          setItemQuantity(item.id, e.target.value)
-                        }
-                      />
-                      <button onClick={() => incrementQuantity(item.id)}>
-                        +
-                      </button>
-                    </div>
-                    <button
-                      className={`add-to-basket-button ${
-                        !isOpen ? "disabled-button" : ""
-                      }`}
-                      onClick={() => addToBasket(item)}
-                      disabled={!isOpen}
-                      title={!isOpen ? t("CustomerRestaurant.outOfHours") : ""}
-                    >
-                      {t("CustomerRestaurant.add")}
-                    </button>
-                  </div>
+                  <ItemCard
+                    key={item.id}
+                    item={item}
+                    isOpen={isOpen}
+                    incrementQuantity={incrementQuantity}
+                    decrementQuantity={decrementQuantity}
+                    setItemQuantity={setItemQuantity}
+                    addToBasket={addToBasket}
+                    t={t}
+                  />
                 ))}
               </div>
             </div>
@@ -307,13 +266,6 @@ function CustomerRestaurant({ darkMode, toggleDarkMode }) {
               </div>
             </div>
           )}
-
-        {isPopupOpen && (
-          <GalleryPopup
-            images={currentItemImages}
-            onClose={closeGalleryPopup}
-          />
-        )}
       </div>
     </>
   );

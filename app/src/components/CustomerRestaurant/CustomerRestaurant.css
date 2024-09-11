@@ -5,17 +5,6 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-.clickable-item-name {
-    color: #3498db;
-    cursor: pointer;
-    text-decoration: underline;
-    margin-right: 15px;
-}
-
-.clickable-item-name:hover {
-    color: #2980b9;
-}
-
 .star-rating {
     display: inline-flex;
     align-items: center;
@@ -30,15 +19,6 @@
 
 .menu-items {
     margin-top: 10px;
-}
-
-.menu-item {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin: 0px 5%;
-    padding: 10px 0;
-    border-bottom: 1px solid #ddd;
 }
 
 .item-description {
@@ -124,10 +104,6 @@ body.dark-mode .restaurant-details {
     color: #ecf0f1;
 }
 
-body.dark-mode .menu-item {
-    border-bottom: 1.5px solid #333;
-}
-
 body.dark-mode .item-quantity-controls button {
     border: 1px solid #555;
     background-color: #34495e;
@@ -154,14 +130,6 @@ body.dark-mode .add-to-basket-button.disabled-button {
 
 body.dark-mode .add-to-basket-button.disabled-button:hover {
     background-color: #666;
-}
-
-body.dark-mode .clickable-item-name {
-    color: #66b3ff;
-}
-
-body.dark-mode .clickable-item-name:hover {
-    color: #3399ff;
 }
 
 body.dark-mode .star {
