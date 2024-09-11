@@ -65,6 +65,8 @@ function Restaurant({ darkMode, toggleDarkMode }) {
   const [selectedDay, setSelectedDay] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
 
+  const dayOrder = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+
   const daysOfWeek = [
     t("Restaurant.days.Monday"),
     t("Restaurant.days.Tuesday"),
@@ -74,10 +76,6 @@ function Restaurant({ darkMode, toggleDarkMode }) {
     t("Restaurant.days.Saturday"),
     t("Restaurant.days.Sunday"),
   ];
-
-  const handleDayChange = (e) => {
-    setSelectedDay(parseInt(e.target.value, 10));
-  };
 
   const fetchRestaurant = async () => {
     const token = localStorage.getItem("token");
@@ -90,6 +88,11 @@ function Restaurant({ darkMode, toggleDarkMode }) {
           },
         }
       );
+  
+      const sortedOperatingHours = response.data.operating_hours.sort(
+        (a, b) => dayOrder.indexOf(a.day_of_week) - dayOrder.indexOf(b.day_of_week)
+      );
+  
       setRestaurant(response.data);
       setRestaurantData({
         name: response.data.name,
@@ -100,7 +103,7 @@ function Restaurant({ darkMode, toggleDarkMode }) {
           response.data.rating_count > 0
             ? response.data.total_rating / response.data.rating_count
             : null,
-        operating_hours: response.data.operating_hours || [],
+        operating_hours: sortedOperatingHours,
         category: response.data.category || "",
       });
       setIsLoading(false);

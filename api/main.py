@@ -255,7 +255,7 @@ scheduler.add_job(
     lambda: asyncio.run(remind_pending_requests()), CronTrigger(hour=0, minute=3)
 )
 scheduler.add_job(
-    lambda: asyncio.run(schedule_assign_orders_to_couriers()), 'interval', seconds=15
+    lambda: asyncio.run(schedule_assign_orders_to_couriers()), 'interval', seconds=45
 )
 scheduler.start()
 
