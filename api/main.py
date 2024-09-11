@@ -553,11 +553,8 @@ async def read_restaurants(db: Session = Depends(get_db)):
 
 # Restoran na osnovu ID-a
 @app.get("/restaurants/{restaurant_id}")
-async def read_restaurant(restaurant_id: int, db: Session = Depends(get_db)):
-    restaurant = await get_restaurant_by_id(db, restaurant_id)
-    if not restaurant:
-        raise HTTPException(status_code=404, detail="Restaurant not found")
-    return restaurant
+async def read_restaurant(restaurant_id: int, current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    return await get_restaurant_by_id(db, restaurant_id, current_user.id)
 
 
 # Kreiranje restorana

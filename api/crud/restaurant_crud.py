@@ -2,7 +2,7 @@ import base64
 from typing import List
 from datetime import datetime, time
 from sqlalchemy.orm import Session
-from fastapi import HTTPException
+from fastapi import HTTPException, status
 from models.models import (
     Restaurant,
     MenuCategory,
@@ -56,10 +56,14 @@ async def get_all_restaurants(db: Session):
     return db.query(Restaurant).all()
 
 
-async def get_restaurant_by_id(db: Session, restaurant_id: int):
+async def get_restaurant_by_id(db: Session, restaurant_id: int, user_id: int):
     restaurant = db.query(Restaurant).filter(Restaurant.id == restaurant_id).first()
+    
     if restaurant is None:
-        return None
+        raise HTTPException(status_code=404, detail="Restaurant not found")
+    
+    if restaurant.owner_id != user_id:
+        raise HTTPException(status_code=403, detail="You do not own this restaurant")
 
     delivery_zone_ids = [zone.delivery_zone_id for zone in restaurant.delivery_zones]
 

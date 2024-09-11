@@ -11,7 +11,7 @@ import {
   EditCategoryRestaurant,
   AddItemRestaurant,
   EditItemRestaurant,
-  Loading
+  Loading,
 } from "../index";
 import {
   FaStar,
@@ -21,6 +21,7 @@ import {
   FaEdit,
 } from "react-icons/fa";
 import { useParams } from "react-router-dom";
+import { useNavigate } from 'react-router-dom';
 import { useTranslation } from "react-i18next";
 import axios from "axios";
 import "../LookupTable/LookupTable.css";
@@ -28,6 +29,7 @@ import "../LookupTable/LookupTable.css";
 function Restaurant({ darkMode, toggleDarkMode }) {
   const { t } = useTranslation("global");
   const { id } = useParams();
+  const navigate = useNavigate();
   const [restaurant, setRestaurant] = useState({
     images: [],
     operating_hours: [],
@@ -65,7 +67,15 @@ function Restaurant({ darkMode, toggleDarkMode }) {
   const [selectedDay, setSelectedDay] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
 
-  const dayOrder = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+  const dayOrder = [
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+    "Sunday",
+  ];
 
   const daysOfWeek = [
     t("Restaurant.days.Monday"),
@@ -88,11 +98,12 @@ function Restaurant({ darkMode, toggleDarkMode }) {
           },
         }
       );
-  
+
       const sortedOperatingHours = response.data.operating_hours.sort(
-        (a, b) => dayOrder.indexOf(a.day_of_week) - dayOrder.indexOf(b.day_of_week)
+        (a, b) =>
+          dayOrder.indexOf(a.day_of_week) - dayOrder.indexOf(b.day_of_week)
       );
-  
+
       setRestaurant(response.data);
       setRestaurantData({
         name: response.data.name,
@@ -108,8 +119,12 @@ function Restaurant({ darkMode, toggleDarkMode }) {
       });
       setIsLoading(false);
     } catch (error) {
-      console.error("Error fetching restaurant:", error);
-      setIsLoading(false);
+      if (error.response && error.response.status === 403) {
+        navigate("/unauthorized");
+      } else {
+        console.error("Error fetching restaurant:", error);
+        setIsLoading(false);
+      }
     }
   };
 
@@ -614,14 +629,11 @@ function Restaurant({ darkMode, toggleDarkMode }) {
     const token = localStorage.getItem("token");
     try {
       if (deleteType === "item" && itemToDelete) {
-        await axios.delete(
-          `http://localhost:8000/items/${itemToDelete.id}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        await axios.delete(`http://localhost:8000/items/${itemToDelete.id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
         setItems(items.filter((item) => item.id !== itemToDelete.id));
         setNotification({
           message: t("Restaurant.itemDeleted"),
