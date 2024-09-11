@@ -64,6 +64,7 @@
     border-radius: 8px;
     cursor: pointer;
     margin: 0 8px;
+    padding: 0px;
     transition: background-color 0.3s ease;
 }
 
@@ -105,6 +106,35 @@
 
 .add-to-basket-button.disabled-button:hover {
     background-color: #ccc;
+}
+
+.item-quantity-controls button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+    color: #fff;
+}
+
+.item-quantity-controls button:disabled:hover {
+    background-color: #ccc;
+}
+
+.item-quantity-controls input:disabled {
+    background-color: #f0f0f0;
+    cursor: not-allowed;
+    border: 1px solid #ccc;
+    color: #aaa;
+}
+
+.disabled-button {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+.disabled-input {
+    background-color: #f0f0f0;
+    cursor: not-allowed;
+    border: 1px solid #ccc;
+    color: #aaa;
 }
 
 /* Dark Mode */
@@ -150,4 +180,25 @@ body.dark-mode .add-to-basket-button.disabled-button {
 
 body.dark-mode .add-to-basket-button.disabled-button:hover {
     background-color: #666;
+}
+
+body.dark-mode .disabled-button {
+    background-color: #666;
+}
+
+body.dark-mode .disabled-input {
+    background-color: #555;
+    border-color: #666;
+    color: #888;
+}
+
+body.dark-mode .item-quantity-controls button:disabled {
+    background-color: #666;
+    color: #888;
+}
+
+body.dark-mode .item-quantity-controls input:disabled {
+    background-color: #555;
+    border-color: #666;
+    color: #888;
 }

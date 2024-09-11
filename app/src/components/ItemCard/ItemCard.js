@@ -23,14 +23,31 @@ const ItemCard = ({
           {t("CustomerRestaurant.price")}: {item.price} BAM
         </p>
         <div className="item-quantity-controls">
-          <button onClick={() => decrementQuantity(item.id)}>-</button>
+          <button
+            onClick={() => decrementQuantity(item.id)}
+            disabled={!isOpen}
+            title={!isOpen ? t("CustomerRestaurant.outOfHours") : ""}
+            className={!isOpen ? "disabled-button" : ""}
+          >
+            -
+          </button>
           <input
             type="number"
             min="1"
             value={item.quantity || 1}
             onChange={(e) => setItemQuantity(item.id, e.target.value)}
+            disabled={!isOpen}
+            title={!isOpen ? t("CustomerRestaurant.outOfHours") : ""}
+            className={!isOpen ? "disabled-input" : ""}
           />
-          <button onClick={() => incrementQuantity(item.id)}>+</button>
+          <button
+            onClick={() => incrementQuantity(item.id)}
+            disabled={!isOpen}
+            title={!isOpen ? t("CustomerRestaurant.outOfHours") : ""}
+            className={!isOpen ? "disabled-button" : ""}
+          >
+            +
+          </button>
         </div>
         <button
           className={`add-to-basket-button ${!isOpen ? "disabled-button" : ""}`}
