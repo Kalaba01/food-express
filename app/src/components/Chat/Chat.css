@@ -6,6 +6,12 @@
     font-size: 2rem;
     cursor: pointer;
     color: #ffffff;
+    margin: 0 5px;
+}
+
+.chat-icon:hover {
+    color: var(--secondary-color);
+    transform: scale(1.1);
 }
 
 .chat-popup {

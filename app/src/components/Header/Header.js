@@ -51,8 +51,8 @@ function Header({ darkMode, toggleDarkMode, openPopupModal, userType, showIcons 
               </Link>
               {currentUser.role ==="owner" && <Notification /> }
               {currentUser.role ==="courier" && <Notification /> }
-              {currentUser.role ==="customer" && <Notification /> }
               {currentUser.role === 'courier' && <Status id={currentUser.id} />}
+              {currentUser.role ==="customer" && <Notification /> }
               {currentUser.role === 'customer' && isBasketVisible && <Basket items={basket} />}
               <Chat userType={currentUser} />
               <Theme darkMode={darkMode} toggleDarkMode={toggleDarkMode} />

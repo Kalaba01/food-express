@@ -8,7 +8,6 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     transition: background-color 0.3s, border-color 0.3s;
     position: relative;
-    /* z-index: -1; */
 }
 
 body.dark-mode .top-bar {
@@ -70,7 +69,8 @@ body.dark-mode .top-bar {
 .profile-icon {
     color: white;
     transition: color 0.2s ease-in-out;
-    margin: 5px 10px 0px 0px;
+    /* margin: 5px 10px 0px 0px; */
+    margin: 0px 5px;
 }
 
 .profile-icon:hover {
