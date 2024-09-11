@@ -1,5 +1,6 @@
 from sqlalchemy.orm import Session
 from models.models import Order, OrderStatus, OrderQueue, OrderQueueStatusEnum, Courier, CourierStatus, Restaurant, Rating
+from utils.rating_utils import calculate_average_rating
 from sqlalchemy import func
 from decimal import Decimal
 
@@ -44,8 +45,23 @@ def o_get_earnings_owner(db: Session, owner_id: int):
     return float(earnings) if isinstance(earnings, Decimal) else earnings
 
 def o_get_ratings_owner(db: Session, owner_id: int):
-    ratings = db.query(func.avg(Rating.restaurant_rating))\
-                .join(Restaurant, Restaurant.id == Rating.restaurant_id)\
-                .filter(Restaurant.owner_id == owner_id)\
-                .scalar()
-    return float(ratings) if isinstance(ratings, Decimal) else ratings
+    restaurants = db.query(Restaurant).filter(Restaurant.owner_id == owner_id).all()
+
+    if not restaurants:
+        return 0
+
+    total_average_sum = 0
+    rated_restaurants = 0
+
+    for restaurant in restaurants:
+        if restaurant.rating_count > 0:
+            restaurant_average_rating = calculate_average_rating(restaurant.total_rating, restaurant.rating_count)
+            total_average_sum += restaurant_average_rating
+            rated_restaurants += 1
+
+    if rated_restaurants == 0:
+        return 0 
+
+    final_average_rating = calculate_average_rating(total_average_sum, rated_restaurants)
+
+    return final_average_rating
