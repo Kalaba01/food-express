@@ -577,38 +577,7 @@ async def update_restaurant(
 @app.delete("/restaurants/{restaurant_id}")
 async def delete_restaurant(restaurant_id: int, db: Session = Depends(get_db)):
     return await delete_restaurant_and_related_data(db, restaurant_id)
-
-
-# Rute za MenuCategory
-@app.get("/menu-categories/")
-async def read_menu_categories(restaurant_id: int, db: Session = Depends(get_db)):
-    return await get_menu_categories(db, restaurant_id)
-
-
-@app.post("/menu-categories/")
-async def create_menu_category(
-    menu_category: MenuCategoryCreate, db: Session = Depends(get_db)
-):
-    return await create_menu_category(db, menu_category)
-
-
-@app.put("/menu-categories/{category_id}")
-async def update_menu_category(
-    category_id: int, menu_category: MenuCategoryUpdate, db: Session = Depends(get_db)
-):
-    return await update_menu_category(db, category_id, menu_category)
-
-
-@app.delete("/menu-categories/{category_id}")
-async def delete_menu_category(category_id: int, db: Session = Depends(get_db)):
-    return await delete_menu_category(db, category_id)
-
-
-# Rute za Item
-@app.get("/items/")
-async def read_items(category_id: int, db: Session = Depends(get_db)):
-    return await get_items(db, category_id)
-
+    
 
 # Restorani odredjenog vlasnika
 @app.get("/owner/restaurants")
@@ -818,21 +787,6 @@ async def read_orders(db: Session = Depends(get_db)):
     return await get_all_orders(db)
 
 
-# Ruta za dohvatanje detalja pojedinačne narudžbe
-@app.get("/orders/{order_id}")
-async def read_order(order_id: int, db: Session = Depends(get_db)):
-    order = await get_order_by_id(db, order_id)
-    if not order:
-        raise HTTPException(status_code=404, detail="Order not found")
-    return order
-
-
-# Ruta za kreiranje nove narudžbe
-@app.post("/orders/")
-async def order_create_route(order: OrderCreate, db: Session = Depends(get_db)):
-    return await new_order_create(db, order)
-
-
 # Ruta za ažuriranje narudžbe
 @app.put("/orders/{order_id}")
 async def order_update(
@@ -842,18 +796,6 @@ async def order_update(
     if not updated_order:
         raise HTTPException(status_code=404, detail="Order not found")
     return updated_order
-
-
-# Ruta za brisanje narudžbe
-@app.delete("/orders/{order_id}")
-async def delete_order(order_id: int, db: Session = Depends(get_db)):
-    return await delete_order(db, order_id)
-
-
-# Pretraga vlasnika
-@app.get("/search-owners/")
-async def owners_search(username: str, db: Session = Depends(get_db)):
-    return await search_owners(db, username)
 
 
 # Ruta za dohvatanje svih kurira
