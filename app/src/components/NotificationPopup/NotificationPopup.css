@@ -7,8 +7,9 @@
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
     color: #fff;
     font-size: 16px;
-    z-index: 1000;
+    z-index: 9999;
     animation: fadeInOut 3s forwards;
+    pointer-events: none;
 }
 
 .notification-popup.success {
