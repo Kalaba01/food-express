@@ -3,16 +3,23 @@ from sqlalchemy.orm import Session
 from models.models import Courier, User, Restaurant
 from schemas.schemas import CourierCreate, CourierUpdate
 
+
 async def search_restaurants(db: Session, name: str):
     restaurants = db.query(Restaurant).filter(Restaurant.name.ilike(f"%{name}%")).all()
-    return [{"id": restaurant.id, "name": restaurant.name} for restaurant in restaurants]
+    return [
+        {"id": restaurant.id, "name": restaurant.name} for restaurant in restaurants
+    ]
+
 
 async def search_couriers(db: Session, username: str):
-    users = db.query(User).outerjoin(Courier, User.id == Courier.user_id).filter(
-        User.role == 'courier',
-        User.username.ilike(f"%{username}%")
-    ).all()
+    users = (
+        db.query(User)
+        .outerjoin(Courier, User.id == Courier.user_id)
+        .filter(User.role == "courier", User.username.ilike(f"%{username}%"))
+        .all()
+    )
     return [{"id": user.id, "username": user.username} for user in users]
+
 
 # Funkcija za dohvatanje svih kurira
 async def get_all_couriers(db: Session):
@@ -25,40 +32,50 @@ async def get_all_couriers(db: Session):
 
     couriers_with_details = []
     for courier in couriers:
-        couriers_with_details.append({
-            "id": courier.id,
-            "user_name": courier.user.username,
-            "restaurant_name": courier.restaurant.name,
-            "latitude": courier.restaurant.latitude,
-            "longitude": courier.restaurant.longitude,
-            "vehicle_type": courier.vehicle_type.value,
-            "wallet_amount": courier.wallet_amount,
-            "halal_mode": courier.halal_mode
-        })
+        couriers_with_details.append(
+            {
+                "id": courier.id,
+                "user_name": courier.user.username,
+                "restaurant_name": courier.restaurant.name,
+                "latitude": courier.restaurant.latitude,
+                "longitude": courier.restaurant.longitude,
+                "vehicle_type": courier.vehicle_type.value,
+                "wallet_amount": courier.wallet_amount,
+                "halal_mode": courier.halal_mode,
+            }
+        )
 
     return couriers_with_details
 
+
 async def create_courier(db: Session, courier: CourierCreate):
-    existing_courier = db.query(Courier).filter(
-        Courier.user_id == courier.user_id,
-        Courier.restaurant_id == courier.restaurant_id
-    ).first()
-    
+    existing_courier = (
+        db.query(Courier)
+        .filter(
+            Courier.user_id == courier.user_id,
+            Courier.restaurant_id == courier.restaurant_id,
+        )
+        .first()
+    )
+
     if existing_courier:
-        raise HTTPException(status_code=400, detail="Courier is already assigned to this restaurant.")
-    
+        raise HTTPException(
+            status_code=400, detail="Courier is already assigned to this restaurant."
+        )
+
     new_courier = Courier(
         user_id=courier.user_id,
         vehicle_type=courier.vehicle_type,
         halal_mode=courier.halal_mode,
         wallet_amount=0,
-        wallet_details="{}",
+        wallet_details=None,
         restaurant_id=courier.restaurant_id,
     )
     db.add(new_courier)
     db.commit()
     db.refresh(new_courier)
     return new_courier
+
 
 # Funkcija za ažuriranje postojećeg kurira
 async def update_courier(db: Session, courier_id: int, courier: CourierUpdate):
@@ -72,6 +89,7 @@ async def update_courier(db: Session, courier_id: int, courier: CourierUpdate):
     db.commit()
     db.refresh(existing_courier)
     return existing_courier
+
 
 # Funkcija za brisanje kurira
 async def delete_courier(db: Session, courier_id: int):

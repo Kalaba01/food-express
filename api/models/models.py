@@ -191,8 +191,8 @@ class Courier(Base):
     user_id = Column(Integer, ForeignKey("users.id"))
     vehicle_type = Column(Enum(VehicleType), nullable=False)
     halal_mode = Column(Boolean, default=False)
-    wallet_amount = Column(Float, nullable=False)
-    wallet_details = Column(Text, nullable=False)
+    wallet_amount = Column(Float, nullable=False, default=0)
+    wallet_details = Column(Text, nullable=True)
     restaurant_id = Column(Integer, ForeignKey("restaurants.id"))
     status = Column(Enum(CourierStatus), nullable=False, default=CourierStatus.offline)
 
