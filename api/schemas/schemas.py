@@ -41,11 +41,6 @@ class OrderAssignmentStatusEnum(str, Enum):
     in_delivery = "in_delivery"
     delivered = "delivered"
 
-class CourierStatusEnum(str, Enum):
-    online = "online"
-    offline = "offline"
-    busy = "busy"
-
 class UpdateOrderStatusEnum(str, Enum):
     preparing = "preparing"
     cancelled = "cancelled"
@@ -71,10 +66,6 @@ class UserCreate(BaseModel):
     email: EmailStr
     password: str
 
-class UserLogin(BaseModel):
-    username: str
-    password: str
-
 class UserUpdate(BaseModel):
     username: Optional[constr(min_length=1)] = Field(None)
     email: Optional[EmailStr] = Field(None)
@@ -83,12 +74,6 @@ class UserUpdate(BaseModel):
     profilePicture: Optional[UploadFile] = None
 
 # Operating Hours schemas for managing restaurant operating hours
-class OperatingHoursCreate(BaseModel):
-    restaurant_id: int
-    day_of_week: str
-    opening_time: datetime.time
-    closing_time: datetime.time
-
 class OperatingHoursUpdate(BaseModel):
     id: Optional[int] = None
     restaurant_id: Optional[int] = None
@@ -106,7 +91,7 @@ class RestaurantCreate(BaseModel):
     category: str
     contact: str
     owner_id: int
-    delivery_zone_ids: List[int]  # Lista zona dostave
+    delivery_zone_ids: List[int]
     capacity: RestaurantCapacityEnum = RestaurantCapacityEnum.normal
     image_ids: Optional[List[int]] = None
 
@@ -119,9 +104,9 @@ class RestaurantUpdate(BaseModel):
     category: Optional[str] = None
     contact: Optional[str] = None
     owner_id: Optional[int] = None
-    delivery_zone_ids: Optional[List[int]] = None  # Lista zona dostave
+    delivery_zone_ids: Optional[List[int]] = None
     capacity: Optional[RestaurantCapacityEnum] = None
-    image_ids: Optional[List[int]] = None  # Lista slika
+    image_ids: Optional[List[int]] = None
     operating_hours: Optional[List[OperatingHoursUpdate]] = None
 
 # Item schemas for handling restaurant items (menu items)
@@ -145,7 +130,7 @@ class ItemUpdate(BaseModel):
     restaurant_id: Optional[int] = None
     menu_category_id: Optional[int] = None
     category: Optional[ItemCategoryEnum] = None
-    image_ids: Optional[List[int]] = None  # Lista slika
+    image_ids: Optional[List[int]] = None
 
 # Menu Category schemas for handling restaurant menu categories
 class MenuCategoryCreate(BaseModel):
@@ -209,40 +194,12 @@ class CourierUpdate(BaseModel):
     restaurant_id: Optional[int] = None
     online: Optional[bool] = None
 
-# Order Assignment schemas for managing the assignment of orders to couriers
-class OrderAssignmentCreate(BaseModel):
-    order_id: int
-    courier_id: int
-    status: OrderAssignmentStatusEnum = OrderAssignmentStatusEnum.pending
-
-class OrderAssignmentUpdate(BaseModel):
-    order_id: Optional[int] = None
-    courier_id: Optional[int] = None
-    status: Optional[str] = None
-
 # Rating schemas for managing ratings of orders and couriers
 class RatingCreate(BaseModel):
     order_id: int
     restaurant_rating: float
     courier_rating: float
     comments: Optional[str]
-
-# Chat schemas for managing chat messages between users
-class ChatCreate(BaseModel):
-    sender_id: int
-    receiver_id: int
-    message: str
-
-# Order Queue schemas for managing the queue of orders
-class OrderQueueCreate(BaseModel):
-    order_id: int
-    status: OrderQueueStatusEnum = OrderQueueStatusEnum.pending
-    estimated_preparation_time: int
-
-class OrderQueueUpdate(BaseModel):
-    order_id: Optional[int] = None
-    status: Optional[str] = None
-    estimated_preparation_time: Optional[int] = None
 
 # Delivery Zone schemas for managing restaurant delivery zones
 class DeliveryZoneCreate(BaseModel):
