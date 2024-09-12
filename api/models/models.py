@@ -235,6 +235,7 @@ class Chat(Base):
     message = Column(Text, nullable=False)
     created_at = Column(DateTime, default=datetime.datetime.utcnow)
     conversation_id = Column(Integer, ForeignKey("conversations.id"), nullable=True)
+    is_seen = Column(Boolean, default=False)
 
     sender = relationship("User", foreign_keys=[sender_id], back_populates="chat_sent")
     receiver = relationship("User", foreign_keys=[receiver_id], back_populates="chat_received")
