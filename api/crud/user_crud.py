@@ -4,8 +4,14 @@ from fastapi import HTTPException, UploadFile
 from sqlalchemy.orm import Session
 from models.models import User, PasswordResetToken, Image
 from schemas.schemas import UserCreate, UserUpdate
-from utils.password_utils import hash_password, verify_password, generate_temp_password, get_password_hash
+from utils.password_utils import (
+    hash_password,
+    verify_password,
+    generate_temp_password,
+    get_password_hash,
+)
 from datetime import datetime, timedelta
+
 
 async def check_user_exists(db: Session, username: str = None, email: str = None):
     if username:
@@ -174,7 +180,7 @@ async def create_user_from_request(db: Session, request):
     role = (
         "administrator"
         if request.request_type == "join"
-        else "courier" if request.request_type == "deliver" else "partner"
+        else "courier" if request.request_type == "deliver" else "owner"
     )
     user_create = UserCreate(
         username=username, email=request.email, password=temp_password
@@ -204,7 +210,9 @@ async def get_profile(db: Session, user_id: int):
     }
 
 
-async def update_user_profile(db: Session, user_id: int, username: str, email: str, profilePicture: UploadFile):
+async def update_user_profile(
+    db: Session, user_id: int, username: str, email: str, profilePicture: UploadFile
+):
     user = db.query(User).filter(User.id == user_id).first()
 
     if not user:
@@ -238,21 +246,25 @@ async def update_user_profile(db: Session, user_id: int, username: str, email: s
         "username": user.username,
         "email": user.email,
         "role": user.role,
-        "profilePicture": profile_picture_base64
+        "profilePicture": profile_picture_base64,
     }
 
-async def change_user_password(db: Session, user_id: int, old_password: str, new_password: str) -> bool:
+
+async def change_user_password(
+    db: Session, user_id: int, old_password: str, new_password: str
+) -> bool:
     user = db.query(User).filter(User.id == user_id).first()
-    
+
     if not user or not await verify_password(old_password, user.hashed_password):
         return False
-    
+
     if await verify_password(new_password, user.hashed_password):
         raise HTTPException(
-            status_code=400, detail="New password cannot be the same as the old password"
+            status_code=400,
+            detail="New password cannot be the same as the old password",
         )
-    
+
     user.hashed_password = get_password_hash(new_password)
     db.commit()
-    
+
     return True
