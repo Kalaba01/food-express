@@ -10,48 +10,58 @@ class ItemCategory(enum.Enum):
     alcohol = "alcohol"
     other = "other"
 
+# Model for indicating restaurant capacity
 class RestaurantCapacity(enum.Enum):
     normal = "normal"
     busy = "busy"
     crowded = "crowded"
 
+# Model for different types of requests
 class RequestType(enum.Enum):
     partner = "partner"
     deliver = "deliver"
     join = "join"
 
+# Model for status of a request
 class RequestStatus(enum.Enum):
     pending = "pending"
     denied = "denied"
     accepted = "accepted"
 
+# Model representing the status of an order
 class OrderStatus(enum.Enum):
     pending = "pending"
     preparing = "preparing"
     delivered = "delivered"
     cancelled = "cancelled"
 
+# Model for the type of vehicle used by couriers
 class VehicleType(enum.Enum):
     bike = "bike"
     car = "car"
 
+# Model representing the status of an order assignment
 class OrderAssignmentStatus(enum.Enum):
     in_delivery = "in_delivery"
     delivered = "delivered"
 
+# Model for different payment methods
 class PaymentMethod(enum.Enum):
     cash = "cash"
     card = "card"
 
+# Model representing the status of a courier
 class CourierStatus(enum.Enum):
     online = "online"
     offline = "offline"
     busy = "busy"
 
+# Model for tracking the status of an order queue
 class OrderQueueStatusEnum(enum.Enum):
     pending = "pending"
     assigned = "assigned"
 
+# Model for storing images related to items and restaurants
 class Image(Base):
     __tablename__ = "images"
     id = Column(Integer, primary_key=True, index=True)
@@ -62,6 +72,7 @@ class Image(Base):
     item = relationship("Item", back_populates="images")
     restaurant = relationship("Restaurant", back_populates="images")
 
+# Model for storing user information
 class User(Base):
     __tablename__ = "users"
     id = Column(Integer, primary_key=True, index=True)
@@ -80,6 +91,7 @@ class User(Base):
     password_reset_tokens = relationship("PasswordResetToken", back_populates="user")
     notifications = relationship("Notification", back_populates="user")
 
+# Model for storing restaurant details
 class Restaurant(Base):
     __tablename__ = "restaurants"
     id = Column(Integer, primary_key=True, index=True)
@@ -105,6 +117,7 @@ class Restaurant(Base):
     operating_hours = relationship("OperatingHours", back_populates="restaurant")
     ratings = relationship("Rating", back_populates="restaurant")
 
+# Model for linking restaurants to their delivery zones
 class RestaurantDeliveryZone(Base):
     __tablename__ = "restaurant_delivery_zones"
     id = Column(Integer, primary_key=True, index=True)
@@ -114,6 +127,7 @@ class RestaurantDeliveryZone(Base):
     restaurant = relationship("Restaurant", back_populates="delivery_zones")
     delivery_zone = relationship("DeliveryZone", back_populates="restaurants")
 
+# Model for storing restaurant operating hours
 class OperatingHours(Base):
     __tablename__ = "operating_hours"
     id = Column(Integer, primary_key=True, index=True)
@@ -124,6 +138,7 @@ class OperatingHours(Base):
 
     restaurant = relationship("Restaurant", back_populates="operating_hours")
 
+# Model for storing items available in a restaurant's menu
 class Item(Base):
     __tablename__ = "items"
     id = Column(Integer, primary_key=True, index=True)
@@ -141,6 +156,7 @@ class Item(Base):
     order_items = relationship("OrderItem", back_populates="item")
     images = relationship("Image", back_populates="item")
 
+# Model for storing menu categories in a restaurant
 class MenuCategory(Base):
     __tablename__ = "menu_categories"
     id = Column(Integer, primary_key=True, index=True)
@@ -151,6 +167,7 @@ class MenuCategory(Base):
     restaurant = relationship("Restaurant", back_populates="menu_categories")
     items = relationship("Item", back_populates="menu_category")
 
+# Model for storing customer orders
 class Order(Base):
     __tablename__ = "orders"
     id = Column(Integer, primary_key=True, index=True)
@@ -174,6 +191,7 @@ class Order(Base):
     order_assignments = relationship("OrderAssignment", back_populates="order")
     ratings = relationship("Rating", back_populates="order")
 
+# Model for storing order items
 class OrderItem(Base):
     __tablename__ = "order_items"
     id = Column(Integer, primary_key=True, index=True)
@@ -185,6 +203,7 @@ class OrderItem(Base):
     order = relationship("Order", back_populates="order_items")
     item = relationship("Item", back_populates="order_items")
 
+# Model for storing courier details
 class Courier(Base):
     __tablename__ = "couriers"
     id = Column(Integer, primary_key=True, index=True)
@@ -200,6 +219,7 @@ class Courier(Base):
     restaurant = relationship("Restaurant", back_populates="couriers")
     order_assignments = relationship("OrderAssignment", back_populates="courier")
 
+# Model for assigning orders to couriers
 class OrderAssignment(Base):
     __tablename__ = "order_assignments"
     id = Column(Integer, primary_key=True, index=True)
@@ -215,6 +235,7 @@ class OrderAssignment(Base):
     order = relationship("Order", back_populates="order_assignments")
     courier = relationship("Courier", back_populates="order_assignments")
 
+# Model for storing restaurant and courier ratings
 class Rating(Base):
     __tablename__ = "ratings"
     id = Column(Integer, primary_key=True, index=True)
@@ -227,6 +248,7 @@ class Rating(Base):
     order = relationship("Order", back_populates="ratings")
     restaurant = relationship("Restaurant", back_populates="ratings")
 
+# Model for storing chat messages between users
 class Chat(Base):
     __tablename__ = "chats"
     id = Column(Integer, primary_key=True, index=True)
@@ -241,6 +263,7 @@ class Chat(Base):
     receiver = relationship("User", foreign_keys=[receiver_id], back_populates="chat_received")
     conversation = relationship("Conversation", back_populates="messages")
 
+# Model for managing order queues in the restaurant
 class OrderQueue(Base):
     __tablename__ = "order_queue"
     id = Column(Integer, primary_key=True, index=True)
@@ -251,6 +274,7 @@ class OrderQueue(Base):
 
     order = relationship("Order")
 
+# Model for defining delivery zones for restaurants
 class DeliveryZone(Base):
     __tablename__ = "delivery_zones"
     id = Column(Integer, primary_key=True, index=True)
@@ -266,12 +290,14 @@ class DeliveryZone(Base):
 
     restaurants = relationship("RestaurantDeliveryZone", back_populates="delivery_zone")
 
+# Model for storing bank account details
 class Bank(Base):
     __tablename__ = "banks"
     id = Column(Integer, primary_key=True, index=True)
     balance = Column(Float, nullable=False)
     account_number = Column(String, unique=True, nullable=False)
 
+# Model for managing user requests
 class Request(Base):
     __tablename__ = "requests"
     id = Column(Integer, primary_key=True, index=True)
@@ -283,6 +309,7 @@ class Request(Base):
     status = Column(Enum(RequestStatus), default=RequestStatus.pending)
     created_at = Column(DateTime, default=datetime.datetime.utcnow)
 
+# Model for storing password reset tokens for users
 class PasswordResetToken(Base):
     __tablename__ = "password_reset_tokens"
     id = Column(Integer, primary_key=True, index=True)
@@ -292,6 +319,7 @@ class PasswordResetToken(Base):
 
     user = relationship("User", back_populates="password_reset_tokens")
 
+# Model for managing conversations between two users
 class Conversation(Base):
     __tablename__ = "conversations"
     id = Column(Integer, primary_key=True, index=True)
@@ -303,6 +331,7 @@ class Conversation(Base):
 
     messages = relationship("Chat", back_populates="conversation")
 
+# Model for storing notifications for users
 class Notification(Base):
     __tablename__ = "notifications"
     id = Column(Integer, primary_key=True, index=True)
