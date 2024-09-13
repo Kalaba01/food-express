@@ -92,15 +92,6 @@ async def get_restaurant_by_id(db: Session, restaurant_id: int, user_id: int):
     return restaurant_data
 
 
-async def search_owners(db: Session, username: str):
-    owners = (
-        db.query(User)
-        .filter(User.username.ilike(f"%{username.strip()}%"), User.role == "owner")
-        .all()
-    )
-    return [{"id": owner.id, "username": owner.username} for owner in owners]
-
-
 async def create_new_restaurant(db: Session, restaurant: RestaurantCreate):
     owner = db.query(User).filter(User.id == restaurant.owner_id).first()
     if not owner or owner.role != "owner":

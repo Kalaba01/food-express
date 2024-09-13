@@ -50,12 +50,3 @@ async def update_request_status_and_process(request_id: int, status_update: Requ
             raise HTTPException(status_code=500, detail=str(e))
 
     return request
-
-async def update_request_status(db: Session, request_id: int, status_update: RequestStatusUpdate):
-    request = db.query(Request).filter(Request.id == request_id).first()
-    if not request:
-        return None
-    request.status = status_update.status
-    db.commit()
-    db.refresh(request)
-    return request

@@ -58,35 +58,6 @@ async def get_all_orders(db: Session):
 
     return orders_with_details
 
-
-# Funkcija za dohvatanje pojedinačne narudžbe prema ID-u
-async def get_order_by_id(db: Session, order_id: int):
-    order = db.query(Order).filter(Order.id == order_id).first()
-    if not order:
-        return None
-
-    order_items = db.query(OrderItem).filter(OrderItem.order_id == order_id).all()
-    return {"order": order, "order_items": order_items}
-
-# Funkcija za kreiranje nove narudžbe
-async def new_order_create(db: Session, order: OrderCreate):
-    new_order = Order(
-        customer_id=order.customer_id,
-        restaurant_id=order.restaurant_id,
-        total_price=order.total_price,
-        status=order.status,
-        delivery_address=order.delivery_address,
-        delivery_latitude=order.delivery_latitude,
-        delivery_longitude=order.delivery_longitude,
-        cutlery_included=order.cutlery_included,
-    )
-
-    db.add(new_order)
-    db.commit()
-    db.refresh(new_order)
-
-    return new_order
-
 # Funkcija za ažuriranje postojeće narudžbe
 async def update_order(db: Session, order_id: int, order: OrderUpdate):
     db_order = db.query(Order).filter(Order.id == order_id).first()
@@ -99,13 +70,3 @@ async def update_order(db: Session, order_id: int, order: OrderUpdate):
     db.commit()
     db.refresh(db_order)
     return db_order
-
-# Funkcija za brisanje narudžbe prema ID-u
-async def delete_order(db: Session, order_id: int):
-    db_order = db.query(Order).filter(Order.id == order_id).first()
-    if not db_order:
-        return {"message": "Order not found"}
-
-    db.delete(db_order)
-    db.commit()
-    return {"message": "Order deleted successfully"}
