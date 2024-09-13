@@ -8,6 +8,7 @@ import "./Chat.css";
 function Chat({ userType }) {
   const { t } = useTranslation("global");
   const [isOpen, setIsOpen] = useState(false);
+  const [unreadCount, setUnreadCount] = useState(0);
   const [chatHistory, setChatHistory] = useState([]);
   const [users, setUsers] = useState({
     admins: [],
@@ -19,52 +20,45 @@ function Chat({ userType }) {
   const [conversationId, setConversationId] = useState(null);
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
-  const [notification, setNotification] = useState({ message: '', type: '' });
+  const [notification, setNotification] = useState({ message: "", type: "" });
   const [showChatHistory, setShowChatHistory] = useState(false);
   const [showUserDropdown, setShowUserDropdown] = useState(false);
-  const socketRef = useRef(null);
+  const chatSocketRef = useRef(null);
+  const messagesSocketRef = useRef(null);
 
   const showNotification = (message, type) => {
     setNotification({ message, type });
     setTimeout(() => {
-      setNotification({ message: '', type: '' });
+      setNotification({ message: "", type: "" });
     }, 3000);
   };
 
   useEffect(() => {
-    if (isOpen) {
-      fetchChatHistory();
-      fetchUsers();
-    }
-  }, [isOpen]);
-
-  const fetchChatHistory = async () => {
-    try {
-      const response = await axios.get(
-        `http://localhost:8000/api/chat/history/${userType.id}`
+    if (userType.id) {
+      messagesSocketRef.current = new WebSocket(
+        `ws://localhost:8000/ws/messages/${userType.id}`
       );
-      setChatHistory(response.data);
-    } catch (error) {
-      console.error("Error fetching chat history:", error);
-      showNotification('Failed to fetch Chat History', 'error');
-    }
-  };
 
-  const fetchUsers = async () => {
-    try {
-      const response = await axios.get(
-        `http://localhost:8000/api/chat/users?role=${userType.role}&current_user_id=${userType.id}`
-      );
-      setUsers(response.data);
-    } catch (error) {
-      console.error("Error fetching users:", error);
-      showNotification('Failed to fetch Users', 'error');
+      messagesSocketRef.current.onmessage = (event) => {
+        const data = JSON.parse(event.data);
+        if (data.unread_count !== undefined) {
+          setUnreadCount(data.unread_count);
+        }
+      };
+
+      return () => {
+        if (messagesSocketRef.current) {
+          messagesSocketRef.current.close();
+        }
+      };
     }
-  };
-  
+  }, [userType.id]);
 
   const toggleChat = () => {
     setIsOpen(!isOpen);
+    if (!isOpen) {
+      setUnreadCount(0);
+    }
   };
 
   const selectUser = async (user) => {
@@ -73,20 +67,28 @@ function Chat({ userType }) {
     if (conversation) {
       loadMessages(conversation.id);
       setConversationId(conversation.id);
-      if (socketRef.current) {
-        socketRef.current.close();
+
+      try {
+        await axios.post(
+          `http://localhost:8000/conversations/${conversation.id}/mark_as_read`,
+          null,
+          { params: { user_id: userType.id } }
+        );
+      } catch (error) {
+        console.error("Error marking messages as read:", error);
       }
-      socketRef.current = new WebSocket(
+
+      if (chatSocketRef.current) {
+        chatSocketRef.current.close();
+      }
+
+      chatSocketRef.current = new WebSocket(
         `ws://localhost:8000/ws/chat/${conversation.id}`
       );
 
-      socketRef.current.onmessage = (event) => {
-        try {
-          const data = JSON.parse(event.data);
-          setMessages((prevMessages) => [...prevMessages, data]);
-        } catch (error) {
-          console.error("Failed to parse WebSocket message as JSON:", error);
-        }
+      chatSocketRef.current.onmessage = (event) => {
+        const data = JSON.parse(event.data);
+        setMessages((prevMessages) => [...prevMessages, data]);
       };
     }
     setShowUserDropdown(false);
@@ -132,15 +134,14 @@ function Chat({ userType }) {
       );
 
       const messageData = response.data;
-
-      if (socketRef.current) {
-        socketRef.current.send(JSON.stringify(messageData));
+      if (chatSocketRef.current) {
+        chatSocketRef.current.send(JSON.stringify(messageData));
       }
 
       setNewMessage("");
     } catch (error) {
       console.error("Error sending message:", error);
-      showNotification('Failed to send message.', 'error');
+      showNotification("Failed to send message.", "error");
     }
   };
 
@@ -159,6 +160,37 @@ function Chat({ userType }) {
     return words[0];
   };
 
+  const fetchChatHistory = async () => {
+    try {
+      const response = await axios.get(
+        `http://localhost:8000/api/chat/history/${userType.id}`
+      );
+      setChatHistory(response.data);
+    } catch (error) {
+      console.error("Error fetching chat history:", error);
+      showNotification("Failed to fetch Chat History", "error");
+    }
+  };
+
+  const fetchUsers = async () => {
+    try {
+      const response = await axios.get(
+        `http://localhost:8000/api/chat/users?role=${userType.role}&current_user_id=${userType.id}`
+      );
+      setUsers(response.data);
+    } catch (error) {
+      console.error("Error fetching users:", error);
+      showNotification("Failed to fetch Users", "error");
+    }
+  };
+
+  useEffect(() => {
+    if (isOpen) {
+      fetchChatHistory();
+      fetchUsers();
+    }
+  }, [isOpen]);
+
   const renderUserList = () => {
     const roles = ["admins", "owners", "couriers", "customers"];
     const roleTitles = {
@@ -167,7 +199,7 @@ function Chat({ userType }) {
       couriers: t("Chat.couriers"),
       customers: t("Chat.customers"),
     };
-  
+
     return roles.map(
       (role) =>
         users[role] &&
@@ -188,11 +220,16 @@ function Chat({ userType }) {
           </div>
         )
     );
-  };  
+  };
 
   return (
     <div className="chat-container">
       <FaComments onClick={toggleChat} className="chat-icon" />
+      {unreadCount > 0 && (
+        <span className="unread-badge">
+           {unreadCount > 9 ? "9+" : unreadCount}
+        </span>
+      )}
       {isOpen && (
         <div className="chat-popup">
           <div className="chat-header">
@@ -283,8 +320,11 @@ function Chat({ userType }) {
         </div>
       )}
       {notification.message && (
-          <NotificationPopup message={notification.message} type={notification.type} />
-        )}
+        <NotificationPopup
+          message={notification.message}
+          type={notification.type}
+        />
+      )}
     </div>
   );
 }

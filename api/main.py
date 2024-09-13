@@ -8,9 +8,9 @@ from fastapi import (
     UploadFile,
     Form,
     WebSocket,
-    WebSocketDisconnect
+    WebSocketDisconnect,
 )
-from fastapi.websockets import WebSocket
+from fastapi.websockets import WebSocket, WebSocketState
 from fastapi.security import OAuth2PasswordRequestForm
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
@@ -24,6 +24,7 @@ from models.models import (
     Image,
     Restaurant,
     MenuCategory,
+    Chat
 )
 from schemas.schemas import (
     UserCreate,
@@ -240,9 +241,9 @@ connections = {}
 
 
 @app.websocket("/ws/chat/{conversation_id}")
-async def websocket_endpoint(websocket: WebSocket, conversation_id: int):
+async def websocket_chat_endpoint(websocket: WebSocket, conversation_id: int):
     await websocket.accept()
-    print(f"New WebSocket connection: {conversation_id}")
+    print(f"New WebSocket connection for conversation: {conversation_id}")
 
     if conversation_id not in connections:
         connections[conversation_id] = []
@@ -253,18 +254,34 @@ async def websocket_endpoint(websocket: WebSocket, conversation_id: int):
             data = await websocket.receive_text()
             print(f"Received message: {data}")
 
-            # Parsiraj JSON podatke
             parsed_data = json.loads(data)
 
-            # Emitovanje poruke svim povezanim klijentima za tu konverzaciju
-            for connection in connections[conversation_id]:
-                await connection.send_text(json.dumps(parsed_data))
+            for connection in connections.get(conversation_id, []):
+                if connection.client_state == WebSocketState.CONNECTED:
+                    await connection.send_text(json.dumps(parsed_data))
 
     except WebSocketDisconnect:
-        print(f"WebSocket disconnected: {conversation_id}")
+        print(f"WebSocket disconnected for conversation: {conversation_id}")
         connections[conversation_id].remove(websocket)
         if len(connections[conversation_id]) == 0:
             del connections[conversation_id]
+
+
+@app.websocket("/ws/messages/{user_id}")
+async def websocket_messages_endpoint(websocket: WebSocket, user_id: int):
+    await websocket.accept()
+    print(f"New WebSocket connection for user: {user_id}")
+
+    try:
+        while True:
+            db = SessionLocal()
+            unread_count = db.query(Chat).filter(Chat.receiver_id == user_id, Chat.is_seen == False).count()
+            if websocket.client_state == WebSocketState.CONNECTED:
+                await websocket.send_text(json.dumps({"unread_count": unread_count}))
+            await asyncio.sleep(10)
+
+    except WebSocketDisconnect:
+        print(f"WebSocket disconnected for user: {user_id}")
 
 
 @app.websocket("/ws/admin-stats")
@@ -1006,3 +1023,13 @@ async def top_restaurants(db: Session = Depends(get_db)):
 @app.put("/notifications/{notification_id}/read")
 async def mark_notification_as_read(notification_id: int, db: Session = Depends(get_db)):
     return await mark_as_read(db, notification_id)
+
+@app.post("/conversations/{conversation_id}/mark_as_read")
+async def mark_conversation_as_read(conversation_id: int, user_id: int, db: Session = Depends(get_db)):
+    db.query(Chat).filter(
+        Chat.conversation_id == conversation_id,
+        Chat.receiver_id == user_id,
+        Chat.is_seen == False
+    ).update({"is_seen": True})
+    db.commit()
+    return {"message": "Conversation marked as read"}
