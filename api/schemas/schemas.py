@@ -11,61 +11,71 @@ class ItemCategoryEnum(str, Enum):
     alcohol = "alcohol"
     other = "other"
 
+# Enum for restaurant capacity status
 class RestaurantCapacityEnum(str, Enum):
     normal = "normal"
     busy = "busy"
     crowded = "crowded"
 
+# Enum for different request types
 class RequestTypeEnum(str, Enum):
     partner = "partner"
     deliver = "deliver"
     join = "join"
 
+# Enum for the status of a request
 class RequestStatusEnum(str, Enum):
     pending = "pending"
     denied = "denied"
     accepted = "accepted"
 
+# Enum for order status
 class OrderStatusEnum(str, Enum):
     pending = "pending"
     preparing = "preparing"
     delivered = "delivered"
     cancelled = "cancelled"
 
+# Enum for vehicle types used by couriers
 class VehicleTypeEnum(str, Enum):
     bike = "bike"
     car = "car"
 
+# Enum for the status of order assignments
 class OrderAssignmentStatusEnum(str, Enum):
     pending = "pending"
     in_delivery = "in_delivery"
     delivered = "delivered"
 
+# Enum for updating the status of an order
 class UpdateOrderStatusEnum(str, Enum):
     preparing = "preparing"
     cancelled = "cancelled"
 
+# Enum for the status of an order queue
 class OrderQueueStatusEnum(str, Enum):
     pending = "pending"
     assigned = "assigned"
 
-# Image schemas for handling image uploads and updates
+# Schema for creating an image
 class ImageCreate(BaseModel):
     image: bytes
     item_id: Optional[int]
     restaurant_id: Optional[int]
 
+# Schema for updating image details
 class ImageUpdate(BaseModel):
     image: Optional[bytes] = None
     item_id: Optional[int] = None
     restaurant_id: Optional[int] = None
 
-# User schemas for handling user-related operations
+# Schema for creating a new user
 class UserCreate(BaseModel):
     username: constr(min_length=6)
     email: EmailStr
     password: str
 
+# Schema for updating user details
 class UserUpdate(BaseModel):
     username: Optional[constr(min_length=1)] = Field(None)
     email: Optional[EmailStr] = Field(None)
@@ -73,7 +83,7 @@ class UserUpdate(BaseModel):
     role: Optional[constr(min_length=1)] = Field(None)
     profilePicture: Optional[UploadFile] = None
 
-# Operating Hours schemas for managing restaurant operating hours
+# Schema for updating operating hours of a restaurant
 class OperatingHoursUpdate(BaseModel):
     id: Optional[int] = None
     restaurant_id: Optional[int] = None
@@ -81,7 +91,7 @@ class OperatingHoursUpdate(BaseModel):
     opening_time: Optional[datetime.time] = None
     closing_time: Optional[datetime.time] = None
 
-# Restaurant schemas for handling restaurant-related operations
+# Schema for creating a new restaurant
 class RestaurantCreate(BaseModel):
     name: str
     address: str
@@ -95,6 +105,7 @@ class RestaurantCreate(BaseModel):
     capacity: RestaurantCapacityEnum = RestaurantCapacityEnum.normal
     image_ids: Optional[List[int]] = None
 
+# Schema for updating restaurant details
 class RestaurantUpdate(BaseModel):
     name: Optional[str] = None
     address: Optional[str] = None
@@ -109,7 +120,7 @@ class RestaurantUpdate(BaseModel):
     image_ids: Optional[List[int]] = None
     operating_hours: Optional[List[OperatingHoursUpdate]] = None
 
-# Item schemas for handling restaurant items (menu items)
+# Schema for creating a new item
 class ItemCreate(BaseModel):
     name: str
     description: Optional[str]
@@ -121,6 +132,7 @@ class ItemCreate(BaseModel):
     category: ItemCategoryEnum
     image_ids: Optional[List[int]] = None
 
+# Schema for updating item details
 class ItemUpdate(BaseModel):
     name: Optional[str] = None
     description: Optional[str] = None
@@ -132,24 +144,25 @@ class ItemUpdate(BaseModel):
     category: Optional[ItemCategoryEnum] = None
     image_ids: Optional[List[int]] = None
 
-# Menu Category schemas for handling restaurant menu categories
+# Schema for creating a new menu category
 class MenuCategoryCreate(BaseModel):
     name: str
     description: Optional[str] = None
     restaurant_id: int
 
+# Schema for updating menu category details
 class MenuCategoryUpdate(BaseModel):
     name: Optional[str] = None
     description: Optional[str] = None
     restaurant_id: Optional[int] = None
 
-# Order Item schemas for managing items within an order
+# Schema for creating an order item
 class OrderItemCreate(BaseModel):
     item_id: int
     quantity: int
     price: float
 
-# Order schemas for managing orders placed by customers
+# Schema for creating a new order
 class OrderCreate(BaseModel):
     customer_id: int
     restaurant_id: int
@@ -162,7 +175,7 @@ class OrderCreate(BaseModel):
     card_number: Optional[str] = None
     items: List[OrderItemCreate]
 
-
+# Schema for updating order details
 class OrderUpdate(BaseModel):
     customer_id: Optional[int] = None
     restaurant_id: Optional[int] = None
@@ -178,13 +191,14 @@ class OrderUpdate(BaseModel):
     money: Optional[str] = None
     card_number: Optional[str] = None
 
-# Courier schemas for managing courier-related operations
+# Schema for creating a new courier
 class CourierCreate(BaseModel):
     user_id: int
     vehicle_type: VehicleTypeEnum
     halal_mode: bool
     restaurant_id: int
 
+# Schema for updating courier details
 class CourierUpdate(BaseModel):
     user_id: Optional[int] = None
     vehicle_type: Optional[str] = None
@@ -194,14 +208,14 @@ class CourierUpdate(BaseModel):
     restaurant_id: Optional[int] = None
     online: Optional[bool] = None
 
-# Rating schemas for managing ratings of orders and couriers
+# Schema for creating a rating for an order and courier
 class RatingCreate(BaseModel):
     order_id: int
     restaurant_rating: float
     courier_rating: float
     comments: Optional[str]
 
-# Delivery Zone schemas for managing restaurant delivery zones
+# Schema for creating a new delivery zone
 class DeliveryZoneCreate(BaseModel):
     name: str
     point1_latitude: float
@@ -213,6 +227,7 @@ class DeliveryZoneCreate(BaseModel):
     point4_latitude: float
     point4_longitude: float
 
+# Schema for updating delivery zone details
 class DeliveryZoneUpdate(BaseModel):
     name: Optional[str] = None
     point1_latitude: Optional[float] = None
@@ -224,7 +239,7 @@ class DeliveryZoneUpdate(BaseModel):
     point4_latitude: Optional[float] = None
     point4_longitude: Optional[float] = None
 
-# Request schemas for managing different types of requests (partnership, delivery, etc.)
+# Schema for creating a new request
 class RequestCreate(BaseModel):
     first_name: str
     last_name: str
@@ -232,23 +247,28 @@ class RequestCreate(BaseModel):
     additional_info: Optional[str] = None
     request_type: RequestTypeEnum
 
+# Schema for updating the status of a request
 class RequestStatusUpdate(BaseModel):
     status: RequestStatusEnum
 
-# Forgot Password schema for handling password reset requests
+# Schema for requesting a password reset
 class ForgotPasswordRequest(BaseModel):
     email: str
 
+# Schema for changing the user's password
 class PasswordChangeRequest(BaseModel):
     oldPassword: str
     newPassword: str
 
+# Schema for handling search queries
 class SearchQuery(BaseModel):
     query: constr(min_length=1, max_length=100)
 
+# Schema for updating the status of an entity
 class StatusUpdateRequest(BaseModel):
     id: int
     status: str
 
+# Schema for updating the status of an order
 class UpdateOrderStatusSchema(BaseModel):
     status: UpdateOrderStatusEnum
