@@ -22,6 +22,13 @@ from schemas.schemas import (
     OperatingHoursUpdate,
 )
 
+async def get_restaurants_for_owner(db: Session, current_user: User):
+    if current_user.role != "owner":
+        raise HTTPException(status_code=403, detail="Not authorized")
+    
+    restaurants = db.query(Restaurant).filter(Restaurant.owner_id == current_user.id).all()
+    return restaurants
+
 
 async def update_operating_hours(
     db: Session, restaurant_id: int, operating_hours: List[OperatingHoursUpdate]

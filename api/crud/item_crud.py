@@ -21,11 +21,10 @@ async def get_items(db: Session, restaurant_id: int):
             "category": item.category.value,
             "menuCategory": (
                 item.menu_category.name if item.menu_category else None
-            ),  # Dodajemo naziv kategorije menija
+            ),
             "images": [],
         }
 
-        # Dodaj slike ako postoje
         for image in item.images:
             image_data = {
                 "id": image.id,
@@ -39,19 +38,17 @@ async def get_items(db: Session, restaurant_id: int):
 
 
 async def create_item(db: Session, restaurant_id: int, item: ItemCreate):
-    # Ručno mapiranje polja iz item-a na Item model
     new_item = Item(
         name=item.name,
         description=item.description,
         price=item.price,
         weight=item.weight,
         preparation_time=item.preparation_time,
-        restaurant_id=restaurant_id,  # Ovo se prenosi iz parametra funkcije
+        restaurant_id=restaurant_id,
         menu_category_id=item.menu_category_id,
         category=item.category,
     )
 
-    # Dodavanje i čuvanje novog item-a u bazu
     db.add(new_item)
     db.commit()
     db.refresh(new_item)
@@ -87,20 +84,16 @@ async def delete_item(db: Session, item_id: int):
 
 
 async def add_image_to_item(db: Session, item_id: int, file: UploadFile):
-    # Provera da li item postoji
     item = db.query(Item).filter(Item.id == item_id).first()
     if not item:
         raise HTTPException(status_code=404, detail="Item not found")
 
-    # Čitanje sadržaja fajla
     file_data = await file.read()
 
-    # Kreiranje nove slike i povezivanje sa stavkom (itemom)
     new_image = Image(image=file_data, item_id=item_id)
 
     db.add(new_image)
     db.commit()
     db.refresh(new_image)
 
-    # Vraćamo samo osnovne informacije o slici, bez binarnih podataka
     return {"id": new_image.id, "item_id": new_image.item_id}

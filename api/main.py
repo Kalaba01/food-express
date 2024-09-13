@@ -1,4 +1,5 @@
 import json
+import asyncio
 from fastapi import (
     FastAPI,
     Depends,
@@ -97,6 +98,7 @@ from crud.restaurant_crud import (
     create_item,
     update_item,
     get_categories,
+    get_restaurants_for_owner
 )
 from crud.item_crud import (
     get_items,
@@ -552,14 +554,8 @@ async def delete_restaurant(restaurant_id: int, db: Session = Depends(get_db)):
 # Restorani odredjenog vlasnika
 @app.get("/owner/restaurants")
 async def get_owner_restaurants(
-    current_user: User = Depends(get_current_user), db: Session = Depends(get_db)
-):
-    if current_user.role != "owner":
-        raise HTTPException(status_code=403, detail="Not authorized")
-    restaurants = (
-        db.query(Restaurant).filter(Restaurant.owner_id == current_user.id).all()
-    )
-    return restaurants
+    current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    return await get_restaurants_for_owner(db, current_user)
 
 
 # Kategorije restorana
