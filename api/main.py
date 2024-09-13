@@ -1,9 +1,4 @@
-import os
-import asyncio
-import uuid
 import json
-
-from datetime import datetime, timedelta
 from fastapi import (
     FastAPI,
     Depends,
@@ -12,7 +7,7 @@ from fastapi import (
     UploadFile,
     Form,
     WebSocket,
-    WebSocketDisconnect,
+    WebSocketDisconnect
 )
 from fastapi.websockets import WebSocket
 from fastapi.security import OAuth2PasswordRequestForm
@@ -25,20 +20,13 @@ from database.database import SessionLocal, engine, get_db
 from models.models import (
     Base,
     User,
-    PasswordResetToken,
     Image,
-    Request,
-    DeliveryZone,
     Restaurant,
     MenuCategory,
-    Item,
-    Chat,
-    Conversation,
 )
 from schemas.schemas import (
     UserCreate,
     ForgotPasswordRequest,
-    ImageCreate,
     RequestCreate,
     RequestStatusUpdate,
     UserUpdate,
@@ -52,25 +40,20 @@ from schemas.schemas import (
     ItemUpdate,
     OrderCreate,
     OrderUpdate,
-    ImageCreate,
-    ImageUpdate,
     CourierCreate,
     CourierUpdate,
     PasswordChangeRequest,
     SearchQuery,
     StatusUpdateRequest,
-    UpdateOrderStatusSchema,
     RatingCreate,
 )
 
 from auth.auth import create_access_token, get_current_user
-from utils.password_utils import hash_password, verify_password, generate_temp_password
+from utils.password_utils import verify_password
 from utils.email_utils import send_email
 from utils.email_templates_utils import (
     welcome_email,
     reset_password_email,
-    request_denied_email,
-    request_reminder_email,
 )
 from utils.scheduled_tasks_utils import (
     deny_requests_and_send_emails,
@@ -85,7 +68,6 @@ from crud.user_crud import (
     verify_password_reset_token,
     update_user_password,
     check_user_exists,
-    create_user_from_request,
     delete_user,
     update_user_details,
     get_profile,
@@ -95,7 +77,6 @@ from crud.user_crud import (
 from crud.request_crud import (
     create_request,
     get_all_requests,
-    update_request_status,
     check_pending_request_by_email,
     update_request_status_and_process,
 )
@@ -110,19 +91,12 @@ from crud.restaurant_crud import (
     create_new_restaurant,
     update_existing_restaurant,
     delete_restaurant_and_related_data,
-    search_owners,
     get_restaurant_by_id,
     create_category,
     update_category,
     create_item,
     update_item,
     get_categories,
-)
-from crud.menu_crud import (
-    get_menu_categories,
-    create_menu_category,
-    update_menu_category,
-    delete_menu_category,
 )
 from crud.item_crud import (
     get_items,
@@ -133,10 +107,7 @@ from crud.item_crud import (
 )
 from crud.orders_crud import (
     get_all_orders,
-    get_order_by_id,
-    new_order_create,
-    update_order,
-    delete_order,
+    update_order
 )
 from crud.couriers_crud import (
     get_all_couriers,
@@ -149,7 +120,6 @@ from crud.couriers_crud import (
 from crud.chat_crud import (
     create_conversation,
     get_conversation,
-    create_message,
     get_conversation_messages,
     get_last_message,
     get_user_chat_history,
