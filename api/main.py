@@ -76,6 +76,7 @@ from crud.user_crud import (
     update_user_profile,
     change_user_password,
 )
+from crud.owner_crud import search_owners
 from crud.request_crud import (
     create_request,
     get_all_requests,
@@ -94,12 +95,12 @@ from crud.restaurant_crud import (
     update_existing_restaurant,
     delete_restaurant_and_related_data,
     get_restaurant_by_id,
-    create_category,
-    update_category,
-    create_item,
-    update_item,
-    get_categories,
     get_restaurants_for_owner
+)
+from crud.menu_crud import (
+    get_categories,
+    create_category,
+    update_category
 )
 from crud.item_crud import (
     get_items,
@@ -806,6 +807,10 @@ async def update_existing_courier(
 async def delete_existing_courier(courier_id: int, db: Session = Depends(get_db)):
     return await delete_courier(db, courier_id)
 
+# Pretraga vlasnika
+@app.get("/search-owners/")
+async def owners_search(username: str, db: Session = Depends(get_db)):
+    return await search_owners(db, username)
 
 @app.get("/search-couriers/")
 async def couriers_search(username: str, db: Session = Depends(get_db)):

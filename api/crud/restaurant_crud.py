@@ -15,11 +15,7 @@ from models.models import (
 from schemas.schemas import (
     RestaurantCreate,
     RestaurantUpdate,
-    MenuCategoryCreate,
-    MenuCategoryUpdate,
-    ItemCreate,
-    ItemUpdate,
-    OperatingHoursUpdate,
+    OperatingHoursUpdate
 )
 
 async def get_restaurants_for_owner(db: Session, current_user: User):
@@ -233,45 +229,6 @@ async def delete_restaurant_and_related_data(db: Session, restaurant_id: int):
     }
 
 
-# Dohvatanje svih kategorija za dati restoran
-async def get_categories(db: Session, restaurant_id: int):
-    return db.query(MenuCategory).filter_by(restaurant_id=restaurant_id).all()
-
-
-# Kreiranje nove kategorije
-async def create_category(
-    db: Session, restaurant_id: int, category: MenuCategoryCreate
-):
-    new_category = MenuCategory(
-        name=category.name,
-        description=category.description,
-        restaurant_id=restaurant_id,
-    )
-    db.add(new_category)
-    db.commit()
-    db.refresh(new_category)
-    return new_category
-
-
-# Uređivanje postojeće kategorije
-async def update_category(
-    db: Session, restaurant_id: int, category_id: int, category: MenuCategoryUpdate
-):
-    db_category = (
-        db.query(MenuCategory)
-        .filter_by(id=category_id, restaurant_id=restaurant_id)
-        .first()
-    )
-    if not db_category:
-        raise HTTPException(status_code=404, detail="Category not found")
-
-    for key, value in category.dict(exclude_unset=True).items():
-        setattr(db_category, key, value)
-
-    db.commit()
-    return db_category
-
-
 async def get_items(db: Session, restaurant_id: int):
     items = db.query(Item).filter_by(restaurant_id=restaurant_id).all()
 
@@ -285,34 +242,3 @@ async def get_items(db: Session, restaurant_id: int):
         items_data.append(item_data)
 
     return items_data
-
-
-# Kreiranje novog artikla
-async def create_item(db: Session, restaurant_id: int, item: ItemCreate):
-    new_item = Item(
-        name=item.name,
-        description=item.description,
-        price=item.price,
-        weight=item.weight,
-        preparation_time=item.preparation_time,
-        restaurant_id=restaurant_id,
-        menu_category_id=item.menu_category_id,
-        category=item.category,
-    )
-    db.add(new_item)
-    db.commit()
-    db.refresh(new_item)
-    return new_item
-
-
-# Uređivanje postojećeg artikla
-async def update_item(db: Session, restaurant_id: int, item_id: int, item: ItemUpdate):
-    db_item = db.query(Item).filter_by(id=item_id, restaurant_id=restaurant_id).first()
-    if not db_item:
-        raise HTTPException(status_code=404, detail="Item not found")
-
-    for key, value in item.dict(exclude_unset=True).items():
-        setattr(db_item, key, value)
-
-    db.commit()
-    return db_item
