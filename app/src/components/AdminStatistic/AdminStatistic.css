@@ -1,4 +1,3 @@
-/* General Styles for Light Mode */
 .dashboard-container {
     padding: 20px;
     display: flex;
@@ -8,7 +7,6 @@
     min-height: 100vh;
 }
 
-/* Summary Row for Orders */
 .summary-row {
     display: flex;
     gap: 20px;
@@ -113,4 +111,62 @@ body.dark-mode .dashboard-card:hover {
 
 body.dark-mode .dashboard-card h3 {
     color: #ffffff;
+}
+
+/* Responsiveness */
+
+@media (max-width: 1024px) {
+    .summary-card {
+        max-width: 80%; 
+    }
+
+    .dashboard-card {
+        max-width: 80%;
+    }
+}
+
+@media (max-width: 768px) {
+    .summary-row,
+    .dashboard-row {
+        flex-direction: column;
+        gap: 15px;
+        align-items: center;
+    }
+    .summary-card {
+        max-width: 100%;
+        font-size: 16px;
+    }
+
+    .dashboard-card {
+        max-width: 100%;
+        font-size: 16px;
+    }
+
+    .dashboard-card h3 {
+        font-size: 20px;
+    }
+
+    .summary-card p {
+        font-size: 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .summary-card {
+        max-width: 100%;
+        font-size: 14px;
+    }
+
+    .dashboard-card {
+        max-width: 100%;
+        font-size: 14px;
+    }
+
+    .dashboard-card h3 {
+        font-size: 18px;
+    }
+
+    .summary-card p {
+        font-size: 18px;
+    }
 }
