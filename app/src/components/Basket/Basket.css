@@ -117,6 +117,97 @@ body.dark-mode .basket-popup {
     border-radius: 4px;
 }
 
+/* Dark Mode Styles */
+
 body.dark-mode .basket-popup::-webkit-scrollbar-thumb {
     background-color: #95a5a6;
+}
+
+/* Responsiveness */
+
+@media (max-width: 1024px) {
+    .basket-popup {
+        width: 350px;
+        padding: 15px;
+    }
+
+    .basket-popup h2 {
+        font-size: 20px;
+    }
+
+    .basket-popup .total-price {
+        font-size: 16px;
+    }
+
+    .order-button {
+        font-size: 14px;
+    }
+}
+
+
+@media (max-width: 768px) {
+    .basket-container {
+        margin: 5px 10px;
+    }
+
+    .basket-popup {
+        width: 300px;
+        padding: 10px;
+        right: -50px;
+    }
+
+    .basket-popup h2 {
+        font-size: 18px;
+    }
+
+    .basket-popup ul li {
+        padding: 8px 0;
+    }
+
+    .basket-popup ul li button {
+        padding: 4px 8px;
+        font-size: 12px;
+    }
+
+    .basket-popup .total-price {
+        font-size: 14px;
+    }
+
+    .order-button {
+        font-size: 12px;
+        padding: 8px;
+    }
+}
+
+
+@media (max-width: 480px) {
+    .basket-popup {
+        width: 250px;
+        left: -150px;
+        right: 0;
+        padding: 8px;
+        border-radius: 0;
+    }
+
+    .basket-popup h2 {
+        font-size: 16px;
+    }
+
+    .basket-popup ul li {
+        padding: 6px 0;
+    }
+
+    .basket-popup ul li button {
+        padding: 3px 6px;
+        font-size: 10px;
+    }
+
+    .basket-popup .total-price {
+        font-size: 12px;
+    }
+
+    .order-button {
+        font-size: 10px;
+        padding: 6px;
+    }
 }
