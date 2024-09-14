@@ -18,7 +18,7 @@ from models.models import (
     ItemCategory,
     Chat,
     Conversation,
-    Notification
+    Notification,
 )
 from utils.distance_utils import calculate_route_distance, calculate_travel_time
 from utils.change_utils import get_optimal_change, calculate_required_change
@@ -107,24 +107,33 @@ async def assign_orders_to_couriers(db: Session):
                 print(
                     f"Order {order.id} is paid in cash. Calculating if courier can return the exact change."
                 )
-                money_data = json.loads(order.money)
-                total_money = sum(
-                    float(denomination[:-3]) * quantity
-                    for denomination, quantity in money_data.items()
-                )
 
-                print(f"Total money given by customer: {total_money}")
+                if courier.wallet_details:
+                    money_data = json.loads(order.money)
+                    total_money = sum(
+                        float(denomination[:-3]) * quantity
+                        for denomination, quantity in money_data.items()
+                    )
 
-                required_change = calculate_required_change(
-                    order.total_price, total_money
-                )
-                meets_change, optimal_change = get_optimal_change(
-                    required_change, courier.wallet_details
-                )
-                print(f"Courier {courier.id} can return exact change: {meets_change}")
-                if meets_change:
+                    print(f"Total money given by customer: {total_money}")
+
+                    required_change = calculate_required_change(
+                        order.total_price, total_money
+                    )
+                    meets_change, optimal_change = get_optimal_change(
+                        required_change, courier.wallet_details
+                    )
                     print(
-                        f"Optimal change for courier {courier.id} to return: {optimal_change}"
+                        f"Courier {courier.id} can return exact change: {meets_change}"
+                    )
+                    if meets_change:
+                        print(
+                            f"Optimal change for courier {courier.id} to return: {optimal_change}"
+                        )
+                else:
+                    meets_change = False
+                    print(
+                        f"Courier {courier.id} does not have wallet details, cannot return change."
                     )
 
             criteria_count = sum([meets_weight, meets_distance, meets_change])
@@ -190,19 +199,23 @@ async def assign_orders_to_couriers(db: Session):
                 user_id=assigned_courier.user_id,
                 message=message,
                 read=False,
-                created_at=local_now.replace(tzinfo=None)
+                created_at=local_now.replace(tzinfo=None),
             )
             db.add(new_notification)
 
-            conversation = db.query(Conversation).filter(
-                (Conversation.participant1_id == assigned_courier.user_id) &
-                (Conversation.participant2_id == order.customer_id)
-            ).first()
+            conversation = (
+                db.query(Conversation)
+                .filter(
+                    (Conversation.participant1_id == assigned_courier.user_id)
+                    & (Conversation.participant2_id == order.customer_id)
+                )
+                .first()
+            )
 
             if not conversation:
                 conversation = Conversation(
                     participant1_id=assigned_courier.user_id,
-                    participant2_id=order.customer_id
+                    participant2_id=order.customer_id,
                 )
                 db.add(conversation)
                 db.flush()
@@ -213,11 +226,13 @@ async def assign_orders_to_couriers(db: Session):
                 receiver_id=order.customer_id,
                 message=message_content,
                 conversation_id=conversation.id,
-                created_at=local_now.replace(tzinfo=None)
+                created_at=local_now.replace(tzinfo=None),
             )
             db.add(new_chat)
 
             db.commit()
-            print(f"Order ID {order.id} assigned to courier ID {assigned_courier.id} with optimal change: {optimal_change}.")
+            print(
+                f"Order ID {order.id} assigned to courier ID {assigned_courier.id} with optimal change: {optimal_change}."
+            )
         else:
             print(f"No suitable courier found for order ID {order.id}.")
