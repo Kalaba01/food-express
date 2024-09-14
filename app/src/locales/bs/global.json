@@ -233,6 +233,7 @@
     "viewLocation": "Pogledaj Lokaciju",
     "deleteSuccess": "Restoran uspješno obrisan!",
     "deleteError": "Brisanje restorana nije uspjelo. Molimo pokušajte ponovo.",
+     "selectOwnerOrZones": "Molimo vas odaberite vlasnika i zonu dostave.",
     "confirmDeleteMessage": "Jeste li sigurni da želite obrisati ovaj restoran i sve povezane menije i artikle?"
   },
   "ConfirmDelete": {

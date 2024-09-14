@@ -233,6 +233,7 @@
     "viewLocation": "View Location",
     "deleteSuccess": "Restaurant deleted successfully!",
     "deleteError": "Failed to delete restaurant. Please try again.",
+    "selectOwnerOrZones": "Please select the owner and delivery zones.",
     "confirmDeleteMessage": "Are you sure you want to delete this restaurant and all associated menus and items?"
   },
   "ConfirmDelete": {
