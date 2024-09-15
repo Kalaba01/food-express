@@ -202,3 +202,63 @@ body.dark-mode .item-quantity-controls input:disabled {
     border-color: #666;
     color: #888;
 }
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .menu-item-card-horizontal {
+        flex-direction: column;
+        padding: 15px;
+    }
+
+    .item-image {
+        width: 100%;
+        margin-right: 0;
+        margin-bottom: 15px;
+    }
+
+    .item-details-horizontal {
+        align-items: center;
+        text-align: center;
+    }
+
+    .item-quantity-controls {
+        justify-content: center;
+        margin-top: 10px;
+    }
+
+    .add-to-basket-button {
+        margin-top: 10px;
+    }
+}
+
+@media (max-width: 576px) {
+    .item-name {
+        font-size: 1.2rem;
+    }
+
+    .item-description {
+        font-size: 0.9rem;
+    }
+
+    .item-price {
+        font-size: 1rem;
+    }
+
+    .item-quantity-controls button {
+        width: 30px;
+        height: 30px;
+        font-size: 18px;
+    }
+
+    .item-quantity-controls input {
+        width: 50px;
+        height: 30px;
+        font-size: 0.9rem;
+    }
+
+    .add-to-basket-button {
+        width: 100px;
+        padding: 10px;
+        font-size: 0.9rem;
+    }
+}
