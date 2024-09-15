@@ -69,7 +69,6 @@ body.dark-mode .top-bar {
 .profile-icon {
     color: white;
     transition: color 0.2s ease-in-out;
-    /* margin: 5px 10px 0px 0px; */
     margin: 0px 5px;
 }
 
@@ -77,4 +76,88 @@ body.dark-mode .top-bar {
     color: var(--secondary-color);
     transform: scale(1.1);
     cursor: pointer;
+}
+
+/* Dark Mode adjustments */
+body.dark-mode .top-bar .logo-text {
+    color: #fff;
+}
+
+body.dark-mode .top-bar-icons .icon {
+    color: #ddd;
+}
+
+body.dark-mode .profile-icon {
+    color: #ddd;
+}
+
+body.dark-mode .top-bar-icons .icon:hover,
+body.dark-mode .profile-icon:hover {
+    color: #34c38f;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .top-bar {
+        flex-direction: column;
+        align-items: center;
+        padding: 10px;
+    }
+
+    .logo-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        margin-bottom: 10px;
+    }
+
+    .logo {
+        width: 40px;
+    }
+
+    .logo-text {
+        font-size: 1.2em;
+        margin-left: 10px;
+    }
+
+    .top-bar-icons {
+        display: flex;
+        justify-content: right;
+        width: 100%;
+        margin-top: 0;
+    }
+
+    .top-bar-icons .icon {
+        font-size: 1.2em;
+        margin: 0 10px;
+    }
+}
+
+@media (max-width: 576px) {
+    .top-bar {
+        padding: 5px;
+    }
+
+    .logo-container {
+        margin-bottom: 8px;
+    }
+
+    .logo {
+        width: 35px;
+    }
+
+    .logo-text {
+        font-size: 1em;
+        margin-left: 8px;
+    }
+
+    .top-bar-icons {
+        justify-content: center;
+    }
+
+    .top-bar-icons .icon {
+        font-size: 1em;
+        margin: 0 8px;
+    }
 }

@@ -35,13 +35,13 @@ function Header({ darkMode, toggleDarkMode, openPopupModal, userType, showIcons 
 
   return (
     <header className="top-bar">
-      {isLoggedIn && !hideHamburgerMenu && <HamburgerMenu />}
       <div className={`logo-container ${!isLoggedIn ? 'login' : 'notlogin'}`}>
         <Link to="/" className="logo-link">
           <img src="/images/logo.png" alt="Food Express Logo" className="logo" />
         </Link>
         <span className="logo-text">{t('Header.logoText')}</span>
       </div>
+      {isLoggedIn && !hideHamburgerMenu && <HamburgerMenu />}
       <div className="top-bar-icons">
         {showIcons ? (
           isLoggedIn ? (
