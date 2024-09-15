@@ -142,3 +142,52 @@ body.dark-mode .delivered-orders-popup-content td {
 body.dark-mode .delivered-orders-close-popup {
     color: #fff;
 }
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .delivered-orders-table th, 
+    .delivered-orders-table td {
+        padding: 8px;
+        font-size: 14px;
+    }
+
+    .delivered-orders-price-button {
+        padding: 8px 12px;
+        font-size: 14px;
+    }
+
+    .delivered-orders-popup-content {
+        width: 90%;
+        max-width: 400px;
+    }
+
+    .delivered-orders-container {
+        padding: 10px;
+    }
+}
+
+@media (max-width: 576px) {
+    .delivered-orders-table th, 
+    .delivered-orders-table td {
+        padding: 6px;
+        font-size: 12px;
+    }
+
+    .delivered-orders-price-button {
+        padding: 6px 10px;
+        font-size: 12px;
+    }
+
+    .delivered-orders-popup-content {
+        width: 95%;
+        max-width: 350px;
+    }
+
+    .delivered-orders-popup-content h2 {
+        font-size: 18px;
+    }
+
+    .delivered-orders-close-popup {
+        font-size: 16px;
+    }
+}
