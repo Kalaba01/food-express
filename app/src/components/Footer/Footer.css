@@ -11,3 +11,18 @@
 body.dark-mode .footer {
     border-top: 2px solid var(--border-color-dark);
 }
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .footer {
+        font-size: 14px;
+        padding: 8px;
+    }
+}
+
+@media (max-width: 576px) {
+    .footer {
+        font-size: 12px;
+        padding: 6px;
+    }
+}
