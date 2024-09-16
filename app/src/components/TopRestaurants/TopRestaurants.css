@@ -85,6 +85,8 @@
     background-color: #357ABD;
 }
 
+/* Dark Mode */
+
 body.dark-mode .restaurant-card {
     box-shadow: 0 4px 8px rgba(255, 255, 255, 0.2);
 }
@@ -93,9 +95,69 @@ body.dark-mode .restaurant-card:hover {
     box-shadow: 0 4px 8px rgba(255, 255, 255, 0.4);
 }
 
-/* Responsive styling */
+/* Responsive Design */
+
+@media (max-width: 1200px) {
+    .restaurant-cards-container {
+        width: 80%;
+    }
+
+    .restaurant-card {
+        width: 220px;
+    }
+}
+
+@media (max-width: 992px) {
+    .restaurant-cards-container {
+        width: 90%;
+    }
+
+    .restaurant-card {
+        width: 200px;
+    }
+
+    .scroll-btn {
+        font-size: 1.3rem;
+        padding: 0.4rem 0.8rem;
+    }
+}
+
 @media (max-width: 768px) {
     .restaurant-cards-container {
         width: 100%;
+        padding: 0 10px;
+    }
+
+    .restaurant-card {
+        width: 180px;
+    }
+
+    .scroll-btn {
+        font-size: 1.1rem;
+        padding: 0.3rem 0.7rem;
+    }
+
+    .top-restaurants h2 {
+        font-size: 1.6rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .restaurant-cards-container {
+        width: 100%;
+        padding: 0 5px;
+    }
+
+    .restaurant-card {
+        width: 160px;
+    }
+
+    .scroll-btn {
+        font-size: 1rem;
+        padding: 0.2rem 0.6rem;
+    }
+
+    .top-restaurants h2 {
+        font-size: 1.4rem;
     }
 }
