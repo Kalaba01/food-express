@@ -108,3 +108,66 @@ body.dark-mode .track-orders .status.preparing {
 body.dark-mode .track-orders .status.delivering {
     background-color: #5cb85c;
 }
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .track-orders th, .track-orders td {
+        padding: 8px;
+    }
+
+    .track-orders .status {
+        padding: 4px 8px;
+    }
+
+    .track-orders .finish-btn {
+        padding: 6px 10px;
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .track-orders {
+        padding: 15px;
+    }
+
+    .track-orders h2 {
+        font-size: 1.8rem;
+    }
+
+    .track-orders th, .track-orders td {
+        font-size: 0.9rem;
+        padding: 6px;
+    }
+
+    .track-orders .finish-btn {
+        padding: 5px 8px;
+        font-size: 0.8rem;
+    }
+}
+
+@media (max-width: 596px) {
+    .track-orders {
+        padding: 10px;
+    }
+
+    .track-orders table {
+        font-size: 0.85rem;
+    }
+
+    .track-orders th, .track-orders td {
+        padding: 5px;
+    }
+
+    .track-orders .finish-btn {
+        padding: 4px 6px;
+        font-size: 0.75rem;
+    }
+
+    .track-orders h2 {
+        font-size: 1.5rem;
+    }
+
+    .track-orders .clickable-address {
+        font-size: 0.85rem;
+    }
+}
