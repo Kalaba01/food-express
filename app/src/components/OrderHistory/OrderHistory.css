@@ -158,3 +158,49 @@ body.dark-mode .close-popup {
 body.dark-mode .close-popup:hover {
     color: #ddd;
 }
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .order-history table {
+        font-size: 14px;
+    }
+
+    .order-history th,
+    .order-history td {
+        padding: 8px;
+    }
+
+    .order-history button {
+        font-size: 14px;
+        padding: 8px 12px;
+    }
+
+    .popup-content {
+        width: 90%;
+    }
+}
+
+@media (max-width: 576px) {
+    .order-history table {
+        font-size: 12px;
+    }
+
+    .order-history th,
+    .order-history td {
+        padding: 6px;
+    }
+
+    .order-history button {
+        font-size: 12px;
+        padding: 6px 10px;
+    }
+
+    .popup-content {
+        width: 100%;
+        padding: 15px;
+    }
+
+    .close-popup {
+        font-size: 18px;
+    }
+}
