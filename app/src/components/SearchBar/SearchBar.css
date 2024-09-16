@@ -117,10 +117,6 @@
     text-align: center;
 }
 
-body.dark-mode .results-section h2 {
-    color: #fff;
-}
-
 .results-cards {
     display: flex;
     gap: 15px;
@@ -165,6 +161,37 @@ body.dark-mode .results-section h2 {
     color: #888;
     text-align: center;
     margin-top: 20px;
+}
+
+.results-section::-webkit-scrollbar {
+    width: 8px;
+}
+
+.results-section::-webkit-scrollbar-thumb {
+    background-color: #c3d6dd;
+    border-radius: 10px;
+}
+
+.search-dropdown:hover .search-chevron-icon,
+.search-dropdown:hover .search-dropdown-toggle  {
+    color: #fff;
+}
+
+.star-rating {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 10px;
+}
+
+.star {
+    color: #FFD700;
+    font-size: 18px;
+    margin-right: 2px;
+}
+
+body.dark-mode .results-section h2 {
+    color: #fff;
 }
 
 body.dark-mode .search-bar {
@@ -214,15 +241,6 @@ body.dark-mode .no-results {
     color: #ecf0f1;
 }
 
-.results-section::-webkit-scrollbar {
-    width: 8px;
-}
-
-.results-section::-webkit-scrollbar-thumb {
-    background-color: #c3d6dd;
-    border-radius: 10px;
-}
-
 body.dark-mode .results-section::-webkit-scrollbar-thumb {
     background-color: #00bfff;
 }
@@ -235,28 +253,51 @@ body.dark-mode .search-bar input::placeholder {
     color: #fff;
 }
 
-.search-dropdown:hover .search-chevron-icon,
-.search-dropdown:hover .search-dropdown-toggle  {
-    color: #fff;
-}
-
-.star-rating {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 10px;
-}
-
-.star {
-    color: #FFD700;
-    font-size: 18px;
-    margin-right: 2px;
-}
-
 body.dark-mode .star {
     color: #FFD700;
 }
 
 body.dark-mode .result-card p {
     color: #ecf0f1;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .search-bar {
+        max-width: 90%;
+        padding: 8px;
+    }
+
+    .search-dropdown-menu {
+        min-width: 140px;
+    }
+
+    .result-card {
+        width: calc(100% - 20px);
+    }
+
+    .search-bar-results {
+        max-width: 100%;
+    }
+}
+
+@media (max-width: 576px) {
+    .search-bar {
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        max-width: 95%;
+    }
+
+    .search-icon {
+        font-size: 1rem;
+    }
+
+    .result-card {
+        padding: 15px;
+    }
+
+    .search-dropdown-menu {
+        min-width: 120px;
+    }
 }
