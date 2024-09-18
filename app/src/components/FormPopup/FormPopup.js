@@ -29,10 +29,12 @@ function FormPopup({ type, closeModal, switchToOtherForm, showNotification, hand
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
+  // Handles verification of CAPTCHA completion for form submissions
   const handleCaptchaVerify = (verified) => {
     setCaptchaVerified(verified);
   };
 
+  // Updates form field values and performs validation for registration fields
   const handleChange = async (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
@@ -85,6 +87,7 @@ function FormPopup({ type, closeModal, switchToOtherForm, showNotification, hand
     }
   };
 
+  // Handles form submission for different form types
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (type === "register") {
@@ -203,6 +206,7 @@ function FormPopup({ type, closeModal, switchToOtherForm, showNotification, hand
     }
   };
 
+  // Resets all form field values and validation states to their initial values
   const resetFormData = () => {
     setFormData({
       username: "",
@@ -223,10 +227,12 @@ function FormPopup({ type, closeModal, switchToOtherForm, showNotification, hand
     setShowConfirmPassword(false);
   };
 
+  // Toggles the visibility of the password input field
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
 
+  // Toggles the visibility of the confirm password input field
   const toggleConfirmPasswordVisibility = () => {
     setShowConfirmPassword(!showConfirmPassword);
   };

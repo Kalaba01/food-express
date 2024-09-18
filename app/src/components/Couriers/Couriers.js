@@ -1,15 +1,8 @@
 import React, { useState, useEffect } from "react";
-import {
-  Header,
-  LookupTable,
-  ConfirmDelete,
-  NotificationPopup,
-  Map,
-  Loading,
-} from "../index";
-import axios from "axios";
-import { useTranslation } from "react-i18next";
+import { Header, LookupTable, ConfirmDelete, NotificationPopup, Map, Loading } from "../index";
 import { FaEdit, FaTrash, FaPlus } from "react-icons/fa";
+import { useTranslation } from "react-i18next";
+import axios from "axios";
 import "../LookupTable/LookupTable.css";
 
 function Couriers({ darkMode, toggleDarkMode }) {
@@ -45,11 +38,13 @@ function Couriers({ darkMode, toggleDarkMode }) {
   const [isMapPopupOpen, setIsMapPopupOpen] = useState(false);
   const [selectedRestaurant, setSelectedRestaurant] = useState(null);
 
+  // handleRestaurantClick function opens a map popup when a restaurant is clicked
   const handleRestaurantClick = (restaurant) => {
     setSelectedRestaurant(restaurant);
     setIsMapPopupOpen(true);
   };
 
+  // fetchCouriers function retrieves the list of couriers from the server
   const fetchCouriers = async () => {
     try {
       const response = await axios.get("http://localhost:8000/couriers/");
@@ -66,6 +61,7 @@ function Couriers({ darkMode, toggleDarkMode }) {
     fetchCouriers();
   }, []);
 
+  // handleCourierSearch function searches for couriers by username
   const handleCourierSearch = async (query) => {
     if (query.trim() === "") {
       setUserSearchResults([]);
@@ -85,6 +81,7 @@ function Couriers({ darkMode, toggleDarkMode }) {
     }
   };
 
+  // handleRestaurantSearch function searches for restaurants by name
   const handleRestaurantSearch = async (query) => {
     if (query.trim() === "") {
       setRestaurantSearchResults([]);
@@ -100,6 +97,7 @@ function Couriers({ darkMode, toggleDarkMode }) {
     }
   };
 
+   // handleCreateCourier function opens the form to create a new courier
   const handleCreateCourier = () => {
     setNewCourier({
       user_id: null,
@@ -115,6 +113,7 @@ function Couriers({ darkMode, toggleDarkMode }) {
     setUserSearchResults([]);
   };
 
+   // handleSelectRestaurant function sets the selected restaurant for courier creation
   const handleSelectRestaurant = (id, restaurantName) => {
     setNewCourier({
       ...newCourier,
@@ -124,6 +123,7 @@ function Couriers({ darkMode, toggleDarkMode }) {
     setRestaurantSearchResults([]);
   };
 
+  // handleSaveCourier function saves a new courier to the database
   const handleSaveCourier = async (event) => {
     event.preventDefault();
     try {
@@ -157,11 +157,13 @@ function Couriers({ darkMode, toggleDarkMode }) {
     }
   };
 
+   // handleEditCourier function opens the form to edit an existing courier
   const handleEditCourier = (courier) => {
     setEditCourier(courier);
     setIsEditPopupOpen(true);
   };
 
+   // handleSaveEdit function updates the selected courier's details
   const handleSaveEdit = async (event) => {
     event.preventDefault();
 
@@ -205,11 +207,13 @@ function Couriers({ darkMode, toggleDarkMode }) {
     }
   };
 
+  // handleDeleteCourier function opens a confirmation dialog to delete a courier
   const handleDeleteCourier = (courierId) => {
     setCourierToDelete(courierId);
     setConfirmDeleteOpen(true);
   };
 
+  // confirmDelete function confirms and deletes the selected courier from the database
   const confirmDelete = async () => {
     try {
       await axios.delete(`http://localhost:8000/couriers/${courierToDelete}`);
@@ -232,6 +236,7 @@ function Couriers({ darkMode, toggleDarkMode }) {
     }
   };
 
+  // cancelDelete function cancels the delete action and closes the confirmation dialog
   const cancelDelete = () => {
     setConfirmDeleteOpen(false);
     setCourierToDelete(null);

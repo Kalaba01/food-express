@@ -11,7 +11,6 @@ function EditRestaurant({
   daysOfWeek,
   setRestaurantData,
   currentImageIndex,
-  setCurrentImageIndex,
   handlePrevImage,
   handleNextImage,
   openDeletePopup,

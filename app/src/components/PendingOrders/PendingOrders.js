@@ -11,6 +11,7 @@ function PendingOrders({ darkMode, toggleDarkMode, openPopupModal, userType }) {
   const [notification, setNotification] = useState({ message: "", type: "" });
   const [isLoading, setIsLoading] = useState(true);
 
+  // Function to fetch pending orders
   const fetchPendingOrders = async () => {
     const token = localStorage.getItem('token');
     try {
@@ -25,10 +26,12 @@ function PendingOrders({ darkMode, toggleDarkMode, openPopupModal, userType }) {
     }
   };
 
+  // Effect hook to fetch pending orders
   useEffect(() => {
     fetchPendingOrders();
   }, []);
 
+  // Function to handle accepting an order
   const handleAccept = async (orderId, e) => {
     e.stopPropagation();
     try {
@@ -49,6 +52,7 @@ function PendingOrders({ darkMode, toggleDarkMode, openPopupModal, userType }) {
     }
   };
 
+  // Function to handle denying an order
   const handleDeny = async (orderId, e) => {
     e.stopPropagation();
     try {
@@ -69,10 +73,12 @@ function PendingOrders({ darkMode, toggleDarkMode, openPopupModal, userType }) {
     }
   };
 
+  // Function to handle clicking on an order to view details
   const handleOrderClick = (order) => {
     setSelectedOrder(order);
   };
 
+  // Function to close the order details popup
   const closePopup = () => {
     setSelectedOrder(null);
   };

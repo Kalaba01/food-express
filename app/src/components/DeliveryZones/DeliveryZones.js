@@ -1,12 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  Header,
-  NotificationPopup,
-  LookupTable,
-  ConfirmDelete,
-  Map,
-  Loading,
-} from "../index";
+import { Header, NotificationPopup, LookupTable, ConfirmDelete, Map, Loading } from "../index";
 import { MapContainer, TileLayer, FeatureGroup } from "react-leaflet";
 import { useTranslation } from "react-i18next";
 import { FaMapPin, FaTrash } from "react-icons/fa";
@@ -32,6 +25,7 @@ function DeliveryZones({ darkMode, toggleDarkMode }) {
   const [zoneToDelete, setZoneToDelete] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
+  // useEffect fetches the delivery zones
   useEffect(() => {
     const fetchZones = async () => {
       try {
@@ -49,21 +43,25 @@ function DeliveryZones({ darkMode, toggleDarkMode }) {
     fetchZones();
   }, []);
 
+  // handleEditClick sets the selected zone for editing and opens the popup
   const handleEditClick = (zone) => {
     setEditZone(zone);
     setIsPopupOpen(true);
   };
 
+  // handleMapClick sets the selected zone to view it on the map and opens the map popup
   const handleMapClick = (zone) => {
     setEditZone(zone);
     setIsMapPopupOpen(true);
   };
 
+  // handleDeleteClick sets the selected zone for deletion and opens the delete confirmation popup
   const handleDeleteClick = (zone) => {
     setZoneToDelete(zone);
     setDeletePopupOpen(true);
   };
 
+  // confirmDelete deletes the selected zone
   const confirmDelete = async () => {
     try {
       await axios.delete(
@@ -79,11 +77,13 @@ function DeliveryZones({ darkMode, toggleDarkMode }) {
     }
   };
 
+  // cancelDelete cancels the deletion and closes the delete confirmation popup
   const cancelDelete = () => {
     setDeletePopupOpen(false);
     setZoneToDelete(null);
   };
 
+  // handleSaveClick updates an existing delivery zone
   const handleSaveClick = async (event) => {
     event.preventDefault();
 
@@ -105,6 +105,7 @@ function DeliveryZones({ darkMode, toggleDarkMode }) {
     }
   };
 
+  // handleNewZoneSave saves a new delivery zone after creating its name and bounds
   const handleNewZoneSave = async (event) => {
     event.preventDefault();
 
@@ -154,6 +155,7 @@ function DeliveryZones({ darkMode, toggleDarkMode }) {
     setTimeout(() => setNotification({ message: "", type: "" }), 3000);
   };
 
+  // handleCreated stores the bounds of a newly created zone from the map drawing tool
   const handleCreated = (e) => {
     const layer = e.layer;
     const bounds = layer.getBounds();
@@ -166,6 +168,7 @@ function DeliveryZones({ darkMode, toggleDarkMode }) {
     });
   };
 
+  // handleEditBoundsChange updates the bounds of an existing zone when edited on the map
   const handleEditBoundsChange = (e) => {
     const layer = e.target;
     const bounds = layer.getBounds();
@@ -182,6 +185,7 @@ function DeliveryZones({ darkMode, toggleDarkMode }) {
     });
   };
 
+  // resetPopup closes all popups and resets the zone form data
   const resetPopup = () => {
     setIsPopupOpen(false);
     setIsMapPopupOpen(false);

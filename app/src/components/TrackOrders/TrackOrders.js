@@ -14,6 +14,7 @@ function TrackOrders({ darkMode, toggleDarkMode }) {
   const [mapCoordinates, setMapCoordinates] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
+  // Fetches the current orders and updates the order status
   useEffect(() => {
     const fetchOrders = async () => {
       try {
@@ -73,6 +74,7 @@ function TrackOrders({ darkMode, toggleDarkMode }) {
     fetchOrders();
   }, []);
 
+  // Updates the remaining time for orders every minute
   useEffect(() => {
     const intervalId = setInterval(() => {
       setOrders((prevOrders) =>
@@ -101,14 +103,17 @@ function TrackOrders({ darkMode, toggleDarkMode }) {
     return () => clearInterval(intervalId);
   }, [orders]);  
 
+  // Opens the map popup with the given coordinates and address
   const handleOpenMap = (latitude, longitude, address) => {
     setMapCoordinates({ latitude, longitude, address });
   };
 
+  // Closes the map popup
   const handleCloseMap = () => {
     setMapCoordinates(null);
   };
 
+  // Handles the finish action for an order, shows the rating popup if applicable
   const handleFinish = (orderId, courierUsername) => {
     if (!courierUsername) {
       setNotification({
@@ -121,6 +126,7 @@ function TrackOrders({ darkMode, toggleDarkMode }) {
     }
   };  
 
+  // Closes the rating popup
   const handleCloseRating = () => {
     setShowRating(false);
     setNotification({
@@ -129,6 +135,7 @@ function TrackOrders({ darkMode, toggleDarkMode }) {
     });
   };
 
+  // Returns the appropriate status element for a given order
   const getStatusColumn = (order) => {
     if (order.statusColumn === "Waiting") {
       return <span className="status waiting">{t("TrackOrders.waiting")}</span>;

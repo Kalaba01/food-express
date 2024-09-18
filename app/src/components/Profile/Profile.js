@@ -26,6 +26,7 @@ function Profile({ darkMode, toggleDarkMode }) {
     document.body.className = darkMode ? 'dark-mode' : '';
   }, [darkMode]);
 
+  // Effect hook to fetch the user's profile data
   useEffect(() => {
     const fetchUserProfile = async () => {
       try {
@@ -52,37 +53,45 @@ function Profile({ darkMode, toggleDarkMode }) {
     fetchUserProfile();
   }, []);
 
+  // Function to handle the edit button click and open the edit profile popup
   const handleEditButtonClick = () => {
     setIsEditPopupOpen(true);
   };
 
+  // Function to close the edit profile popup
   const handleCloseEditPopup = () => {
     setIsEditPopupOpen(false);
   };
 
+  // Function to handle the change password button click and open the change password popup
   const handleChangePasswordClick = () => {
     setIsChangePasswordPopupOpen(true);
   };
 
+  // Function to close the change password popup
   const handleCloseChangePasswordPopup = () => {
     setIsChangePasswordPopupOpen(false);
   };
 
+  // Function to handle changes in the profile edit form inputs
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setEditData({ ...editData, [name]: value });
   };
 
+  // Function to handle changes in the change password form inputs
   const handlePasswordChange = (e) => {
     const { name, value } = e.target;
     setPasswordData({ ...passwordData, [name]: value });
   };
 
+  // Function to handle the profile picture file change
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     setEditData({ ...editData, profilePicture: file });
   };
 
+  // Function to handle saving the updated profile information
   const handleSave = async () => {
     try {
       const token = localStorage.getItem("token");
@@ -110,6 +119,7 @@ function Profile({ darkMode, toggleDarkMode }) {
     }
   };
 
+  // Function to handle changing the user's password
   const handleChangePassword = async () => {
     if (passwordData.newPassword !== passwordData.confirmPassword) {
       setNotification({ message: t('Profile.passwordsDontMatch'), type: 'error' });
@@ -140,7 +150,6 @@ function Profile({ darkMode, toggleDarkMode }) {
       }
     }
   };
-
 
   if (loading) {
     return (

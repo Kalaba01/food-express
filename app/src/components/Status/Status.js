@@ -9,6 +9,7 @@ function Status({ id }) {
   const [status, setStatus] = useState('offline');
   const [showPopup, setShowPopup] = useState(false);
 
+  // Fetches the current status of the courier based on their ID
   useEffect(() => {
     const fetchStatus = async () => {
       const token = localStorage.getItem('token');
@@ -24,10 +25,12 @@ function Status({ id }) {
     fetchStatus();
   }, [id]);
 
+  // Handles the status change when a new status is selected
   const handleStatusChange = (newStatus) => {
     setStatus(newStatus);
   };
 
+  // Sends the updated status to the server and hides the popup
   const handleSaveStatus = async () => {
     const token = localStorage.getItem('token');
     try {

@@ -11,6 +11,7 @@ function CourierStatistic() {
   const [completedOrders, setCompletedOrders] = useState([]);
   const [averageRating, setAverageRating] = useState(0);
 
+  // useEffect hook fetches the courier's statistics data via WebSocket
   useEffect(() => {
     const token = localStorage.getItem("token");
 
@@ -56,6 +57,7 @@ function CourierStatistic() {
     }
   }, []);
 
+   // lineOptions defines the configuration for the line chart
   const lineOptions = {
     chart: { type: 'line', height: 350, toolbar: { show: false }},
     stroke: { curve: 'smooth' },
@@ -63,6 +65,7 @@ function CourierStatistic() {
     tooltip: { theme: 'dark' }
   };
 
+  // barOptions defines the configuration for the bar chart
   const barOptions = {
     chart: { type: 'bar', toolbar: { show: false }},
     plotOptions: { bar: { horizontal: false }},
@@ -78,7 +81,10 @@ function CourierStatistic() {
     },
   };
 
+  // lineSeries contains the data to be displayed on the line chart
   const lineSeries = [{ name: t('CourierStatistic.completedOrders'), data: [completedOrders] }];
+
+   // barSeries contains the data to be displayed on the bar chart
   const barSeries = [{ name: t('CourierStatistic.averageRating'), data: [averageRating] }];
 
   return (

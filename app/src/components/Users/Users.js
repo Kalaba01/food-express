@@ -1,11 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  Header,
-  NotificationPopup,
-  LookupTable,
-  ConfirmDelete,
-  Loading,
-} from "../index";
+import { Header, NotificationPopup, LookupTable, ConfirmDelete, Loading } from "../index";
 import { useTranslation } from "react-i18next";
 import { FaTrash } from "react-icons/fa";
 import axios from "axios";
@@ -26,6 +20,7 @@ function Users({ darkMode, toggleDarkMode }) {
   const [userToDelete, setUserToDelete] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
+  // Fetches the list of users
   useEffect(() => {
     const fetchUsers = async () => {
       try {
@@ -42,16 +37,19 @@ function Users({ darkMode, toggleDarkMode }) {
     fetchUsers();
   }, []);
 
+  // Handles the click event to edit a specific user
   const handleEditClick = (user) => {
     setEditUser(user);
     setIsPopupOpen(true);
   };
 
+  // Handles the click event to trigger the delete confirmation popup for a specific user
   const handleDeleteClick = (user) => {
     setUserToDelete(user);
     setDeletePopupOpen(true);
   };
 
+  // Confirms the deletion of the selected user
   const confirmDelete = async () => {
     try {
       await axios.delete(`http://localhost:8000/users/${userToDelete.id}`);
@@ -65,11 +63,13 @@ function Users({ darkMode, toggleDarkMode }) {
     }
   };
 
+  // Cancels the deletion process
   const cancelDelete = () => {
     setDeletePopupOpen(false);
     setUserToDelete(null);
   };
 
+  // Handles saving the edits made to a user's information
   const handleSaveClick = async (event) => {
     event.preventDefault();
 
@@ -125,6 +125,7 @@ function Users({ darkMode, toggleDarkMode }) {
     setTimeout(() => setNotification({ message: "", type: "" }), 3000);
   };
 
+  // Handles changes to the selected option for editing user details
   const handleOptionChange = (event) => {
     setEditOption(event.target.value);
     setEditField(event.target.value);
@@ -136,14 +137,17 @@ function Users({ darkMode, toggleDarkMode }) {
     }
   };
 
+  // Handles input change for the edit form fields
   const handleInputChange = (event) => {
     setEditValue(event.target.value);
   };
 
+  // Handles input change for the confirm password field
   const handleConfirmPasswordChange = (event) => {
     setConfirmPassword(event.target.value);
   };
 
+  // Resets the popup modal for editing user information
   const resetPopup = () => {
     setIsPopupOpen(false);
     setEditOption("");
@@ -152,6 +156,7 @@ function Users({ darkMode, toggleDarkMode }) {
     setConfirmPassword("");
   };
 
+  // Handles filtering users based on their role
   const handleRoleFilter = (role) => {
     setFilterRole(role);
   };

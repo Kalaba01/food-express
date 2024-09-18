@@ -170,18 +170,22 @@ function Restaurant({ darkMode, toggleDarkMode }) {
     }
   };
 
+  // Hook to fetch the restaurant data
   useEffect(() => {
     fetchRestaurant();
   }, [id]);
 
+  // Hook to fetch the categories of the restaurant
   useEffect(() => {
     fetchCategories();
   }, [id]);
 
+  // Hook to fetch the items of the restaurant
   useEffect(() => {
     fetchItems();
   }, [id]);
 
+  // Opens the image gallery popup for a selected item if it has images
   const openImageGalleryPopup = (item) => {
     if (item && item.images && item.images.length > 0) {
       setCurrentGalleryItem(item);
@@ -189,49 +193,59 @@ function Restaurant({ darkMode, toggleDarkMode }) {
     }
   };
 
+  // Closes the image gallery popup
   const closeImageGalleryPopup = () => {
     setIsImageGalleryOpen(false);
     setCurrentGalleryItem(null);
   };
 
+  // Closes the image gallery popup
   const openEditCategoryPopup = (category) => {
     setCurrentCategory(category);
     setIsEditCategoryOpen(true);
   };
 
+  // Closes the category edit popup
   const closeEditCategoryPopup = () => {
     setCurrentCategory(null);
     setIsEditCategoryOpen(false);
   };
 
+  // Closes the category edit popup
   const openAddCategoryPopup = () => {
     setCurrentCategory({ name: "" });
     setIsAddCategoryOpen(true);
   };
 
+  // Closes the add category popup
   const closeAddCategoryPopup = () => {
     setIsAddCategoryOpen(false);
   };
 
+  // Opens the item edit popup
   const openEditItemPopup = (item) => {
     setCurrentItem(item);
     setCurrentGalleryImageIndex(0);
     setIsEditItemOpen(true);
   };
 
+  // Closes the item edit popup
   const closeEditItemPopup = () => {
     setCurrentItem(null);
     setIsEditItemOpen(false);
   };
 
+  // Opens the add item popup
   const openAddItemPopup = () => {
     setIsAddItemOpen(true);
   };
 
+  // Closes the add item popup
   const closeAddItemPopup = () => {
     setIsAddItemOpen(false);
   };
 
+  // Opens the delete confirmation popup for a specified type (item, category, or image)
   const openDeletePopup = (type, item) => {
     setDeleteType(type);
     if (type === "item") {
@@ -246,6 +260,7 @@ function Restaurant({ darkMode, toggleDarkMode }) {
     setDeletePopupOpen(true);
   };
 
+  // Closes the delete confirmation popup
   const closeDeletePopup = () => {
     setItemToDelete(null);
     setCategoryToDelete(null);
@@ -253,10 +268,12 @@ function Restaurant({ darkMode, toggleDarkMode }) {
     setDeletePopupOpen(false);
   };
 
+  // Toggles the restaurant edit mode
   const handleRestaurantEdit = () => {
     setEditingRestaurant(!editingRestaurant);
   };
 
+  // Updates the restaurant data form fields
   const handleRestaurantChange = (e) => {
     setRestaurantData({
       ...restaurantData,
@@ -264,6 +281,7 @@ function Restaurant({ darkMode, toggleDarkMode }) {
     });
   };
 
+  // Saves the restaurant data
   const handleSaveRestaurant = async (e) => {
     e.preventDefault();
     const token = localStorage.getItem("token");
@@ -325,6 +343,7 @@ function Restaurant({ darkMode, toggleDarkMode }) {
     }
   };
 
+  // Adds new image/s to the restaurant
   const handleAddRestaurantImage = (e) => {
     const files = e.target.files;
     const newImages = [];
@@ -348,6 +367,7 @@ function Restaurant({ darkMode, toggleDarkMode }) {
     }
   };
 
+  // Adds new image/s to an item
   const handleAddItemImage = (e) => {
     const files = e.target.files;
     const newImages = [];
@@ -364,6 +384,7 @@ function Restaurant({ darkMode, toggleDarkMode }) {
     }));
   };
 
+  // Confirms and handles the deletion of a restaurant image
   const handleConfirmDeleteRestaurantImage = async () => {
     const token = localStorage.getItem("token");
 
@@ -419,6 +440,7 @@ function Restaurant({ darkMode, toggleDarkMode }) {
     }
   };
 
+  // Saves or updates a restaurant category
   const handleSaveCategory = async (e) => {
     e.preventDefault();
     const token = localStorage.getItem("token");
@@ -483,6 +505,7 @@ function Restaurant({ darkMode, toggleDarkMode }) {
     }
   };
 
+  // Adds a new item to the restaurant's menu
   const handleAddItem = async (e) => {
     e.preventDefault();
     const token = localStorage.getItem("token");
@@ -561,6 +584,7 @@ function Restaurant({ darkMode, toggleDarkMode }) {
     }
   };
 
+  // Edits an existing item in the restaurant's menu
   const handleEditItem = async (e) => {
     e.preventDefault();
     const token = localStorage.getItem("token");
@@ -625,6 +649,7 @@ function Restaurant({ darkMode, toggleDarkMode }) {
     }
   };
 
+  // Handles the deletion of items, categories, or images
   const handleDelete = async () => {
     const token = localStorage.getItem("token");
     try {
@@ -670,6 +695,7 @@ function Restaurant({ darkMode, toggleDarkMode }) {
     }
   };
 
+  // Renders star ratings based on the provided rating
   const renderStars = (rating) => {
     const fullStars = Math.floor(rating);
     const halfStar = rating % 1 !== 0;
@@ -688,24 +714,28 @@ function Restaurant({ darkMode, toggleDarkMode }) {
     );
   };
 
+  // Navigates to the next image in the restaurant gallery
   const handleNextImage = () => {
     setCurrentImageIndex((prevIndex) =>
       prevIndex === restaurant.images.length - 1 ? 0 : prevIndex + 1
     );
   };
 
+  // Navigates to the previous image in the restaurant gallery
   const handlePrevImage = () => {
     setCurrentImageIndex((prevIndex) =>
       prevIndex === 0 ? restaurant.images.length - 1 : prevIndex - 1
     );
   };
 
+  // Handles the deletion of an item image
   const handleDeleteItemImage = (imageIndex) => {
     setImageToDelete(imageIndex);
     setDeleteType("itemImage");
     setDeletePopupOpen(true);
   };
 
+  // Confirms and handles the deletion of an item image
   const handleConfirmDeleteItemImage = async () => {
     const token = localStorage.getItem("token");
 

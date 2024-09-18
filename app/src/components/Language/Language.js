@@ -8,6 +8,7 @@ function Language() {
   const [language, setLanguage] = useState(i18n.language);
   const [showDropdown, setShowDropdown] = useState(false);
 
+  // Fetches stored language from localStorage and updates the app's language
   useEffect(() => {
     const storedLanguage = localStorage.getItem('language');
     if (storedLanguage && storedLanguage !== i18n.language) {
@@ -16,6 +17,7 @@ function Language() {
     }
   }, [i18n]);
 
+  // Changes the app's language and updates both state and localStorage
   const changeLanguage = (language) => {
     i18n.changeLanguage(language);
     setLanguage(language);

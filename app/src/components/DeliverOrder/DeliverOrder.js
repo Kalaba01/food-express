@@ -14,6 +14,7 @@ function DeliverOrder({ darkMode, toggleDarkMode }) {
   const [mapCoordinates, setMapCoordinates] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
+  // useEffect fetches the list of orders for the logged-in courier on component mount
   useEffect(() => {
     const fetchOrders = async () => {
       const token = localStorage.getItem("token");
@@ -40,6 +41,7 @@ function DeliverOrder({ darkMode, toggleDarkMode }) {
     fetchOrders();
   }, []);
 
+  // handleShowItems displays a popup with the items of the selected order
   const handleShowItems = (items) => {
     const content = (
       <>
@@ -57,6 +59,7 @@ function DeliverOrder({ darkMode, toggleDarkMode }) {
     setIsPopupOpen(true);
   };
 
+   // handleShowPaymentDetails displays payment details including the optimal change
   const handleShowPaymentDetails = (optimalChange) => {
     let parsedChange = JSON.parse(optimalChange);
 
@@ -77,17 +80,20 @@ function DeliverOrder({ darkMode, toggleDarkMode }) {
     setIsPopupOpen(true);
   };
 
+  // handleClosePopup closes the currently open popup
   const handleClosePopup = () => {
     setIsPopupOpen(false);
     setPopupContent(null);
     setMapCoordinates(null);
   };
 
+  // handleShowMap displays the map popup with the coordinates of a selected address
   const handleShowMap = (latitude, longitude, address) => {
     setMapCoordinates({ latitude, longitude, address });
     setIsPopupOpen(true);
   };
 
+  // handleFinishOrder allows the courier to mark an order as finished
   const handleFinishOrder = async (orderId) => {
     try {
       const token = localStorage.getItem("token");

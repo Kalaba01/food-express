@@ -16,6 +16,7 @@ function OrderHistory({ darkMode, toggleDarkMode }) {
   const [mapCoordinates, setMapCoordinates] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
+  // useEffect hook to fetch the order history
   useEffect(() => {
     const fetchOrderHistory = async () => {
       const token = localStorage.getItem("token");
@@ -42,6 +43,7 @@ function OrderHistory({ darkMode, toggleDarkMode }) {
     fetchOrderHistory();
   }, []);
 
+  // Function to handle ordering the same items again
   const handleOrderAgain = (order) => {
     const basketItems = order.items.map((item) => ({
       id: item.item_id,
@@ -55,24 +57,29 @@ function OrderHistory({ darkMode, toggleDarkMode }) {
     setIsOrderPopupOpen(true);
   };
 
+  // Function to display the items of a selected order in a popup
   const handleShowItems = (items) => {
     setSelectedOrderItems(items);
     setIsPopupOpen(true);
   };
 
+  // Function to open the map popup with the restaurant's location
   const handleOpenMap = (latitude, longitude, address) => {
     setMapCoordinates({ latitude, longitude, address });
   };
 
+  // Function to close the order items popup
   const handleClosePopup = () => {
     setIsPopupOpen(false);
     setSelectedOrderItems([]);
   };
 
+  // Function to close the order confirmation popup
   const handleCloseOrderPopup = () => {
     setIsOrderPopupOpen(false);
   };
 
+  // Function to close the map popup
   const handleCloseMap = () => {
     setMapCoordinates(null);
   };

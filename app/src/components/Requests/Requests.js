@@ -11,6 +11,7 @@ function Requests({ darkMode, toggleDarkMode }) {
   const [notification, setNotification] = useState({ message: "", type: "" });
   const [isLoading, setIsLoading] = useState(true);
 
+  // Fetches requests
   useEffect(() => {
     const fetchRequests = async () => {
       try {
@@ -26,6 +27,7 @@ function Requests({ darkMode, toggleDarkMode }) {
     fetchRequests();
   }, []);
 
+  // Function to update the status of a specific request
   const updateRequestStatus = async (id, status) => {
     try {
       const response = await axios.put(`http://localhost:8000/requests/${id}`, {
@@ -53,6 +55,7 @@ function Requests({ darkMode, toggleDarkMode }) {
     }
   };
 
+  // Function to handle filtering requests by their status
   const handleRoleFilter = (role) => {
     setFilterRole(role);
   };

@@ -33,11 +33,13 @@ function Order({ onClose }) {
   });
   const navigate = useNavigate();
 
+  // useEffect hook to determine if the cutlery option should be displayed
   useEffect(() => {
     const containsFood = basket.some(item => item.category === 'food');
     setShowCutleryOption(containsFood);
   }, [basket]);
 
+  // Function to filter out cash denominations
   const filterCashAmounts = (cashAmounts) => {
     return Object.entries(cashAmounts).reduce((filtered, [key, value]) => {
       if (value > 0) {
@@ -47,6 +49,7 @@ function Order({ onClose }) {
     }, {});
   };
 
+  // Function to calculate the total cash based on the inputted denominations
   const calculateTotalCash = () => {
     return Object.entries(cashAmounts).reduce((total, [denomination, count]) => {
       const value = parseFloat(denomination.replace('BAM', ''));
@@ -54,6 +57,7 @@ function Order({ onClose }) {
     }, 0);
   };
 
+  // Function to handle the confirmation and submission of the order
   const handleConfirmOrder = async () => {
     if (!address || !contact || !paymentMethod || (paymentMethod === 'card' && !cardNumber)) {
       setNotification({ message: t('Order.fillAllFields'), type: 'error' });

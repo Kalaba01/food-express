@@ -11,30 +11,38 @@ function Basket() {
   const [basketVisible, setBasketVisible] = useState(false);
   const [isOrderPopupOpen, setIsOrderPopupOpen] = useState(false);
 
+  // useEffect hook initializes the basket state by resetting the basket when the component loads
   useEffect(() => {
     setBasket([]);
   }, []);
 
+  // toggleBasket function shows or hides the basket popup
   const toggleBasket = () => {
     setBasketVisible(!basketVisible);
   };
 
+  // removeFromBasket function removes an item from the basket
   const removeFromBasket = (itemId) => {
     setBasket((prevBasket) => prevBasket.filter((item) => item.id !== itemId));
   };
 
+  // openOrderPopup function opens the order popup
   const openOrderPopup = () => {
     setIsOrderPopupOpen(true);
     toggleBasket();
   };
   
+  // closeOrderPopup function closes the order popup
   const closeOrderPopup = () => {
     setIsOrderPopupOpen(false);
   };
 
+  // totalPrice calculates the total cost of items in the basket
   const totalPrice = basket.reduce((total, item) => total + item.price * item.quantity, 0);
 
+  // itemCount calculates the total number of items in the basket
   const itemCount = basket.reduce((count, item) => count + item.quantity, 0);
+  
   const displayItemCount = itemCount > 9 ? '9+' : itemCount;
 
   return (

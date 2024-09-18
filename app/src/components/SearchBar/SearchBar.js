@@ -15,6 +15,7 @@ function SearchBar() {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
+  // Handles click events outside of the dropdown to close it when clicked elsewhere
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownOpen && !event.target.closest(".search-dropdown")) {
@@ -28,6 +29,7 @@ function SearchBar() {
     };
   }, [dropdownOpen]);
 
+  // Handles the search request based on the current search type (restaurants or items)
   const handleSearch = async () => {
     if (query.trim() === "") return;
 
@@ -58,16 +60,19 @@ function SearchBar() {
     }
   };
 
+  // Handles key press events, triggers search when "Enter" is pressed
   const handleKeyPress = (e) => {
     if (e.key === "Enter") {
       handleSearch();
     }
   };
 
+  // Toggles the dropdown menu for selecting search type
   const toggleDropdown = () => {
     setDropdownOpen(!dropdownOpen);
   };
 
+  // Renders the star rating for restaurants
   const renderStars = (rating) => {
     const fullStars = Math.floor(rating);
     const halfStar = rating - fullStars >= 0.5;
@@ -82,10 +87,12 @@ function SearchBar() {
     );
   };
 
+  // Navigates to the selected restaurant's page
   const handleRestaurantClick = (restaurantName) => {
     navigate(`/restaurants/${encodeURIComponent(restaurantName)}`);
   };
 
+  // Navigates to the selected item in a restaurant's menu
   const handleItemClick = (restaurantName) => {
     navigate(`/restaurants/${encodeURIComponent(restaurantName)}`);
   };

@@ -15,6 +15,7 @@ function AdminStatistic() {
   const [closingSoonRestaurants, setClosingSoonRestaurants] = useState(0);
   const [closedRestaurants, setClosedRestaurants] = useState(0);
 
+  // useEffect hook establishes a WebSocket connection to fetch real-time statistics
   useEffect(() => {
     const ws = new WebSocket("ws://localhost:8000/ws/admin-stats");
 
@@ -43,6 +44,7 @@ function AdminStatistic() {
     };
   }, []);
 
+  // Configuration for the donut chart displaying courier statuses
   const donutOptions = {
     chart: {
       type: "donut",
@@ -66,6 +68,7 @@ function AdminStatistic() {
     tooltip: { theme: "dark" },
   };
 
+  // Configuration for the stacked bar chart displaying restaurant statuses
   const stackedBarOptions = {
     chart: {
       type: "bar",
@@ -91,12 +94,14 @@ function AdminStatistic() {
     tooltip: { theme: "dark" },
   };
 
+  // Data series for the stacked bar chart
   const stackedBarSeries = [
     { name: t("AdminStatistic.open"), data: [openRestaurants] },
     { name: t("AdminStatistic.closingSoon"), data: [closingSoonRestaurants] },
     { name: t("AdminStatistic.closed"), data: [closedRestaurants] },
   ];
 
+  // Data series for the donut chart
   const donutSeries = [
     onlineCouriers || 0,
     busyCouriers || 0,

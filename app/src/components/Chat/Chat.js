@@ -33,6 +33,7 @@ function Chat({ userType }) {
     }, 3000);
   };
 
+  // useEffect hook sets up a WebSocket connection for real-time message updates
   useEffect(() => {
     if (userType.id) {
       messagesSocketRef.current = new WebSocket(
@@ -54,6 +55,7 @@ function Chat({ userType }) {
     }
   }, [userType.id]);
 
+  // toggleChat function opens and closes the chat window and resets the unread count when opened
   const toggleChat = () => {
     setIsOpen(!isOpen);
     if (!isOpen) {
@@ -61,6 +63,7 @@ function Chat({ userType }) {
     }
   };
 
+  // selectUser function starts a conversation with a selected user and loads the message history
   const selectUser = async (user) => {
     setSelectedUser(user);
     const conversation = await startConversation(user);
@@ -95,6 +98,7 @@ function Chat({ userType }) {
     setShowChatHistory(false);
   };
 
+   // startConversation function initiates a new conversation between the current user and the selected user
   const startConversation = async (user) => {
     try {
       const response = await axios.post(
@@ -106,6 +110,7 @@ function Chat({ userType }) {
     }
   };
 
+  // loadMessages function fetches the message history for a given conversation
   const loadMessages = async (conversationId) => {
     try {
       const response = await axios.get(
@@ -117,6 +122,7 @@ function Chat({ userType }) {
     }
   };
 
+  // sendMessage function sends a new message to the selected user and updates the chat window
   const sendMessage = async () => {
     if (newMessage.trim() === "") return;
 
@@ -145,12 +151,14 @@ function Chat({ userType }) {
     }
   };
 
+  // handleKeyPress function listens for the "Enter" key to send messages
   const handleKeyPress = (e) => {
     if (e.key === "Enter") {
       sendMessage();
     }
   };
 
+   // truncateMessage function shortens long messages for better display in the chat history
   const truncateMessage = (message) => {
     if (!message) return "";
     const words = message.split(" ");
@@ -160,6 +168,7 @@ function Chat({ userType }) {
     return words[0];
   };
 
+   // fetchChatHistory function retrieves the chat history for the current user
   const fetchChatHistory = async () => {
     try {
       const response = await axios.get(
@@ -172,6 +181,7 @@ function Chat({ userType }) {
     }
   };
 
+  // fetchUsers function fetches the list of users to chat with based on the user role
   const fetchUsers = async () => {
     try {
       const response = await axios.get(
@@ -191,6 +201,7 @@ function Chat({ userType }) {
     }
   }, [isOpen]);
 
+  // renderUserList function dynamically displays the list of users to chat with based on their role
   const renderUserList = () => {
     const roles = ["admins", "owners", "couriers", "customers"];
     const roleTitles = {

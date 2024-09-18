@@ -10,18 +10,22 @@ const Unauthorized = ({ darkMode, toggleDarkMode }) => {
   const navigate = useNavigate();
   const [isHovered, setIsHovered] = useState(false);
 
+  // Navigates the user back to the home page
   const handleReturnHome = () => {
     navigate("/");
   };
 
+  // Sets the hover state to true when the mouse enters the icon
   const handleMouseEnter = () => {
     setIsHovered(true);
   };
 
+  // Sets the hover state to false when the mouse leaves the icon
   const handleMouseLeave = () => {
     setIsHovered(false);
   };
 
+  // Redirects the user to send an email for unauthorized access
   const handleUnlockClick = () => {
     window.location.href =
       "mailto:foodexpressproject@outlook.com?subject=Unauthorized Access&body=I encountered a 403 Forbidden error on your website.";

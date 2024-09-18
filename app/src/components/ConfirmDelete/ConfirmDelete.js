@@ -1,6 +1,6 @@
 import React from 'react';
-import './ConfirmDelete.css';
 import { useTranslation } from 'react-i18next';
+import './ConfirmDelete.css';
 
 function ConfirmDelete({ isOpen, message, onConfirm, onCancel }) {
   const { t } = useTranslation('global');

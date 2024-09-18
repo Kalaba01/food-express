@@ -23,15 +23,18 @@ function DeliveredOrders({ darkMode, toggleDarkMode }) {
     label: "",
   });
 
+  // handleAddressClick handles the opening of the map popup for a given address
   const handleAddressClick = (latitude, longitude, label) => {
     setMapCoordinates({ latitude, longitude, label });
     setMapPopupOpen(true);
   };
 
+  // getToken retrieves the JWT token from localStorage for authorization
   const getToken = () => {
     return localStorage.getItem("token");
   };
 
+   // fetchDeliveredOrders fetches the list of delivered orders for the courier
   const fetchDeliveredOrders = async () => {
     const token = getToken();
     if (!token) {
@@ -65,15 +68,18 @@ function DeliveredOrders({ darkMode, toggleDarkMode }) {
     }
   };
 
+   // useEffect hook fetches delivered orders when the component mounts
   useEffect(() => {
     fetchDeliveredOrders();
   }, []);
 
+  // handleOrderDetailsClick handles opening the order details popup
   const handleOrderDetailsClick = (order) => {
     setSelectedOrder(order);
     setPopupOpen(true);
   };
 
+  // closePopup closes the order details popup
   const closePopup = () => {
     setPopupOpen(false);
     setSelectedOrder(null);

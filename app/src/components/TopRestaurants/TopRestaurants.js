@@ -12,6 +12,7 @@ function TopRestaurants({ openPopupModal }) {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
+  // Fetches the top restaurants
   useEffect(() => {
     const fetchTopRestaurants = async () => {
       try {
@@ -27,6 +28,7 @@ function TopRestaurants({ openPopupModal }) {
     fetchTopRestaurants();
   }, [t]);
 
+  // Handles the click on order button
   const handleOrderClick = (restaurantName) => {
     const token = localStorage.getItem('token');
 
@@ -49,11 +51,13 @@ function TopRestaurants({ openPopupModal }) {
     }
   };
 
+  // Scrolls the restaurant cards container to the left
   const scrollLeft = () => {
     const container = document.querySelector('.restaurant-cards-container');
     container.scrollLeft -= 305;
   };
 
+  // Scrolls the restaurant cards container to the right
   const scrollRight = () => {
     const container = document.querySelector('.restaurant-cards-container');
     container.scrollLeft += 305;

@@ -43,6 +43,7 @@ function Restaurants({ darkMode, toggleDarkMode }) {
   const [zonesDropdownOpen, setZonesDropdownOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
+  // Fetches restaurant data and zones
   useEffect(() => {
     const fetchRestaurants = async () => {
       try {
@@ -73,6 +74,7 @@ function Restaurants({ darkMode, toggleDarkMode }) {
     loadData();
   }, []);
 
+  // Fetches categories
   const fetchCategories = async (restaurantId) => {
     try {
       const response = await axios.get(
@@ -84,6 +86,7 @@ function Restaurants({ darkMode, toggleDarkMode }) {
     }
   };
 
+  // Fetches items
   const fetchItems = async (categoryId) => {
     try {
       const response = await axios.get(
@@ -95,6 +98,7 @@ function Restaurants({ darkMode, toggleDarkMode }) {
     }
   };
 
+  // Searches for restaurant owners based on input
   const searchOwners = async (username) => {
     if (username.length < 6) return;
     try {
@@ -140,12 +144,14 @@ function Restaurants({ darkMode, toggleDarkMode }) {
     ),
   };
 
+  // Handles click on a restaurant to fetch categories and open the popup
   const handleRestaurantClick = async (restaurantId) => {
     setSelectedRestaurant(restaurantId);
     await fetchCategories(restaurantId);
     setIsPopupOpen(true);
   };
 
+  // Handles click on a category to fetch its items or close the items view
   const handleCategoryClick = async (categoryId) => {
     if (openCategoryId === categoryId) {
       setOpenCategoryId(null);
@@ -155,6 +161,7 @@ function Restaurants({ darkMode, toggleDarkMode }) {
     }
   };
 
+  // Resets the state and closes all open popups
   const resetPopup = () => {
     setIsPopupOpen(false);
     setSelectedRestaurant(null);
@@ -168,6 +175,7 @@ function Restaurants({ darkMode, toggleDarkMode }) {
     setZonesDropdownOpen(false);
   };
 
+  // Opens the restaurant edit popup and loads the restaurant details for editing
   const handleEditClick = async (restaurant) => {
     try {
       const response = await axios.get(
@@ -196,6 +204,7 @@ function Restaurants({ darkMode, toggleDarkMode }) {
     }
   };
 
+  // Renders checkboxes for selecting delivery zones
   const renderZoneCheckbox = (zone) => {
     return (
       <div key={zone.id} className="zone-dropdown-item">
@@ -210,16 +219,19 @@ function Restaurants({ darkMode, toggleDarkMode }) {
     );
   };
 
+  // Opens the map popup to display the restaurant's location
   const handleMapClick = (restaurant) => {
     setEditRestaurant(restaurant);
     setIsMapPopupOpen(true);
   };
 
+  // Opens the delete confirmation popup for a selected restaurant
   const handleDeleteClick = (restaurant) => {
     setRestaurantToDelete(restaurant);
     setDeletePopupOpen(true);
   };
 
+  // Confirms the deletion of a restaurant and removes it from the list
   const confirmDelete = async () => {
     try {
       await axios.delete(
@@ -235,11 +247,13 @@ function Restaurants({ darkMode, toggleDarkMode }) {
     }
   };
 
+  // Cancels the deletion of a restaurant and closes the delete confirmation popup
   const cancelDelete = () => {
     setDeletePopupOpen(false);
     setRestaurantToDelete(null);
   };
 
+  // Saves the edited restaurant details
   const handleSaveClick = async (event) => {
     event.preventDefault();
 
@@ -293,6 +307,7 @@ function Restaurants({ darkMode, toggleDarkMode }) {
     setTimeout(() => setNotification({ message: "", type: "" }), 3000);
   };
 
+  // Renders the star rating based on the average rating of a restaurant
   const renderStars = (rating) => {
     const roundedRating = Math.round(rating * 2) / 2;
     const stars = [];
@@ -311,6 +326,7 @@ function Restaurants({ darkMode, toggleDarkMode }) {
     return stars.length > 0 ? stars : <span>{t("Restaurants.noRating")}</span>;
   };
 
+  // Toggles the selection of a delivery zone
   const handleZoneSelect = (zoneId) => {
     setSelectedZones((prevSelectedZones) =>
       prevSelectedZones.includes(zoneId)
@@ -319,6 +335,7 @@ function Restaurants({ darkMode, toggleDarkMode }) {
     );
   };
 
+  // Renders the list of categories for the selected restaurant
   const renderCategories = () => {
     const restaurantCategories = categories[selectedRestaurant] || [];
     return (
@@ -346,6 +363,7 @@ function Restaurants({ darkMode, toggleDarkMode }) {
     );
   };
 
+  // Renders the list of items for the selected category
   const renderItems = () => {
     if (!openCategoryId) return null;
 
@@ -361,6 +379,7 @@ function Restaurants({ darkMode, toggleDarkMode }) {
     );
   };
 
+  // Scrolls the category list to the left
   const scrollLeft = () => {
     const container = document.querySelector(".categories-container");
     container.scrollBy({
@@ -369,6 +388,7 @@ function Restaurants({ darkMode, toggleDarkMode }) {
     });
   };
 
+  // Scrolls the category list to the right
   const scrollRight = () => {
     const container = document.querySelector(".categories-container");
     container.scrollBy({ left: container.offsetWidth / 2, behavior: "smooth" });

@@ -15,20 +15,24 @@ function App() {
   const [notification, setNotification] = useState({ message: '', type: '' });
   const [userRole, setUserRole] = useState(null);
 
+  // Toggles dark mode
   const toggleDarkMode = () => {
     setDarkMode(!darkMode);
     document.body.classList.toggle('dark-mode', !darkMode);
   };
 
+  // Opens the popup modal for login, registration, or password
   const openPopupModal = (type) => {
     setIsPopupOpen(true);
     setFormType(type);
   };
 
+  // Closes the popup modal
   const closePopupModal = () => {
     setIsPopupOpen(false);
   };
 
+  // Switches between different forms in the popup modal (e.g., login to registration)
   const switchToOtherForm = (type) => {
     setFormType(type);
   };
@@ -38,6 +42,7 @@ function App() {
     setTimeout(() => setNotification({ message: '', type: '' }), 3000);
   };
 
+  // Handles login by decoding the JWT token, checking its validity, and navigating the user to the appropriate page based on their role
   const handleLogin = (userRole, token) => {
     try {
       const decodedToken = jwtDecode(token);
@@ -65,6 +70,7 @@ function App() {
     }
   };
 
+  // useEffect hook to check for an existing token in localStorage
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (token) {
@@ -85,6 +91,7 @@ function App() {
     }
   }, [navigate]);
 
+  // useEffect hook to load the user's preferred language from localStorage
   useEffect(() => {
     const storedLanguage = localStorage.getItem('language');
     if (storedLanguage) {

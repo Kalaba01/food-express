@@ -14,6 +14,7 @@ function OwnerStatistic() {
   const [earnings, setEarnings] = useState(0);
   const [ratings, setRatings] = useState(0);
 
+  // useEffect hook for setting up the WebSocket connection and fetching owner statistics
   useEffect(() => {
     const token = localStorage.getItem("token");
 
@@ -54,6 +55,7 @@ function OwnerStatistic() {
     }
   }, []);
 
+  // Configuration for the pie chart
   const pieOptions = {
     chart: { type: 'pie', width: 380 },
     labels: [t('OwnerStatistic.onlineCouriers'), t('OwnerStatistic.busyCouriers'), t('OwnerStatistic.offlineCouriers')],
@@ -62,6 +64,7 @@ function OwnerStatistic() {
     tooltip: { theme: 'dark' }
   };
 
+  // Configuration for the pie chart
   const lineOptions = {
     chart: { type: 'line', height: 350, toolbar: { show: false }},
     stroke: { curve: 'smooth' },
@@ -69,6 +72,7 @@ function OwnerStatistic() {
     tooltip: { theme: 'dark' }
   };
 
+  // Configuration for the bar chart
   const barOptions = {
     chart: { type: 'bar', toolbar: { show: false } },
     plotOptions: { bar: { horizontal: false } },
@@ -84,8 +88,13 @@ function OwnerStatistic() {
     tooltip: { theme: 'dark' }
   };  
 
+  // Series data for the pie chart
   const pieSeries = [onlineCouriers, busyCouriers, offlineCouriers];
+
+  // Series data for the line chart
   const lineSeries = [{ name: t('OwnerStatistic.earnings'), data: [earnings] }];
+
+  // Series data for the bar chart
   const barSeries = [{ name: t('OwnerStatistic.rating'), data: [ratings] }];
 
   return (

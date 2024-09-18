@@ -22,6 +22,7 @@ function CustomerRestaurant({ darkMode, toggleDarkMode }) {
   });
   const [isLoading, setIsLoading] = useState(true);
 
+  // useEffect hook fetches restaurant details and menu
   useEffect(() => {
     const fetchRestaurantDetails = async () => {
       try {
@@ -38,6 +39,7 @@ function CustomerRestaurant({ darkMode, toggleDarkMode }) {
         console.error("Error fetching restaurant details:", error);
       }
     };
+
 
     const fetchRestaurantMenu = async () => {
       try {
@@ -63,15 +65,18 @@ function CustomerRestaurant({ darkMode, toggleDarkMode }) {
     loadData();
   }, [restaurantName]);
 
+   // openMapPopup opens a modal to display the restaurant's location on the map
   const openMapPopup = (latitude, longitude, label) => {
     setMapCoordinates({ latitude, longitude, label });
     setMapPopupOpen(true);
   };
 
+  // closeMapPopup closes the map modal
   const closeMapPopup = () => {
     setMapPopupOpen(false);
   };
 
+   // checkOperatingHours checks if the restaurant is currently open based on its operating hours
   const checkOperatingHours = (operatingHours) => {
     const currentDay = new Date().toLocaleString("en-US", { weekday: "long" });
     const currentTime = new Date();
@@ -100,6 +105,7 @@ function CustomerRestaurant({ darkMode, toggleDarkMode }) {
     }
   };
 
+  // setItemQuantity updates the quantity of a menu item
   const setItemQuantity = (itemId, quantity) => {
     setMenu((prevState) =>
       prevState.map((category) => ({
@@ -113,6 +119,7 @@ function CustomerRestaurant({ darkMode, toggleDarkMode }) {
     );
   };
 
+  // incrementQuantity increases the quantity of a menu item
   const incrementQuantity = (itemId) => {
     setMenu((prevState) =>
       prevState.map((category) => ({
@@ -126,6 +133,7 @@ function CustomerRestaurant({ darkMode, toggleDarkMode }) {
     );
   };
 
+  // decrementQuantity decreases the quantity of a menu item
   const decrementQuantity = (itemId) => {
     setMenu((prevState) =>
       prevState.map((category) => ({
@@ -139,6 +147,7 @@ function CustomerRestaurant({ darkMode, toggleDarkMode }) {
     );
   };
 
+   // addToBasket adds a menu item to the basket, updating quantity if it already exists
   const addToBasket = (item) => {
     const itemToAdd = {
       id: item.id,
@@ -163,6 +172,7 @@ function CustomerRestaurant({ darkMode, toggleDarkMode }) {
     });
   };
 
+  // renderStars renders the star rating for a restaurant
   const renderStars = (rating) => {
     const fullStars = Math.floor(rating);
     const halfStar = rating - fullStars >= 0.5;

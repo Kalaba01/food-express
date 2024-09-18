@@ -11,10 +11,12 @@ function HamburgerMenu() {
   const [restaurantsOpen, setRestaurantsOpen] = useState(false);
   const [restaurants, setRestaurants] = useState([]);
 
+  // Toggles the state of the menu
   const toggleMenu = () => {
     setMenuOpen(!menuOpen);
   };
 
+  // Toggles the visibility of the restaurant dropdown menu
   const toggleRestaurants = () => {
     setRestaurantsOpen(!restaurantsOpen);
   };
@@ -37,6 +39,7 @@ function HamburgerMenu() {
     }
   }
 
+  // Fetches the list of restaurants for the owner if the userRole is "owner"
   useEffect(() => {
     if (userRole === "owner") {
       const fetchRestaurants = async () => {
@@ -59,6 +62,7 @@ function HamburgerMenu() {
     }
   }, [userRole, token]);
 
+  // Dynamically renders menu items based on the user's role
   const menuItems = () => {
     switch (userRole) {
       case "administrator":

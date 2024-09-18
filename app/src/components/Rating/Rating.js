@@ -12,6 +12,7 @@ function Rating({ orderId, onClose }) {
   const [comment, setComment] = useState("");
   const [notification, setNotification] = useState({ message: "", type: "" });
 
+  // Function to handle the submission of the rating data
   const handleSubmit = async () => {
     try {
       const token = localStorage.getItem("token");

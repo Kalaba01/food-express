@@ -13,6 +13,7 @@ function Notification() {
   const [unreadCount, setUnreadCount] = useState(0);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
 
+  // useEffect hook for initializing WebSocket connection and fetching notifications
   useEffect(() => {
     const token = localStorage.getItem("token");
 
@@ -61,6 +62,7 @@ function Notification() {
     };
   }, [t]);
 
+  // Function to mark a notification as read
   const markAsRead = async (id) => {
     const notification = notifications.find((n) => n.id === id);
   
@@ -87,6 +89,7 @@ function Notification() {
     }
   };  
 
+  // Function to toggle the notification popup visibility
   const togglePopup = () => {
     setIsPopupOpen(!isPopupOpen);
   };

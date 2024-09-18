@@ -12,6 +12,7 @@ function Orders({ darkMode, toggleDarkMode }) {
   const [filteredStatus, setFilteredStatus] = useState("");
   const [isLoading, setIsLoading] = useState(true);
 
+  // useEffect hook to fetch the list of orders
   useEffect(() => {
     const fetchOrders = async () => {
       try {
@@ -27,11 +28,13 @@ function Orders({ darkMode, toggleDarkMode }) {
     fetchOrders();
   }, []);
 
+  // Function to handle the click event on a restaurant, opening the order details popup
   const handleRestaurantClick = (order) => {
     setSelectedOrder(order);
     setIsPopupOpen(true);
   };
 
+  // Function to apply a filter based on the selected order status
   const handleFilterClick = (status) => {
     setFilteredStatus(status);
   };
@@ -82,6 +85,7 @@ function Orders({ darkMode, toggleDarkMode }) {
     [t("Orders.status")]: (item) => t(`Orders.status_${item.status}`) || "N/A",
   };
 
+  // Function to close the order details popup
   const closePopup = () => {
     setIsPopupOpen(false);
     setSelectedOrder(null);

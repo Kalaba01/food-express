@@ -12,6 +12,7 @@ function ResetPassword({ darkMode, toggleDarkMode }) {
   const [notification, setNotification] = useState({ message: '', type: '' });
   const navigate = useNavigate();
 
+  // Function to handle the password reset form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
     const token = new URLSearchParams(window.location.search).get('token');
