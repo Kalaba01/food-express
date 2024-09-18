@@ -18,6 +18,7 @@ from schemas.schemas import (
     OperatingHoursUpdate
 )
 
+# Retrieves all restaurants owned by the current user
 async def get_restaurants_for_owner(db: Session, current_user: User):
     if current_user.role != "owner":
         raise HTTPException(status_code=403, detail="Not authorized")
@@ -25,7 +26,7 @@ async def get_restaurants_for_owner(db: Session, current_user: User):
     restaurants = db.query(Restaurant).filter(Restaurant.owner_id == current_user.id).all()
     return restaurants
 
-
+# Updates the operating hours for a specific restaurant
 async def update_operating_hours(
     db: Session, restaurant_id: int, operating_hours: List[OperatingHoursUpdate]
 ):
@@ -54,11 +55,11 @@ async def update_operating_hours(
 
     db.commit()
 
-
+# Retrieves all restaurants from the database
 async def get_all_restaurants(db: Session):
     return db.query(Restaurant).all()
 
-
+# Retrieves a specific restaurant by its ID and checks ownership
 async def get_restaurant_by_id(db: Session, restaurant_id: int, user_id: int):
     restaurant = db.query(Restaurant).filter(Restaurant.id == restaurant_id).first()
     
@@ -94,7 +95,7 @@ async def get_restaurant_by_id(db: Session, restaurant_id: int, user_id: int):
 
     return restaurant_data
 
-
+# Creates a new restaurant and adds delivery zones and default operating hours
 async def create_new_restaurant(db: Session, restaurant: RestaurantCreate):
     owner = db.query(User).filter(User.id == restaurant.owner_id).first()
     if not owner or owner.role != "owner":
@@ -155,7 +156,7 @@ async def create_new_restaurant(db: Session, restaurant: RestaurantCreate):
     db.refresh(new_restaurant)
     return new_restaurant
 
-
+# Updates an existing restaurant's details
 async def update_existing_restaurant(
     db: Session, restaurant_id: int, restaurant: RestaurantUpdate
 ):
@@ -195,7 +196,6 @@ async def update_existing_restaurant(
             )
             db.add(restaurant_delivery_zone)
 
-    # Ažuriranje radnog vremena
     if restaurant.operating_hours is not None:
         await update_operating_hours(db, restaurant_id, restaurant.operating_hours)
 
@@ -203,7 +203,7 @@ async def update_existing_restaurant(
     db.refresh(db_restaurant)
     return db_restaurant
 
-
+# Deletes a restaurant and all associated menus, items, and delivery zones
 async def delete_restaurant_and_related_data(db: Session, restaurant_id: int):
     db_restaurant = db.query(Restaurant).filter(Restaurant.id == restaurant_id).first()
     if not db_restaurant:
@@ -228,7 +228,7 @@ async def delete_restaurant_and_related_data(db: Session, restaurant_id: int):
         "message": "Restaurant and all associated menus, items, and delivery zones deleted successfully"
     }
 
-
+# Retrieves all items for a specific restaurant
 async def get_items(db: Session, restaurant_id: int):
     items = db.query(Item).filter_by(restaurant_id=restaurant_id).all()
 

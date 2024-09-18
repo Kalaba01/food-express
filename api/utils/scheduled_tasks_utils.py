@@ -6,6 +6,7 @@ from models.models import Request
 from utils.email_utils import send_email
 from utils.email_templates_utils import request_denied_email, request_reminder_email
 
+# Denies pending requests without additional information and sends denial emails
 async def deny_requests_and_send_emails():
     db = SessionLocal()
     try:
@@ -26,7 +27,7 @@ async def deny_requests_and_send_emails():
     finally:
         db.close()
 
-
+# Sends reminder emails to users with pending requests
 async def remind_pending_requests():
     db = SessionLocal()
     try:

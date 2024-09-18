@@ -1,6 +1,7 @@
 from sqlalchemy.orm import Session
 from models.models import User
 
+# Searches for owners by username
 async def search_owners(db: Session, username: str):
     owners = (
         db.query(User)

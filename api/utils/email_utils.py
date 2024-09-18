@@ -5,7 +5,8 @@ from dotenv import load_dotenv
 import os
 
 load_dotenv()
-    
+
+# Sends a plain text email using SMTP
 async def send_email(to_email, subject, body):
     from_email = os.getenv('EMAIL_USER')
     from_password = os.getenv('EMAIL_PASSWORD')
@@ -24,6 +25,7 @@ async def send_email(to_email, subject, body):
     except Exception as e:
         print(f"Failed to send email: {e}")
 
+# Sends an HTML formatted report email using SMTP
 async def send_report_email(to_email, subject, body):
     from_email = os.getenv('EMAIL_USER')
     from_password = os.getenv('EMAIL_PASSWORD')

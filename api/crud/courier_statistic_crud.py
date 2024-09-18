@@ -3,10 +3,12 @@ from models.models import Order, Courier, Rating, Restaurant, OrderAssignment, O
 from sqlalchemy import func
 from decimal import Decimal
 
+# Retrieves the courier ID based on the user ID
 def get_courier_id(db: Session, user_id: int):
     courier = db.query(Courier.id).filter(Courier.user_id == user_id).first()
     return courier.id if courier else None
 
+# Returns the number of active (in-delivery) orders for a courier
 def c_get_active_orders(db: Session, user_id: int):
     courier_id = get_courier_id(db, user_id)
     if not courier_id:
@@ -20,6 +22,7 @@ def c_get_active_orders(db: Session, user_id: int):
             OrderAssignment.status == OrderAssignmentStatus.in_delivery
         ).scalar()
 
+# Counts the number of distinct restaurants a courier is associated with
 def c_get_restaurant_count(db: Session, user_id: int):
     courier_id = get_courier_id(db, user_id)
     if not courier_id:
@@ -28,6 +31,7 @@ def c_get_restaurant_count(db: Session, user_id: int):
     return db.query(func.count(func.distinct(Courier.restaurant_id)))\
         .filter(Courier.user_id == user_id).scalar()
 
+# Returns the number of completed (delivered) orders for a courier
 def c_get_completed_orders(db: Session, user_id: int):
     courier_id = get_courier_id(db, user_id)
     if not courier_id:
@@ -41,6 +45,7 @@ def c_get_completed_orders(db: Session, user_id: int):
             OrderAssignment.status == OrderAssignmentStatus.delivered
         ).scalar()
 
+# Calculates and returns the average rating for a courier based on completed orders
 def c_get_average_rating(db: Session, user_id: int):
     courier_id = get_courier_id(db, user_id)
     if not courier_id:

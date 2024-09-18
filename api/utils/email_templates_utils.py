@@ -1,3 +1,4 @@
+# Generates a welcome email for a new user
 def welcome_email(username):
     return (
         f"Dear {username},\n\n"
@@ -15,6 +16,7 @@ def welcome_email(username):
         "P.S. Don't forget to follow us on social media for the latest updates and promotions!"
     )
 
+# Generates a password reset email with a secure link for the user to reset their account password
 def reset_password_email(username, reset_link):
     return (
         f"Dear {username},\n\n"
@@ -29,6 +31,7 @@ def reset_password_email(username, reset_link):
         "P.S. For more tips on account security, visit our Help Center."
     )
 
+# Generates an email to notify the user that their request has been denied
 def request_denied_email(first_name, last_name):
     return (
         f"Dear {first_name} {last_name},\n\n"
@@ -40,6 +43,7 @@ def request_denied_email(first_name, last_name):
         "https://www.foodexpress.com"
     )
 
+# Generates a reminder email to notify the user that their request is still under review
 def request_reminder_email(first_name, last_name):
     return (
         f"Dear {first_name} {last_name},\n\n"
@@ -51,6 +55,7 @@ def request_reminder_email(first_name, last_name):
         "https://www.foodexpress.com"
     )
 
+# Generates an email to notify the user of successful account creation and provides a link to set their password
 def account_creation_email(first_name, last_name, username, reset_link):
     return (
         f"Hello {first_name} {last_name},\n\n"

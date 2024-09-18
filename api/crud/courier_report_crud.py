@@ -9,17 +9,14 @@ from utils.email_utils import send_report_email
 templates_path = os.path.join(os.path.dirname(__file__), '../utils')
 env = Environment(loader=FileSystemLoader(templates_path))
 
+# Generates and sends a daily report to all couriers with details of their delivered orders and earnings
 async def courier_report(db: Session):
-    print("Funkcija za slanje reporta kuririma!")
-    
     couriers = db.query(User).filter(User.role == 'courier').all()
     
     if not couriers:
         raise Exception("No couriers found.")
     
     for courier in couriers:
-        print(f"Kurir: {courier.username}")
-        
         restaurants = db.query(Restaurant).join(Courier).filter(Courier.user_id == courier.id).all()
         report_data = []
         total_delivered = 0

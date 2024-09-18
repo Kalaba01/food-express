@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 from models.models import Restaurant, Item, MenuCategory, Image, OperatingHours
 from utils.rating_utils import calculate_average_rating
 
-
+# Searches for restaurants based on a query string and returns matching restaurants with details
 async def search_restaurants(db: Session, query: str):
     results = db.query(Restaurant).filter(Restaurant.name.ilike(f"%{query}%")).all()
 
@@ -31,7 +31,7 @@ async def search_restaurants(db: Session, query: str):
 
     return response
 
-
+# Searches for menu items based on a query string and returns matching items with restaurant details
 async def search_items(db: Session, query: str):
     results = (
         db.query(Item, Restaurant.name.label("restaurant_name"))
@@ -56,7 +56,7 @@ async def search_items(db: Session, query: str):
 
     return items
 
-
+# Retrieves detailed information about a specific restaurant
 async def get_restaurant_details(db: Session, restaurant_name: str):
     restaurant = (
         db.query(Restaurant)
@@ -108,7 +108,7 @@ async def get_restaurant_details(db: Session, restaurant_name: str):
         ],
     }
 
-
+# Retrieves the menu of a specific restaurant
 async def get_restaurant_menu(db: Session, restaurant_name: str):
     restaurant = (
         db.query(Restaurant)

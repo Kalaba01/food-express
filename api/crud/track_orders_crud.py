@@ -2,6 +2,7 @@ from sqlalchemy.orm import Session
 from datetime import datetime
 from models.models import Order, OrderAssignment, Courier, Restaurant, OrderQueue, OrderStatus, OrderQueueStatusEnum, OrderAssignmentStatus, OrderAssignment
 
+# Retrieves all active customer orders (excluding cancelled ones) along with details
 async def get_customer_orders(user_id: int, db: Session):
     orders = (
         db.query(Order)

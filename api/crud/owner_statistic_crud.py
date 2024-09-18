@@ -4,12 +4,14 @@ from utils.rating_utils import calculate_average_rating
 from sqlalchemy import func
 from decimal import Decimal
 
+# Returns the count of pending orders for a specific restaurant owner
 def o_get_pending_orders_owner(db: Session, owner_id: int):
     return db.query(func.count(Order.id))\
              .join(Restaurant, Restaurant.id == Order.restaurant_id)\
              .filter(Order.status == OrderStatus.pending, Restaurant.owner_id == owner_id)\
              .scalar()
 
+# Returns the count of orders in the preparing stage for a specific restaurant owner
 def o_get_preparing_orders_owner(db: Session, owner_id: int):
     return db.query(func.count(Order.id))\
              .join(OrderQueue, Order.id == OrderQueue.order_id)\
@@ -19,24 +21,28 @@ def o_get_preparing_orders_owner(db: Session, owner_id: int):
                      Restaurant.owner_id == owner_id)\
              .scalar()
 
+# Returns the count of online couriers for a specific restaurant owner
 def o_get_online_couriers_owner(db: Session, owner_id: int):
     return db.query(func.count(Courier.id))\
              .join(Restaurant, Restaurant.id == Courier.restaurant_id)\
              .filter(Courier.status == CourierStatus.online, Restaurant.owner_id == owner_id)\
              .scalar()
 
+# Returns the count of busy couriers for a specific restaurant owner
 def o_get_busy_couriers_owner(db: Session, owner_id: int):
     return db.query(func.count(Courier.id))\
              .join(Restaurant, Restaurant.id == Courier.restaurant_id)\
              .filter(Courier.status == CourierStatus.busy, Restaurant.owner_id == owner_id)\
              .scalar()
 
+# Returns the count of offline couriers for a specific restaurant owner
 def o_get_offline_couriers_owner(db: Session, owner_id: int):
     return db.query(func.count(Courier.id))\
              .join(Restaurant, Restaurant.id == Courier.restaurant_id)\
              .filter(Courier.status == CourierStatus.offline, Restaurant.owner_id == owner_id)\
              .scalar()
 
+# Returns the total earnings for a specific restaurant owner
 def o_get_earnings_owner(db: Session, owner_id: int):
     earnings = db.query(func.sum(Order.total_price))\
                  .join(Restaurant, Restaurant.id == Order.restaurant_id)\
@@ -44,6 +50,7 @@ def o_get_earnings_owner(db: Session, owner_id: int):
                  .scalar()
     return float(earnings) if isinstance(earnings, Decimal) else earnings
 
+# Returns the average rating across all restaurants owned by a specific restaurant owner
 def o_get_ratings_owner(db: Session, owner_id: int):
     restaurants = db.query(Restaurant).filter(Restaurant.owner_id == owner_id).all()
 

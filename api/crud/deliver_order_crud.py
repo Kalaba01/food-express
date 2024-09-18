@@ -15,7 +15,7 @@ from models.models import (
     CourierStatus,
 )
 
-
+# Retrieves the list of orders assigned to a specific courier for delivery, including order and customer details
 async def get_orders_for_courier(db: Session, user_id: int):
     courier = db.query(Courier.id).filter(Courier.user_id == user_id).first()
     if not courier:
@@ -85,7 +85,7 @@ async def get_orders_for_courier(db: Session, user_id: int):
 
     return order_details
 
-
+# Marks an order as finished (delivered), updates the courier's wallet if cash was used, and updates the status of the order and courier
 async def finish_order(db: Session, order_id: int):
     print(f"Attempting to finish order with ID: {order_id}")
     assignment = (

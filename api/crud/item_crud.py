@@ -4,7 +4,7 @@ from fastapi import HTTPException, UploadFile
 from models.models import Item, Image
 from schemas.schemas import ItemCreate, ItemUpdate
 
-
+# Retrieves all items for a specific restaurant by restaurant_id
 async def get_items(db: Session, restaurant_id: int):
     items = db.query(Item).filter(Item.restaurant_id == restaurant_id).all()
 
@@ -36,7 +36,7 @@ async def get_items(db: Session, restaurant_id: int):
 
     return result
 
-
+# Creates a new item for a restaurant based on the provided data
 async def create_item(db: Session, restaurant_id: int, item: ItemCreate):
     new_item = Item(
         name=item.name,
@@ -55,7 +55,7 @@ async def create_item(db: Session, restaurant_id: int, item: ItemCreate):
 
     return new_item
 
-
+# Updates an existing item with the provided data
 async def update_item(db: Session, item_id: int, item: ItemUpdate):
     db_item = db.query(Item).filter(Item.id == item_id).first()
     if not db_item:
@@ -66,7 +66,7 @@ async def update_item(db: Session, item_id: int, item: ItemUpdate):
     db.refresh(db_item)
     return db_item
 
-
+# Deletes an item by item_id and removes any associated images
 async def delete_item(db: Session, item_id: int):
     db_item = db.query(Item).filter(Item.id == item_id).first()
     if not db_item:
@@ -82,7 +82,7 @@ async def delete_item(db: Session, item_id: int):
     
     return {"message": "Item and associated images deleted successfully"}
 
-
+# Adds an image to a specific item by item_id
 async def add_image_to_item(db: Session, item_id: int, file: UploadFile):
     item = db.query(Item).filter(Item.id == item_id).first()
     if not item:

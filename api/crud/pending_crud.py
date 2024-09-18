@@ -6,6 +6,7 @@ from sqlalchemy import func, DateTime
 from models.models import OrderStatus, Order, OrderItem, OrderQueue, Item, Restaurant, User, RestaurantCapacity, Notification
 from schemas.schemas import UpdateOrderStatusSchema, OrderQueueStatusEnum
 
+# Retrieves pending orders for a specific restaurant owner and returns order details
 async def get_pending_orders_for_owner(db: Session, owner_id: int):
     restaurants = db.query(Restaurant).filter(Restaurant.owner_id == owner_id).all()
     if not restaurants:
@@ -47,6 +48,7 @@ async def get_pending_orders_for_owner(db: Session, owner_id: int):
 
     return order_details
 
+# Updates the status of an order and adds an entry to the order queue if necessary
 async def update_order_status(db: Session, order_id: int, status: str):
     order = db.query(Order).filter(Order.id == order_id).first()
     if not order:

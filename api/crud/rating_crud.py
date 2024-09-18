@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session
 from models.models import Rating, Order, OrderAssignment, Restaurant
 from schemas.schemas import RatingCreate
 
+# Submits a customer rating for a specific order and updates the restaurant's overall rating
 async def submit_rating(rating_data: RatingCreate, db: Session):
     order = db.query(Order).filter(Order.id == rating_data.order_id).first()
 

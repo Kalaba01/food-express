@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session
 from sqlalchemy.sql import func
 from models.models import Restaurant, Image
 
+# Fetches the top 10 restaurants with a rating of 4 or higher, including their images
 async def get_top_restaurants(db: Session):
     result = db.query(Restaurant.id, Restaurant.name, Image.image)\
             .join(Image, Image.restaurant_id == Restaurant.id)\

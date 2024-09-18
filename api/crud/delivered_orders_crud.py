@@ -1,6 +1,7 @@
 from sqlalchemy.orm import Session
 from models.models import Order, OrderItem, OrderAssignment, OrderAssignmentStatus, Courier
 
+# Retrieves the list of all orders that have been delivered by a specific courier
 async def get_delivered_orders(db: Session, user_id: int):
     courier = db.query(Courier).filter(Courier.user_id == user_id).first()
 

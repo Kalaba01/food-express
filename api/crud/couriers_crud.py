@@ -3,14 +3,14 @@ from sqlalchemy.orm import Session
 from models.models import Courier, User, Restaurant
 from schemas.schemas import CourierCreate, CourierUpdate
 
-
+# Searches for restaurants by name
 async def search_restaurants(db: Session, name: str):
     restaurants = db.query(Restaurant).filter(Restaurant.name.ilike(f"%{name}%")).all()
     return [
         {"id": restaurant.id, "name": restaurant.name} for restaurant in restaurants
     ]
 
-
+# Searches for restaurants by name
 async def search_couriers(db: Session, username: str):
     users = (
         db.query(User)
@@ -20,8 +20,7 @@ async def search_couriers(db: Session, username: str):
     )
     return [{"id": user.id, "username": user.username} for user in users]
 
-
-# Funkcija za dohvatanje svih kurira
+# Retrieves all couriers along with their associated details
 async def get_all_couriers(db: Session):
     couriers = (
         db.query(Courier)
@@ -47,7 +46,7 @@ async def get_all_couriers(db: Session):
 
     return couriers_with_details
 
-
+# Creates a new courier and assigns them to a restaurant
 async def create_courier(db: Session, courier: CourierCreate):
     existing_courier = (
         db.query(Courier)
@@ -76,8 +75,7 @@ async def create_courier(db: Session, courier: CourierCreate):
     db.refresh(new_courier)
     return new_courier
 
-
-# Funkcija za ažuriranje postojećeg kurira
+# Updates an existing courier's information
 async def update_courier(db: Session, courier_id: int, courier: CourierUpdate):
     existing_courier = db.query(Courier).filter(Courier.id == courier_id).first()
     if not existing_courier:
@@ -90,8 +88,7 @@ async def update_courier(db: Session, courier_id: int, courier: CourierUpdate):
     db.refresh(existing_courier)
     return existing_courier
 
-
-# Funkcija za brisanje kurira
+# Deletes a courier by their ID
 async def delete_courier(db: Session, courier_id: int):
     existing_courier = db.query(Courier).filter(Courier.id == courier_id).first()
     if not existing_courier:

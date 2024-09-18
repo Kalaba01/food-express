@@ -2,6 +2,7 @@ from sqlalchemy.orm import Session
 from fastapi import HTTPException, status
 from models.models import RestaurantDeliveryZone, DeliveryZone
 
+# Checks if a given location (latitude, longitude) is within the delivery zone of a restaurant
 def is_in_delivery_zone(db: Session, restaurant_id: int, latitude: float, longitude: float) -> bool:
     try:
         zones = db.query(RestaurantDeliveryZone).filter_by(restaurant_id=restaurant_id).all()

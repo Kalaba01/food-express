@@ -8,18 +8,21 @@ from schemas.schemas import OrderCreate, OrderStatusEnum
 from utils.delivery_utils import is_in_delivery_zone
 from utils.card_utils import validate_card_payment
 
+# Creates a new order and handles address validation, delivery zone check, and payment validation
 async def create_order(db: Session, order: OrderCreate):
     geolocator = Nominatim(user_agent="food-express")
-    location = geolocator.geocode(order.delivery_address, country_codes="BA")
+    location = geolocator.geocode(order.delivery_address, country_codes="BA") # Geolocates the delivery address using Nominatim
     if not location:
         raise HTTPException(status_code=400, detail="Address could not be located.")
     
     longitude = location.longitude
     latitude = location.latitude
 
+    # Checks if the delivery address is within the restaurant's delivery zone
     if not is_in_delivery_zone(db, order.restaurant_id, latitude, longitude):
         raise HTTPException(status_code=400, detail="We do not deliver to this address.")
     
+    # Validates card payment if the payment method is card
     if order.payment_method == 'card':
         if not validate_card_payment(db, order.card_number, order.total_price):
             raise HTTPException(status_code=400, detail="Insufficient funds on the card.")

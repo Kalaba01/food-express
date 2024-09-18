@@ -1,6 +1,7 @@
 from sqlalchemy.orm import Session
 from models.models import Order, Restaurant, OrderItem, Item
 
+# Retrieves the order history of a customer along with details about ordered items
 async def get_customer_order_history_with_items(db: Session, customer_id: int):
     orders = db.query(
         Order.id,

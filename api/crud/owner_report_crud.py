@@ -11,15 +11,14 @@ from utils.email_utils import send_report_email
 templates_path = os.path.join(os.path.dirname(__file__), '../utils')
 env = Environment(loader=FileSystemLoader(templates_path))
 
+# Generates and sends a daily report to each restaurant owner
 async def owner_report(db: Session):
-    print("Func for owner reports!")
     owners = db.query(User).filter(User.role == 'owner').all()
 
     if not owners:
         raise Exception("No restaurant owners found")
 
     for owner in owners:
-        print(owner.username)
         restaurants = db.query(Restaurant).filter(Restaurant.owner_id == owner.id).all()
         report_data = []
         total_delivered = 0

@@ -2,10 +2,9 @@ from sqlalchemy.orm import Session
 from models.models import Order, OrderItem, Restaurant, User, OrderAssignment
 from schemas.schemas import OrderCreate, OrderUpdate
 
-# Funkcija za dohvatanje svih narudžbi
+# Retrieves all orders along with their details
 async def get_all_orders(db: Session):
     orders = db.query(Order).all()
-
     orders_with_details = []
 
     for order in orders:
@@ -58,7 +57,7 @@ async def get_all_orders(db: Session):
 
     return orders_with_details
 
-# Funkcija za ažuriranje postojeće narudžbe
+# Updates an existing order with new data
 async def update_order(db: Session, order_id: int, order: OrderUpdate):
     db_order = db.query(Order).filter(Order.id == order_id).first()
     if not db_order:

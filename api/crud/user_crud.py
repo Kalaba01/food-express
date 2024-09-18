@@ -12,7 +12,7 @@ from utils.password_utils import (
 )
 from datetime import datetime, timedelta
 
-
+# Checks if a user with the given username or email already exists in the database
 async def check_user_exists(db: Session, username: str = None, email: str = None):
     if username:
         db_user = db.query(User).filter(User.username == username).first()
@@ -26,7 +26,7 @@ async def check_user_exists(db: Session, username: str = None, email: str = None
 
     return False
 
-
+# Creates a new user in the database with a hashed password and specified role
 async def create_user(db: Session, user: UserCreate, role: str):
     hashed_password = await hash_password(user.password)
     new_user = User(
@@ -41,7 +41,7 @@ async def create_user(db: Session, user: UserCreate, role: str):
     db.refresh(new_user)
     return new_user
 
-
+# Updates user details
 async def update_user_details(user_id: int, user_update: UserUpdate, db: Session):
     user = db.query(User).filter(User.id == user_id).first()
     if not user:
@@ -65,66 +65,54 @@ async def update_user_details(user_id: int, user_update: UserUpdate, db: Session
     db.refresh(user)
     return user
 
-
+# Deletes a user from the database and also removes associated data
 async def delete_user(db: Session, user_id: int):
     user = db.query(User).filter(User.id == user_id).first()
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
 
-    # Brisanje slike povezane sa korisnikom
     if user.image_id:
         image = db.query(Image).filter(Image.id == user.image_id).first()
         if image:
             db.delete(image)
 
-    # Brisanje restorana koje korisnik posjeduje
     for restaurant in user.owned_restaurants:
         db.delete(restaurant)
 
-    # Brisanje narudžbi koje je korisnik napravio
     for order in user.orders:
-        # Brisanje stavki narudžbe
         db.query(OrderItem).filter(OrderItem.order_id == order.id).delete()
-        # Brisanje dodjela narudžbi dostavljačima
         db.query(OrderAssignment).filter(OrderAssignment.order_id == order.id).delete()
         db.delete(order)
 
-    # Brisanje kurira povezanih sa korisnikom
     db.query(Courier).filter(Courier.user_id == user_id).delete()
 
-    # Brisanje poruka (chats)
     db.query(Chat).filter(
         (Chat.sender_id == user_id) | (Chat.receiver_id == user_id)
     ).delete()
 
-    # Brisanje notifikacija
     db.query(Notification).filter(Notification.user_id == user_id).delete()
 
-    # Brisanje ocjena (ratings)
     db.query(Rating).filter(
         Rating.order_id.in_([order.id for order in user.orders])
     ).delete()
 
-    # Brisanje tokena za reset lozinke
     db.query(PasswordResetToken).filter(PasswordResetToken.user_id == user_id).delete()
 
-    # Brisanje bankovnog računa povezanog sa korisnikom
     if user.bank_account:
         db.delete(user.bank_account)
 
-    # Konačno brisanje korisnika
     db.delete(user)
     db.commit()
 
-
+# Retrieves a user from the database by username
 async def get_user_by_username(db: Session, username: str):
     return db.query(User).filter(User.username == username).first()
 
-
+# Retrieves a user from the database by email
 async def get_user_by_email(db: Session, email: str):
     return db.query(User).filter(User.email == email).first()
 
-
+# Creates a password reset token for a user that expires after 24 hours
 async def create_password_reset_token(db: Session, user_id: int):
     token = str(uuid.uuid4())
     expiration_time = datetime.utcnow() + timedelta(hours=24)
@@ -136,7 +124,7 @@ async def create_password_reset_token(db: Session, user_id: int):
     db.refresh(reset_token)
     return reset_token
 
-
+# Verifies if a given password reset token is valid and not expired
 async def verify_password_reset_token(db: Session, token: str):
     reset_token = (
         db.query(PasswordResetToken).filter(PasswordResetToken.token == token).first()
@@ -145,18 +133,17 @@ async def verify_password_reset_token(db: Session, token: str):
         return reset_token
     return None
 
-
+# Updates the user's password and deletes associated password reset tokens
 async def update_user_password(db: Session, user_id: int, new_password: str):
     user = db.query(User).filter(User.id == user_id).first()
     user.hashed_password = await hash_password(new_password)
 
-    # Obriši sve povezane reset tokene za korisnika
     db.query(PasswordResetToken).filter(PasswordResetToken.user_id == user_id).delete()
 
     db.commit()
     return user
 
-
+# Generates a unique username for a user by combining their first and last name in various formats
 async def generate_unique_username(db: Session, first_name: str, last_name: str):
     base_usernames = [
         f"{first_name.lower()}.{last_name.lower()}",
@@ -172,7 +159,7 @@ async def generate_unique_username(db: Session, first_name: str, last_name: str)
             return username
     raise Exception("Could not generate unique username")
 
-
+# Creates a new user based on a request and generates a password reset token for the user to set their password
 async def create_user_from_request(db: Session, request):
     username = await generate_unique_username(db, request.first_name, request.last_name)
     await check_user_exists(db, username=username, email=request.email)
@@ -189,7 +176,7 @@ async def create_user_from_request(db: Session, request):
     reset_token = await create_password_reset_token(db, new_user.id)
     return new_user, reset_token
 
-
+# Retrieves the profile information of a user
 async def get_profile(db: Session, user_id: int):
     user = db.query(User).filter(User.id == user_id).first()
 
@@ -209,7 +196,7 @@ async def get_profile(db: Session, user_id: int):
         "profilePicture": profile_picture,
     }
 
-
+# Updates a user's profile
 async def update_user_profile(
     db: Session, user_id: int, username: str, email: str, profilePicture: UploadFile
 ):
@@ -220,11 +207,9 @@ async def update_user_profile(
             status_code=status.HTTP_404_NOT_FOUND, detail="User not found"
         )
 
-    # Ažuriraj korisničko ime i email ako su dostavljeni
     user.username = username
     user.email = email
 
-    # Ako postoji nova slika profila, sačuvaj je u tabelu Images
     if profilePicture:
         image_data = await profilePicture.read()
         new_image = Image(image=image_data, item_id=None, restaurant_id=None)
@@ -232,12 +217,10 @@ async def update_user_profile(
         db.commit()
         db.refresh(new_image)
 
-        # Postavi ID nove slike u kolonu image_id u tabeli Users
         user.image_id = new_image.id
 
     db.commit()
 
-    # Base64 enkodovanje slike za JSON odgovor
     profile_picture_base64 = (
         base64.b64encode(new_image.image).decode("utf-8") if new_image else None
     )
@@ -249,7 +232,7 @@ async def update_user_profile(
         "profilePicture": profile_picture_base64,
     }
 
-
+# Changes a user's password, ensuring that the new password is different from the old one
 async def change_user_password(
     db: Session, user_id: int, old_password: str, new_password: str
 ) -> bool:

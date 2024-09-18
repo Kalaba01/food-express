@@ -3,6 +3,7 @@ import datetime
 from sqlalchemy.orm import Session
 from models.models import Chat, Conversation, User, OrderAssignment, OrderAssignmentStatus, Order, Courier
 
+# Retrieves the chat history for a specific user, including the last message in each conversation
 async def get_user_chat_history(db: Session, user_id: int):
     conversations = db.query(Conversation).filter(
         (Conversation.participant1_id == user_id) | (Conversation.participant2_id == user_id)
@@ -13,7 +14,7 @@ async def get_user_chat_history(db: Session, user_id: int):
         other_user_id = conversation.participant1_id if conversation.participant1_id != user_id else conversation.participant2_id
         other_user = db.query(User).filter(User.id == other_user_id).first()
 
-        # Dobijanje poslednje poruke
+        
         last_message = db.query(Chat).filter(Chat.conversation_id == conversation.id).order_by(Chat.created_at.desc()).first()
         
         chat_history.append({
@@ -27,6 +28,7 @@ async def get_user_chat_history(db: Session, user_id: int):
 
     return chat_history
 
+# Retrieves users sorted by their role, filtering out the current user
 async def get_users_sorted_by_role(db: Session, role: str, current_user_id: int):
     users = {
         "admins": db.query(User).filter(User.role == "administrator", User.id != current_user_id).all(),
@@ -63,7 +65,7 @@ async def get_users_sorted_by_role(db: Session, role: str, current_user_id: int)
     else:
         return {}
 
-
+# Creates a new conversation between two users
 async def create_conversation(db: Session, user1_id: int, user2_id: int):
     conversation = Conversation(participant1_id=user1_id, participant2_id=user2_id)
     db.add(conversation)
@@ -71,12 +73,14 @@ async def create_conversation(db: Session, user1_id: int, user2_id: int):
     db.refresh(conversation)
     return conversation
 
+# Retrieves an existing conversation between two users
 async def get_conversation(db: Session, user1_id: int, user2_id: int):
     return db.query(Conversation).filter(
         ((Conversation.participant1_id == user1_id) & (Conversation.participant2_id == user2_id)) |
         ((Conversation.participant1_id == user2_id) & (Conversation.participant2_id == user1_id))
     ).first()
 
+# Creates a new message in a conversation with a timestamp in the local timezone
 async def create_message(db: Session, conversation_id: int, sender_id: int, receiver_id: int, message: str):
     local_timezone = pytz.timezone("Europe/Sarajevo")
     local_now = datetime.datetime.now(local_timezone)
@@ -94,23 +98,23 @@ async def create_message(db: Session, conversation_id: int, sender_id: int, rece
     db.refresh(chat_message)
     return chat_message
 
+# Sends a message in a conversation and broadcasts it to any active WebSocket connections
 async def handle_send_message(db: Session, conversation_id: int, sender_id: int, receiver_id: int, message: str, connections: dict):
-    # Proveri da li je poruka prazna ili ne
     if not message.strip():
         raise HTTPException(status_code=400, detail="Message cannot be empty")
     
-    # Sačuvaj poruku u bazi
     chat_message = await create_message(db, conversation_id, sender_id, receiver_id, message)
     
-    # Emituj poruku putem WebSocket-a (ako postoje povezani klijenti)
     if conversation_id in connections:
         for connection in connections[conversation_id]:
             await connection.send_text(chat_message.message)
 
     return chat_message
 
+# Retrieves all messages in a specific conversation, ordered by creation time
 async def get_conversation_messages(db: Session, conversation_id: int):
     return db.query(Chat).filter(Chat.conversation_id == conversation_id).order_by(Chat.created_at.asc()).all()
 
+# Retrieves the last message in a specific conversation
 async def get_last_message(db: Session, conversation_id: int):
     return db.query(Chat).filter(Chat.conversation_id == conversation_id).order_by(Chat.created_at.desc()).first()

@@ -7,12 +7,15 @@ from crud.user_crud import create_user_from_request
 from utils.email_utils import send_email
 from utils.email_templates_utils import account_creation_email
 
+# Retrieves all requests from the database
 async def get_all_requests(db: Session):
     return db.query(Request).all()
 
+# Checks if there is a pending request by email
 async def check_pending_request_by_email(db: Session, email: str):
     return db.query(Request).filter(Request.email == email, Request.status == "pending").first()
 
+# Creates a new request in the system
 async def create_request(db: Session, request: RequestCreate):
     new_request = Request(
         first_name=request.first_name,
@@ -28,6 +31,7 @@ async def create_request(db: Session, request: RequestCreate):
     db.refresh(new_request)
     return new_request
 
+# Updates the status of a request and processes it if accepted (e.g., creates a user from the request)
 async def update_request_status_and_process(request_id: int, status_update: RequestStatusUpdate, db: Session):
     request = db.query(Request).filter(Request.id == request_id).first()
     if not request:
