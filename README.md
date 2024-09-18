@@ -1,6 +1,6 @@
 # Food-Express
 
-Food-Express is a full-stack application designed to manage food ordering and delivery services, built using FastAPI for the backend, React for the frontend, and SQLAlchemy for database management. Users can browse restaurants, place orders, track their delivery, and rate restaurants and couriers. The platform includes roles for customers, restaurant owners, couriers, and administrators, each having tailored functionality. The system supports real-time order tracking, user authentication with JWT, and multi-language support.
+Food-Express is a full-stack application designed to manage food ordering and delivery services, built using FastAPI for the backend, React for the frontend, SQLAlchemy as the ORM, and PostgreSQL for the database management. Users can browse restaurants, place orders, track their delivery, and rate restaurants and couriers. The platform includes roles for customers, restaurant owners, couriers, and administrators, each having tailored functionality. The system supports real-time order tracking, user authentication with JWT, and multi-language support.
 
 ## Project Architecture
 
