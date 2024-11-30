@@ -14,7 +14,7 @@ function Captcha({ onVerify }) {
   return (
     <div className="captcha-container">
       <ReCAPTCHA
-        sitekey="6LfkoxYqAAAAANfYopnEkcsUPDkk0GitkdSw-POG"
+        sitekey={process.env.REACT_APP_CAPTCHA}
         onChange={handleCaptchaVerify}
       />
     </div>
