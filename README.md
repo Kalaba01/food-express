@@ -187,7 +187,7 @@ The following libraries and tools are used in this project:
 
 1) Clone the repository:
 ```
-git clone https://github.com/your-username/food-express.git
+git clone https://github.com/Kalaba01/food-express.git
 cd food-express
 ```
 2) Navigate to the backend folder and install dependencies:
